@@ -1,9 +1,10 @@
 ---
-toc: true
-toc_label: "Getting Started"
-# classes: wide
+classes: wide
 title: "o-unitにようこそ"
 layout: "single"
+author_profile: false # true で _config.yml のauther: で設定した値が表示される
+#sidebar:
+#  nav: "sidemenu-default"
 ---
 ## このサイトは？
 私個人がjekyllの学習をするために作成したサイトです。  
@@ -14,3 +15,5 @@ layout: "single"
     (forked from [l3tnun/plugin.video.epgstation](https://github.com/l3tnun/plugin.video.epgstation))  
     EPGStation v2 に暫定対応させたKODIプラグイン  
     自分用に何か機能追加することもあるかもしれません。  
+
+{{ page.defaults }}

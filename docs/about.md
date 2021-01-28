@@ -1,4 +1,7 @@
 ---
+layout: single
+classes: wide
+title: "about"
 ---
 # このサイトについて
 私 takuro が個人的にjekyllの学習をするために作成しているサイトです。

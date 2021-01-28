@@ -1,8 +1,6 @@
 ---
-after_footer_scripts:
-  - https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
-  - ./scripts/musics.js
 title: "beatmania IIDX infinitas 楽曲一覧"
+layout: "single-nosidebar"
 ---
 <div id="ret"></div>
 

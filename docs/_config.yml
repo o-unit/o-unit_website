@@ -156,17 +156,21 @@ defaults:
       comments: true
       share: true
       related: true
+      sidebar:
+        nav: "sidemenu-default"
   # _pages
   - scope:
-      path: "_pages"
+      path: ""
       type: pages
     values:
       layout: single
       author_profile: true
+      sidebar:
+        nav: "sidemenu-default"
   # _docs
   - scope:
       path: ""
-      type:   
+      type: docs
     values:
       layout: single
       read_time: false
@@ -174,7 +178,7 @@ defaults:
       share: false
       comments: false
       sidebar:
-        nav: "docs"
+        nav: "sidemenu-default"
   # _recipes
   - scope:
       path: ""
@@ -184,6 +188,8 @@ defaults:
       author_profile: true
       share: true
       comments: true
+      sidebar:
+        nav: "sidemenu-default"
   # _pets
   - scope:
       path: ""
@@ -193,6 +199,8 @@ defaults:
       author_profile: true
       share: true
       comment: true
+      sidebar:
+        nav: "sidemenu-default"
   # _portfolio
   - scope:
       path: ""
@@ -201,6 +209,20 @@ defaults:
       layout: single
       author_profile: false
       share: true
+      sidebar:
+        nav: "sidemenu-default"
+  # _portfolio
+  - scope:
+      path: ""
+      type: 
+    values:
+      layout: single
+      read_time: false
+      author_profile: true
+      share: false
+      comments: false
+      sidebar:
+        nav: "sidemenu-default"
 
 
 # Sass/SCSS
@@ -258,3 +280,23 @@ compress_html:
   clippings: all
   ignore:
     envs: development
+
+# 左側メニュー部にプロフィールを表示する際の内容
+author:
+  name: "taukro"
+  avatar: ""
+  bio: "のんびりやっていきます" # Note: Markdown is allowed
+  location: "日本, 東京都 (Tokyo, Japan)"
+  links:
+    - label: ""
+      icon: "fas fa-fw fa-link"
+      url: "https://mademistakes.com"
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/mmistakes"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/o-unit"
+#    - label: "Instagram"
+#      icon: "fab fa-fw fa-instagram"
+#      url: "https://instagram.com/mmistakes"
