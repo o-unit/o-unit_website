@@ -10,15 +10,15 @@ html {
    font-size: 14px;
  
    @include breakpoint($medium) {
-     font-size: 14px;
+     font-size: 16px;
    }
  
    @include breakpoint($large) {
-     font-size: 16px;
+     font-size: 18px;
    }
  
    @include breakpoint($x-large) {
-     font-size: 16px;
+     font-size: 18px;
    }
  
    -webkit-text-size-adjust: 100%;
@@ -27,4 +27,14 @@ html {
 
  .page__nosidebar {
    width: 100%;
+   padding-right: 0px;
+ }
+
+ .site-title {
+   font-size: 2rem;
+ }
+
+ .site-subtitle {
+   display: unset;
+   font-size: 0.875rem;
  }

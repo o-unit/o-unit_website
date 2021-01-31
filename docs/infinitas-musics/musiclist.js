@@ -1,4 +1,4 @@
-{
+musiclist = {
 "status":"OK",
 "info":{
     "lastupdated":"2021-01-05T05:25:07Z",

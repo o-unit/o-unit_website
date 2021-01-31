@@ -1,0 +1,732 @@
+@charset "UTF-8";
+/*! nouislider - 14.0.3 - 10/10/2019 */
+.noUi-target,.noUi-target *{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;-ms-touch-action:none;touch-action:none;-ms-user-select:none;-moz-user-select:none;user-select:none;-moz-box-sizing:border-box;box-sizing:border-box}.noUi-target{position:relative;direction:ltr}.noUi-base,.noUi-connects{width:100%;height:100%;position:relative;z-index:1}.noUi-connects{overflow:hidden;z-index:0}.noUi-connect,.noUi-origin{will-change:transform;position:absolute;z-index:1;top:0;left:0;-ms-transform-origin:0 0;-webkit-transform-origin:0 0;-webkit-transform-style:preserve-3d;transform-origin:0 0;transform-style:flat}.noUi-connect{height:100%;width:100%}.noUi-origin{height:10%;width:10%}html:not([dir=rtl]) .noUi-horizontal .noUi-origin{left:auto;right:0}.noUi-vertical .noUi-origin{width:0}.noUi-horizontal .noUi-origin{height:0}.noUi-handle{-webkit-backface-visibility:hidden;backface-visibility:hidden;position:absolute}.noUi-touch-area{height:100%;width:100%}.noUi-state-tap .noUi-connect,.noUi-state-tap .noUi-origin{-webkit-transition:transform .3s;transition:transform .3s}.noUi-state-drag *{cursor:inherit!important}.noUi-horizontal{height:18px}.noUi-horizontal .noUi-handle{width:34px;height:28px;left:-17px;top:-6px}.noUi-vertical{width:18px}.noUi-vertical .noUi-handle{width:28px;height:34px;left:-6px;top:-17px}html:not([dir=rtl]) .noUi-horizontal .noUi-handle{right:-17px;left:auto}.noUi-target{background:#FAFAFA;border-radius:4px;border:1px solid #D3D3D3;box-shadow:inset 0 1px 1px #F0F0F0,0 3px 6px -5px #BBB}.noUi-connects{border-radius:3px}.noUi-connect{background:#3FB8AF}.noUi-draggable{cursor:ew-resize}.noUi-vertical .noUi-draggable{cursor:ns-resize}.noUi-handle{border:1px solid #D9D9D9;border-radius:3px;background:#FFF;cursor:default;box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #EBEBEB,0 3px 6px -3px #BBB}.noUi-active{box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #DDD,0 3px 6px -3px #BBB}.noUi-handle:after,.noUi-handle:before{content:"";display:block;position:absolute;height:14px;width:1px;background:#E8E7E6;left:14px;top:6px}.noUi-handle:after{left:17px}.noUi-vertical .noUi-handle:after,.noUi-vertical .noUi-handle:before{width:14px;height:1px;left:6px;top:14px}.noUi-vertical .noUi-handle:after{top:17px}[disabled] .noUi-connect{background:#B8B8B8}[disabled] .noUi-handle,[disabled].noUi-handle,[disabled].noUi-target{cursor:not-allowed}.noUi-pips,.noUi-pips *{-moz-box-sizing:border-box;box-sizing:border-box}.noUi-pips{position:absolute;color:#999}.noUi-value{position:absolute;white-space:nowrap;text-align:center}.noUi-value-sub{color:#ccc;font-size:10px}.noUi-marker{position:absolute;background:#CCC}.noUi-marker-sub{background:#AAA}.noUi-marker-large{background:#AAA}.noUi-pips-horizontal{padding:10px 0;height:80px;top:100%;left:0;width:100%}.noUi-value-horizontal{-webkit-transform:translate(-50%,50%);transform:translate(-50%,50%)}.noUi-rtl .noUi-value-horizontal{-webkit-transform:translate(50%,50%);transform:translate(50%,50%)}.noUi-marker-horizontal.noUi-marker{margin-left:-1px;width:2px;height:5px}.noUi-marker-horizontal.noUi-marker-sub{height:10px}.noUi-marker-horizontal.noUi-marker-large{height:15px}.noUi-pips-vertical{padding:0 10px;height:100%;top:0;left:100%}.noUi-value-vertical{-webkit-transform:translate(0,-50%);transform:translate(0,-50%);padding-left:25px}.noUi-rtl .noUi-value-vertical{-webkit-transform:translate(0,50%);transform:translate(0,50%)}.noUi-marker-vertical.noUi-marker{width:5px;height:2px;margin-top:-1px}.noUi-marker-vertical.noUi-marker-sub{width:10px}.noUi-marker-vertical.noUi-marker-large{width:15px}.noUi-tooltip{display:block;position:absolute;border:1px solid #D9D9D9;border-radius:3px;background:#fff;color:#000;padding:5px;text-align:center;white-space:nowrap}.noUi-horizontal .noUi-tooltip{-webkit-transform:translate(-50%,0);transform:translate(-50%,0);left:50%;bottom:120%}.noUi-vertical .noUi-tooltip{-webkit-transform:translate(0,-50%);transform:translate(0,-50%);top:50%;right:120%}
+
+/*--------------------------------------------------
+  maked from http://www.cssarrowplease.com/
+--------------------------------------------------*/
+.arrow_box {
+    position: relative;
+    background: #dedede;
+    border: 2px solid #222222;
+}
+.arrow_box:after, .arrow_box:before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.arrow_box:after {
+    border-color: #dedede00;
+    border-bottom-color: #dedede;
+    border-width: 20px;
+    margin-left: -20px;
+}
+.arrow_box:before {
+    border-color: #22222200;
+    border-bottom-color: #222222;
+    border-width: 23px;
+    margin-left: -23px;
+}
+
+/*--------------------------------------------------
+  汎用クラス
+--------------------------------------------------*/
+.clearfix {
+    clear: both;
+    margin: 5px 0px 5px;
+}
+.center {
+    text-align: center;
+}
+.inblock {
+    display: inline-block;
+}
+.pad-lr5 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.pad-lr20 {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.input-60 {
+    padding: 2px !important;
+    width: 60px;
+}
+.input-80 {
+    padding: 2px !important;
+    width: 80px;
+}
+.input-200 {
+    padding: 2px !important;
+    width: 200px;
+}
+.input-260 {
+    padding: 2px !important;
+    width: 260px;
+}
+.fieldname {
+    display: inline-block;
+    width: 6.5rem;
+    font-weight: bold;
+}
+.settings-check {
+    display: inline-block;
+    width: 2rem;
+}
+.hidden {
+    display: none;
+}
+.table-outer {
+    overflow: auto;
+}
+
+/*--------------------------------------------------
+  テーマ改変
+--------------------------------------------------*/
+.container {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+/*--------------------------------------------------
+  更新情報トースト
+--------------------------------------------------*/
+#toastbox {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #000000;
+    border-radius: 0.3rem;
+    -moz-border-radius: 0.3rem;
+    -webkit-border-radius: 0.3rem;
+    background-color: #eeeeee;
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+    height: 3.5rem;
+    width: 18rem;
+    margin: 0.5rem;
+    z-index: 999999;
+    box-shadow: 3px 2px 6px #333333;
+    -ms-box-shadow: 3px 2px 6px #333333;
+    -webkit-box-shadow: 3px 2px 6px #333333;
+    -moz-box-shadow: 3px 2px 6px #333333;
+    text-shadow: 1px 1px 3px #eeeeee;
+    display: none;
+}
+/*--------------------------------------------------
+  検索フォーム
+--------------------------------------------------*/
+/*タブ切り替え全体のスタイル*/
+.tabs {
+    margin-top: 50px;
+    padding-bottom: 40px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 700px;
+    margin: 0 auto;}
+  
+  /*タブのスタイル*/
+.tab_item {
+    width: calc(100%/5);
+    height: 36px;
+    border-bottom: 3px solid #5ab4bd;
+    background-color: #d9d9d9;
+    font-size: 1rem;
+    text-align: center;
+    color: #565656;
+    display: block;
+    float: left;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.tab_item:hover {
+    opacity: 0.75;
+}
+  
+/*ラジオボタンを全て消す*/
+input[name="formtab"] {
+    display: none;
+}
+  
+/*タブ切り替えの中身のスタイル*/
+.tab_content {
+    display: none;
+    padding: 40px 40px 0;
+    clear: both;
+    overflow: hidden;
+}
+
+/*選択されているタブのコンテンツのみを表示*/
+#formtab-1:checked ~ #formtab-1_content,
+#formtab-2:checked ~ #formtab-2_content,
+#formtab-3:checked ~ #formtab-3_content,
+#formtab-4:checked ~ #formtab-4_content,
+#formtab-5:checked ~ #formtab-5_content {
+    display: block;
+}
+  
+/*選択されているタブのスタイルを変える*/
+input:checked + .tab_item {
+    background-color: #5ab4bd;
+    color: #fff;
+}
+
+#musicsearch input::placeholder {
+    color: #aaaaaa;
+}
+#musicsearch fieldset {
+    padding: 0px;
+    border: 2px solid #e9e9e9;
+}
+#musicsearch legend {
+    width: auto;
+    margin-left: 36px;
+    padding: 0px 20px 0px;
+}
+#musicsearch legend input[type="checkbox"] {
+    display: none;
+}
+#musicsearch legend input[type="checkbox"] + label:before {
+    content: "\f078";
+    font-family: FontAwesome;
+    font-weight: 400;
+    font-size: 1rem;
+}
+#musicsearch legend input[type="checkbox"]:checked + label:before {
+    content: "\f077";
+    font-family: FontAwesome;
+}
+#musicsearch .changeselect {
+    margin: 0rem 1rem 0rem 0rem;
+    display: inline-block;
+}
+#musicsearch .vname {
+    width: 9.6rem;
+    display: inline-block;
+    font-size: 0.8rem;
+}
+#musicsearch .vname input[type="checkbox"] {
+    display: none;
+}
+#musicsearch .vname input[type="checkbox"] + label {
+    position: relative;
+    padding: 1px 3px 1px 3px;
+    margin: 2px;
+    width: 95%;
+    text-align: center;
+    line-height: 26px;
+    padding-left: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+    color: #333333;
+    border: 2px solid #ff8f22;
+    border-radius: 8px;
+    user-select: none;
+}
+#musicsearch .vname input[type="checkbox"]:checked + label {
+    background-color: #ff8f22;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: bold;
+}
+#musicsearch input[type="checkbox"][disabled] + label {
+    background-color: #ff8f22;
+    color: #333333;
+    border-color: #ff8f22;
+}
+
+#musicsearch .vname input.opt {
+    display: none;
+}
+#musicsearch .vname input.opt + label {
+    position: relative;
+    padding: 1px 3px 1px 3px;
+    margin: 2px;
+    width: 95%;
+    text-align: center;
+    line-height: 26px;
+    padding-left: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+    color: #333333;
+    border: 2px solid #ff8f22;
+    border-radius: 8px;
+    user-select: none;
+}
+#musicsearch .vname input.opt.checked + label {
+    background-color: #ff8f22;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: bold;
+}
+#musicsearch .vname input.opt[disabled] + label {
+    background-color: #ff8f22;
+    color: #333333;
+    border-color: #ff8f22;
+}
+
+
+#musicsearch input[type="text"], #musicsearch input[type="password"], #musicsearch select {
+    color: #000000;
+    background-color: #f2f2ff;
+    border-radius: 8px;
+}
+#musicsearch input[type="text"][disabled], #musicsearch input[type="password"][disabled], #musicsearch select[disabled] {
+    color: #666666;
+    background-color: #cccccc;
+}
+#musicsearch select {
+    padding: 1px 10px;
+}
+#musicsearch .slider_outer {
+    min-width: 200px;
+    max-width: 300px;
+    width: 100%;
+}
+#musicsearch .score_opt {
+    width: 90px;
+    margin: 14px 0px 0px;
+}
+#musicsearch .bpm_opt {
+    width: 90px;
+}
+#musicsearch .notes-menu {
+    width: 60px;
+    display: inline-block;
+}
+#musicsearch .releasedate-menu {
+    width: 76px;
+    display: inline-block;
+}
+#musicsearch .releasedate-menu select {
+    width: 100%;
+    padding: 1px 0px;
+}
+#musicsearch .releasedate-menu select:disabled {
+    background-color: #cccccc;
+}
+#musicsearch .selectbutton select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 1px 20px 1px 5px;
+    border-color: #ff8f22;
+
+}
+#musicsearch .selectbutton select::-ms-expand {
+    display: none;
+}
+
+#musicsearch .selectbutton::after {
+    position: relative;
+    top: 15px;
+    right: 18px;
+    width: 0;
+    height: 0;
+    padding: 0;
+    content: '';
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #e9831c;
+    pointer-events: none;
+}
+#musicsearch .noUi-target {
+    margin: 15px 15px 10px 15px;
+    max-width: 280px;
+}
+#musicsearch .noUi-handle {
+    cursor: grab;
+    right: -0.5rem;
+    width: 1rem;
+}
+#musicsearch .noUi-handle::before {
+    left: 0.3rem;
+}
+#musicsearch .noUi-handle::after {
+    left: 0.5rem;
+}
+#musicsearch .noUi-connect {
+    background: #ff8f22;
+}
+#musicsearch .noUi-tooltip {
+    display: none;
+}
+#musicsearch .noUi-active .noUi-tooltip {
+    display: block;
+}
+
+#savesetting {
+    text-decoration: line-througth;
+}
+.level_number {
+    margin: 0px 3px 0px;
+    font-size: 1.06rem;
+}
+#loginform input::placeholder {
+    color: #aaaaaa;
+}
+#loginform fieldset {
+    padding: 0px;
+    border: 2px solid #e9e9e9;
+}
+#loginform legend {
+    width: auto;
+    margin-left: 36px;
+    padding: 0px 20px 0px;
+}
+
+#loginform .vname {
+    width: 160px;
+    display: inline-block;
+}
+#loginform .vname input[type="checkbox"] {
+    display: none;
+}
+#loginform .vname input[type="checkbox"] + label {
+    position: relative;
+    padding: 1px 3px 1px 3px;
+    margin: 2px;
+    width: 95%;
+    text-align: center;
+    line-height: 26px;
+    padding-left: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+    color: #333333;
+    border: 2px solid #ff8f22;
+    border-radius: 8px;
+}
+#loginform .vname input[type="checkbox"]:checked + label {
+    background-color: #ff8f22;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: bold;
+}
+#loginform input[type="checkbox"][disabled] + label {
+    background-color: #ff8f22;
+    color: #333333;
+    border-color: #ff8f22;
+}
+
+#loginform legend input[type="checkbox"] {
+    display: none;
+}
+#loginform legend input[type="checkbox"] + label:before {
+    content: "\f078";
+    font-family: FontAwesome;
+    font-weight: 400;
+    font-size: 1rem;
+}
+#loginform legend input[type="checkbox"]:checked + label:before {
+    content: "\f077";
+    font-family: FontAwesome;
+}
+#loginform input[type="text"], #loginform input[type="password"], #loginform select {
+    color: #000000;
+    background-color: #f2f2ff;
+    border-radius: 8px;
+}
+#loginform input[type="text"][disabled], #loginform input[type="password"][disabled], #loginform select[disabled] {
+    color: #666666;
+    background-color: #cccccc;
+}
+#setmyid + label, #setrivalid + label, .purchase input + label {
+    position: relative;
+    padding: 1px 3px 1px 3px;
+    margin: 2px;
+    width:  260px;
+    text-align: center;
+    line-height: 26px;
+    padding-left: 3px;
+    padding-right: 3px;
+    cursor: pointer;
+    color: #333333;
+    border: 2px solid #ffcc99;
+    border-radius: 8px;
+}
+#setmyid:checked + label, #setrivalid:checked + label, .purchase input:checked + label {
+    background-color: #ffcc99;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: bold;
+}
+.buttons {
+    margin-bottom: 15px;
+}
+#filter-button {
+    width: 260px;
+}
+
+/*--------------------------------------------------
+  デバッグ用
+--------------------------------------------------*/
+#debug {
+    color: #ff0000;
+    content: " ";
+}
+
+/*--------------------------------------------------
+  情報テーブル・検索結果テーブル共通
+--------------------------------------------------*/
+table.infotable, table.musiclist {
+    display: table;
+    width: 1560px;
+    border: 2px solid #e9e9e9;
+    table-layout: auto;
+}
+
+table.infotable .spb, table.musiclist .spb {
+    background-color: #ccffcc;
+}
+table.infotable .spn, table.musiclist .spn {
+    background-color: #ccffff;
+}
+table.infotable .sph, table.musiclist .sph {
+    background-color: #ffffcc;
+}
+table.infotable .spa, table.musiclist .spa {
+    background-color: #ff99ff;
+}
+table.infotable .dpn, table.musiclist .dpn {
+    background-color: #ccffff;
+}
+table.infotable .dph, table.musiclist .dph {
+    background-color: #ffffcc;
+}
+table.infotable .dpa, table.musiclist .dpa {
+    background-color: #ff99ff;
+}
+
+/*--------------------------------------------------
+  情報テーブル用
+--------------------------------------------------*/
+table.infotable {
+    border: 2px solid #e9e9e9;
+}
+
+table.infotable .level {
+    width: 102px;
+    padding: 0px;
+    text-align: center;
+    vertical-align: top;
+    color: #000000;
+}
+/*--------------------------------------------------
+  検索結果テーブル用
+--------------------------------------------------*/
+table.musiclist tbody {
+    display: none;
+}
+table.musiclist tbody.headertbody {
+    display: table-row-group;
+}
+table.musiclist .headerline {
+    color: #ffffff;
+    text-shadow: 3px 2px 3px #000000;
+}
+table.musiclist .headerline th {
+	border-width: 0px 2px 0px 2px;
+	border-style: solid;
+	border-color: #9b9b9d;
+}
+table.musiclist .music_other {
+	border-top: 2px dotted #9b9b9b;
+}
+table.musiclist .par-version {
+    background-color: #99ccff;
+}
+table.musiclist .par-level {
+    background-color: #00cccc;
+}
+table.musiclist .par-notes {
+    background-color: #520000;
+}
+table.musiclist .par-bpm {
+    background-color: #669999;
+}
+table.musiclist .par-rel-type {
+    background-color: #99cc00;
+}
+table.musiclist .par-rel-year {
+    background-color: #00cc33;
+}
+table.musiclist .par-rel-month {
+    background-color: #66cc00;
+}
+table.musiclist .par-bit-year {
+    background-color: #ff6666;
+}
+table.musiclist .par-bit-month {
+    background-color: #ff3333;
+}
+table.musiclist th {
+    text-transform: none;
+}
+table.musiclist .release {
+    width: 52px;
+    text-align: center;
+    padding: 0px;
+    border-left: 2px solid #9b9b9d;
+}
+table.musiclist .version {
+    width: 52px;
+    text-align: center;
+    padding: 0px;
+    border-left: 2px solid #9b9b9d;
+}
+table.musiclist .musicinfo {
+    border-left: 2px solid #9b9b9d;
+}
+table.musiclist .scoreinfo {
+    border-left: 2px solid #9b9b9d;
+    border-right: 2px solid #9b9b9d;
+}
+table.musiclist colgroup:last-child {
+    border-right: 2px solid #9b9b9d;
+}
+table.musiclist .bit {
+    color: #000000;
+    background-color: #ba55d3;
+    font-size: 0.825rem;
+}
+table.musiclist .bitbeforerelease {
+    color: #000000;
+    background-color: #dd99ff;
+    font-size: 0.825rem;
+}
+table.musiclist .monthly {
+    color: #000000;
+    background-color: #99ff99;
+    font-size: 0.825rem;
+}
+table.musiclist .monthlynobit {
+    color: #000000;
+    background-color: #c0c0c0;
+    font-size: 0.825rem;
+}
+table.musiclist .monthlybeforerelease {
+    color: #000000;
+    background-color: #ccffcc;
+    font-size: 0.825rem;
+}
+
+table.musiclist .championship {
+    color: #000000;
+    background-color: #ffd700;
+    font-size: 0.825rem;
+}
+table.musiclist .pack {
+    color: #000000;
+    background-color: #ffc0cb;
+    font-size: 0.825rem;
+}
+table.musiclist .packSS {
+    color: #000000;
+    background-color: #9999ff;
+    font-size: 0.825rem;
+}
+table.musiclist .djp {
+    color: #000000;
+    background-color: #ffff00;
+    font-size: 0.825rem;
+}
+table.musiclist .genre {
+    width: 168px;
+}
+table.musiclist .artist {
+    width: 340px;
+}
+table.musiclist .title {
+    width: 366px;
+}
+table.musiclist .bpm {
+    width: 72px;
+}
+table.musiclist .level {
+    width: 48px;
+    padding: 0px;
+    text-align: center;
+    vertical-align: top;
+    color: #000000;
+}
+table.musiclist .canplay {
+    font-size: 1rem;
+    font-weight: bold;
+}
+table.musiclist input.check-playable {
+    display: none;
+}
+table.musiclist label {
+    margin-bottom: 0px;
+}
+table.musiclist input.check-playable + label:before {
+    content: "\f096";
+    font-family: FontAwesome;
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+table.musiclist input.check-playable:checked + label:before {
+    content: "\f046";
+    font-family: FontAwesome;
+}
+table.musiclist .notes {
+    width: 48px;
+    padding: 0px;
+    text-align: center;
+    color: #000000;
+}
+table.musiclist .notesstyle {
+    float: left;
+    width: 50%;
+    height: 6px;
+    content: " ";
+    font-size: 0.2rem;
+    visibility: hidden;
+}
+table.musiclist .playable {
+    padding: 0px;
+    text-align: center;
+    color: #000000;
+}
+table.musiclist .hcn {
+    background-color: #9900ff;
+    visibility: visible;
+}
+table.musiclist .hbss {
+    background-color: #3333ff;
+    visibility: visible;
+}
+table.musiclist .cn {
+    background-color: #ff9900;
+    visibility: visible;
+}
+table.musiclist .bss {
+    background-color: #ff3333;
+    visibility: visible;
+}
+/*--------------------------------------------------
+  画面サイズ：横512px以下の場合
+--------------------------------------------------*/
+@media screen and (max-width:512px){
+    .vname {
+        width: 33%;
+    }
+}
+
+/*--------------------------------------------------
+  画面サイズ：横400px以下の場合
+--------------------------------------------------*/
+@media screen and (max-width:400px){
+    .vname {
+        width: 50%;
+    }
+}

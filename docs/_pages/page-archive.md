@@ -1,6 +1,6 @@
 ---
 layout: archive
-title: "Page Archive"
+title: "ページ一覧"
 permalink: /page-archive/
 author_profile: true
 ---

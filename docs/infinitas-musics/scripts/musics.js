@@ -325,10 +325,12 @@ function execLogout() {
 function makeHeaderLine(items) {
     let addHtml = '';
     for(let item of items){
-        addHtml += '<tbody id="' + item[0] + '"><tr class="headerline ' + item[1] + '"><th colspan="13">' + item[2] +'</th></tr></tbody>';
+        addHtml += '<tbody id="' + item[0] + '" class="headertbody"><tr class="headerline ' + item[1] + '"><th colspan="13">' + item[2] +'</th></tr></tbody>';
     };
 
     jQuery('.musiclist').append(addHtml);
+    jQuery('.musiclist tbody').hide();
+
 };
 
 /**
@@ -1741,8 +1743,297 @@ function updateFileContentSample() {
  */
 function handleClientLoad() {
     // googleAPIクライアントの初期化
-    gapi.load('client:auth2', initClient);
-    musics.getJSON("musiclist.json");
+    //gapi.load('client:auth2', initClient);
+//    musics.getJSON("musiclist.js");
+    // musiclist
+    musics.JSON = musiclist.musics;
+    musics.infoJSON = musiclist.info;
+    delete musiclist;
+
+    // 
+    jQuery('#search-message').html('<span>準備中…</span>');
+    if (musics.JSON.length > 0) {
+        // 曲名の自動補完
+        let titleSet = new Set();
+        musics.JSON.forEach(function(val,idx,ar){ titleSet.add(val.Title); });
+        titleSet = new Set([...titleSet].sort());
+        titleSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#titlelist'); });
+
+        // ジャンル名の自動補完
+        let genreSet = new Set();
+        musics.JSON.forEach(function(val,idx,ar){ genreSet.add(val.Genre); });
+        genreSet = new Set([...genreSet].sort());
+        genreSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#genrelist'); });
+
+        // アーティスト名の自動補完
+        let artistSet = new Set();
+        musics.JSON.forEach(function(val,idx,ar){ artistSet.add(val.Artist); });
+        artistSet = new Set([...artistSet].sort());
+        artistSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#artistlist'); });
+
+        jQuery('#search-message').html('<span>データファイル読み込み完了</span>');
+        jQuery('.infotable').append(
+            '<tbody><tr><td>' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm') + '</td>' +
+                       '<td>' + musics.infoJSON.music_count + '曲 / ' + musics.infoJSON.chart_count_all + '譜面</td>' +
+                       '<td>' + musics.infoJSON.chart_single_all + '譜面</td>' +
+                       '<td class="spb">' + musics.infoJSON.chart_single_beginner + '譜面</td>' +
+                       '<td class="spn">' + musics.infoJSON.chart_single_normal + '譜面</td>' +
+                       '<td class="sph">' + musics.infoJSON.chart_single_hyper + '譜面</td>' +
+                       '<td class="spa">' + musics.infoJSON.chart_single_another + '譜面</td>' +
+                       '<td>' + musics.infoJSON.chart_double_all + '譜面</td>' +
+                       '<td class="dpn">' + musics.infoJSON.chart_double_normal + '譜面</td>' +
+                       '<td class="dph">' + musics.infoJSON.chart_double_hyper + '譜面</td>' +
+                       '<td class="dpa">' + musics.infoJSON.chart_double_another + '譜面</td>' +
+                       '<!-- <td>' + musics.infoJSON.user_count + '人</td> -->' +
+            '</tr></tbody>');
+        jQuery('#filter-button').prop('disabled',false);
+    };
+
+    // 検索条件・表示設定を閉じておく
+    jQuery('fieldset legend input').each(function() {
+        let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)')
+        jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
+    });
+
+    // ログイン後に使用する項目をいったん非表示
+    jQuery('.sg2').addClass('hidden');
+
+    // 検索条件のシリーズ項目作成
+    makeCheckbox('#seriesbox',[ ['series',   1, true, '1st style', ['series-CS']],
+                                ['series',   2, true, 'substream', ['series-CS']],
+                                ['series',   3, true, '2nd style', ['series-CS']],
+                                ['series',   4, true, '3rd style', ['series-CS']],
+                                ['series',   5, true, '4th style', ['series-CS']],
+                                ['series',   6, true, '5th style', ['series-CS']],
+                                ['series',   7, true, '6th style', ['series-CS']],
+                                ['series',   8, true, '7th style', ['series-CS']],
+                                ['series',   9, true, '8th style', ['series-CS']],
+                                ['series',  10, true, '9th style', ['series-CS']],
+                                ['series',  11, true, '10th style', ['series-CS']],
+                                ['series',  12, true, 'IIDX RED', ['series-CS']],
+                                ['series',  13, true, 'HAPPY SKY', ['series-CS']],
+                                ['series',  14, true, 'DistorteD', ['series-CS']],
+                                ['series',  15, true, 'GOLD', ['series-CS']],
+                                ['series',  16, true, 'DJ TROOPERS', ['series-CS']],
+                                ['series',  17, true, 'EMPRESS', ['series-CS']],
+                                ['series',  18, true, 'SIRIUS'],
+                                ['series',  19, true, 'Resort Anthem'],
+                                ['series',  20, true, 'Lincle'],
+                                ['series',  21, true, 'tricoro'],
+                                ['series',  22, true, 'SPADA'],
+                                ['series',  23, true, 'PENDUAL'],
+                                ['series',  24, true, 'copula'],
+                                ['series',  25, true, 'SINOBUZ'],
+                                ['series',  26, true, 'CANNON BALLERS'],
+                                ['series',  27, true, 'Rootage'],
+                                ['series',  28, true, 'HEROIC VERSE'],
+                                ['series',  29, true, 'BISTROVER'],
+                                ['series', 999, true, 'INFINITAS', ['series-CS']] ]);
+
+    // 検索条件のシリーズ項目変更時に全選択・全解除の表示変更
+    jQuery('.series-checkbox').change(function() {
+        toggleSelectLink('#changeselect-series-ALL','series-checkbox', '全');
+        toggleSelectLink('#changeselect-series-CS','series-CS', 'CS作全');
+    });
+
+    // 検索条件のシリーズ項目に全選択・全解除のリンク追加
+    toggleSelectLink('#changeselect-series-ALL','series-checkbox', '全');
+    toggleSelectLink('#changeselect-series-CS','series-CS', 'CS作全');
+
+    // 検索条件の可変BPMボタン押下時
+    jQuery('#opt_bpm_changing').click(function() { toggleBPMOptButton(this); });
+    jQuery('#opt_bpm_changing').change(function() { toggleBPMOptButton(this,true); });
+
+    // 検索条件の譜面毎条件項目作成
+    makeScorefilter('#scorefilterbox',[ ['SPB'],
+                                        ['SPN'],
+                                        ['SPH'],
+                                        ['SPA'],
+                                        ['DPN'],
+                                        ['DPH'],
+                                        ['DPA'] ]);
+    // 検索条件のリリース条件項目作成
+    makeCheckbox('#releasetypebox',[ ['releasetype', 'Default',       true, 'デフォルト楽曲'],
+                                     ['releasetype', 'Monthly',       true, '特定月プレイ特典'],
+                                     ['releasetype', 'BIT',           true, 'BIT解禁'],
+                                     ['releasetype', 'DJP',           true, 'DJP解禁'],
+                                     ['releasetype', 'Championship1', true, 'championship&nbsp;#1', ['releasetype-championship']],
+                                     ['releasetype', 'Championship2', true, 'championship&nbsp;#2', ['releasetype-championship']],
+                                     ['releasetype', 'Championship3', true, 'championship&nbsp;#3', ['releasetype-championship']],
+                                     ['releasetype', 'Championship4', true, 'championship&nbsp;#4', ['releasetype-championship']],
+                                     ['releasetype', 'Pack1',         true, '楽曲パックVol.1', ['releasetype-pack']],
+                                     ['releasetype', 'Pack2',         true, '楽曲パックVol.2', ['releasetype-pack']],
+                                     ['releasetype', 'Pack3',         true, '楽曲パックVol.3', ['releasetype-pack']],
+                                     ['releasetype', 'Pack4',         true, '楽曲パックVol.4', ['releasetype-pack']],
+                                     ['releasetype', 'Pack5',         true, '楽曲パックVol.5', ['releasetype-pack']],
+                                     ['releasetype', 'Pack6',         true, '楽曲パックVol.6', ['releasetype-pack']],
+                                     ['releasetype', 'Pack7',         true, '楽曲パックVol.7', ['releasetype-pack']],
+                                     ['releasetype', 'Pack8',         true, '楽曲パックVol.8', ['releasetype-pack']],
+                                     ['releasetype', 'Pack9',         true, '楽曲パックVol.9', ['releasetype-pack']],
+                                     ['releasetype', 'Pack10',        true, '楽曲パックVol.10', ['releasetype-pack']],
+                                     ['releasetype', 'Pack11',        true, '楽曲パックVol.11', ['releasetype-pack']],
+                                     ['releasetype', 'Pack12',        true, '楽曲パックVol.12', ['releasetype-pack']],
+                                     ['releasetype', 'Pack13',        true, '楽曲パックVol.13', ['releasetype-pack']],
+                                     ['releasetype', 'PackSS1',       true, 'SSパックVol.1', ['releasetype-pack', 'releasetype-packSS']] ]);
+
+    // 検索条件のリリース条件項目変更時に全選択・全解除の表示変更
+    jQuery('.releasetype-checkbox').change(function() {
+        toggleSelectLink('#changeselect-releasetype-ALL','releasetype-checkbox', '全');
+        toggleSelectLink('#changeselect-releasetype-championship','releasetype-championship', 'CH全');
+        toggleSelectLink('#changeselect-releasetype-Pack','releasetype-pack', 'パック全');
+    });
+
+    // 検索条件のリリース条件項目に全選択・全解除のリンク追加
+    toggleSelectLink('#changeselect-releasetype-ALL','releasetype-checkbox', '全');
+    toggleSelectLink('#changeselect-releasetype-championship','releasetype-championship', 'CH全');
+    toggleSelectLink('#changeselect-releasetype-Pack','releasetype-pack', 'パック全');
+
+    // データ保存条件のパック購入状況項目作成
+    makeCheckbox('#purchasebox',[ ['purchase', 'Pack1',  false, 'Pack1 未購入'],
+                                  ['purchase', 'Pack2',  false, 'Pack2 未購入'],
+                                  ['purchase', 'Pack3',  false, 'Pack3 未購入'],
+                                  ['purchase', 'Pack4',  false, 'Pack4 未購入'],
+                                  ['purchase', 'Pack5',  false, 'Pack5 未購入'],
+                                  ['purchase', 'Pack6',  false, 'Pack6 未購入'],
+                                  ['purchase', 'Pack7',  false, 'Pack7 未購入'],
+                                  ['purchase', 'Pack8',  false, 'Pack8 未購入'],
+                                  ['purchase', 'Pack9',  false, 'Pack9 未購入'],
+                                  ['purchase', 'Pack10', false, 'Pack10 未購入'],
+                                  ['purchase', 'Pack11', false, 'Pack11 未購入'],
+                                  ['purchase', 'Pack12', false, 'Pack12 未購入'],
+                                  ['purchase', 'Pack13', false, 'Pack13 未購入'],
+                                  ['purchase', 'PackSS1', false, 'PackSS1 未購入'] ]);
+    
+    // 日付のセレクトボックスを作成
+    makeSelectMonth('#bitdate-min', LaunchDate, now, true);
+    makeSelectMonth('#bitdate-max', LaunchDate, now, false);
+    makeSelectMonth('#releasedate-min', LaunchDate, now, true);
+    makeSelectMonth('#releasedate-max', LaunchDate, now, false);
+    jQuery('#bitdate-min option:first-child').attr('selected','');
+    jQuery('#bitdate-max option:last-child').attr('selected','');
+    jQuery('#releasedate-min option:first-child').attr('selected','');
+    jQuery('#releasedate-max option:last-child').attr('selected','');
+
+    // 日付セレクトで未指定(val=2000-01-01)の場合に至を無効化
+    jQuery('#bitdate-min').change(function() {
+        jQuery('#bitdate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
+    });
+    jQuery('#releasedate-min').change(function() {
+        jQuery('#releasedate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
+    });
+
+    // ログインボタン押下
+    jQuery('#setmyid').change(function() {
+        if ( !jQuery('#setmyid').prop('checked') ) {
+            execLogout();
+            return false;
+        };
+
+        // 同意画面の表示有無確認
+        if ( confirmWindow ) {
+            // 同意しない場合は何もしない
+            if ( !confirm('データをcookieおよびサーバ内に保存することに同意しますか？') ) {
+                jQuery('#setmyid').prop('checked', false);
+                return false;
+            // 一度同意したら同意画面は出さない
+            } else {
+                confirmWindow = false;
+            };
+        };
+
+        execLogin();
+    });
+
+    // ライバル情報ボタン押下
+    jQuery('#setrivalid').change(function() {
+        jQuery("label[for='setrivalid']").text( ( jQuery(this).prop('checked') ? 'ライバル情報を非表示にする' : 'ライバル情報を表示する' ) );
+    });
+
+    // パックボタン押下時
+    jQuery('.purchase input').change(function() { togglePackButton(this); });
+
+    // 譜面オプションボタン押下時
+    jQuery('.score_opt input[type="number"]').click(function() { toggleScoreOptButton(this); });
+    jQuery('.score_opt input[type="number"]').change(function() { toggleScoreOptButton(this,true); });
+
+    // 検索結果のヘッダー行を作成
+    let LvArr = ['01','02','03','04','05','06','07','08','09','10','11','12','NO'];
+    let bitEndDate = new Date();
+    bitEndDate.setFullYear(bitEndDate.getFullYear() + 2);
+    pushheaderLine('spn-lv','par-level','Single&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
+    pushheaderLine('sph-lv','par-level','Single&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
+    pushheaderLine('spa-lv','par-level','Single&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
+    pushheaderLine('dpn-lv','par-level','Double&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
+    pushheaderLine('dph-lv','par-level','Double&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
+    pushheaderLine('dpa-lv','par-level','Double&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
+    pushheaderLine('spn-notes','par-notes','Single&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
+    pushheaderLine('sph-notes','par-notes','Single&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
+    pushheaderLine('spa-notes','par-notes','Single&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
+    pushheaderLine('dpn-notes','par-notes','Double&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
+    pushheaderLine('dph-notes','par-notes','Double&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
+    pushheaderLine('dpa-notes','par-notes','Double&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
+    pushheaderLine('bpm','par-bpm','BPM&nbsp;', BPMArray);
+    pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4',
+    'Pack1','Pack2','Pack3','Pack4','Pack5','Pack6','Pack7','Pack8','Pack9','Pack10','Pack11','Pack12','Pack13','PackSS1','Unreleased']);
+    pushheaderLine('rely',  'par-rel-year', 'RELEASED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate));
+    pushheaderLine('relym', 'par-rel-month','RELEASED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true));
+    pushheaderLine('bity',  'par-bit-year', 'BIT&nbsp;UNLOCKED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate).concat(['NO']));
+    pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
+    makeHeaderLine(headerLine);
+
+    // 検索ボタン押下時
+    jQuery('#filter-button').click(function() {
+        try {
+            let filteredJSON = [];
+            let sortedJSON = [];
+
+            // 検索終了まで検索ボタンを無効化
+            jQuery(this).attr('disabled', true);
+            s.getSearchParam();
+
+            filteredJSON = musics.filter(musics.JSON);
+            sortedJSON = musics.sort(filteredJSON);
+            musics.write(sortedJSON);
+
+            jQuery(this).attr('disabled', false);
+        } catch(e) {
+            jQuery('#debug').append(e.toString());
+        };
+    });
+
+    // バージョンヘッダーをクリックで開閉
+    jQuery('.musiclist .headerline').click(function() {
+        // クリック対象が開いていたら
+        if ( jQuery(this).hasClass('opened') ) {
+            jQuery(this).parent().children('.music,.music_other').hide();
+        // クリック対象が閉じていたら
+        } else {
+            if ( jQuery('#singleopen').prop("checked") ) {
+                jQuery('.musiclist tbody').children('.music_other,.music').hide();
+                jQuery(this).parent().children('.music').fadeIn('fast');
+            } else {
+                jQuery('.musiclist tbody').children('.music_other').hide();
+                jQuery(this).parent().children('.music').fadeToggle('fast');
+            };
+        };
+        jQuery(this).toggleClass('opened');
+    });
+
+    // 検索条件のグループをクリックで開閉
+    jQuery('fieldset legend input').change(function() {
+        let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)');
+        jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
+    });
+
+    token = Cookies.get('infinitas_rtoken');
+    if (token) {
+        execLogin(token);
+        if (userJSON.id) { confirmWindow = false; };
+    };
+
+    // 
+    jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
+    jQuery('.purchase input').each(function() {togglePackButton(this, false); });
 
 };
 

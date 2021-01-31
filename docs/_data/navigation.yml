@@ -1,17 +1,15 @@
 # ヘッダーメニュー
 main:
-  - title: "Posts"
+  - title: "投稿一覧"
     url: /year-archive/
-  - title: "Categories"
+  - title: "カテゴリ別"
     url: /categories/
-  - title: "Tags"
+  - title: "タグ別"
     url: /tags/
-  - title: "Pages"
+  - title: "ページ一覧"
     url: /page-archive/
-  - title: "Collections"
-    url: /collection-archive/
-  - title: "External Link"
-    url: https://google.com
+  - title: "INFINITAS曲一覧"
+    url: /infinitas-musics/
 
 
 # 左側メニューの定義(サンプル)
