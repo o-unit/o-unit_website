@@ -1421,7 +1421,7 @@ let musics = {
                                     '<td class="dpn">' + usedBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + usedBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + usedBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th>BIT解禁</th><td>合計BIT数</td>' +
+                                    '</tr></tbody><tbody class="resultdata"><tr><th>BIT解禁</th><td>合計BIT数</td>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + allBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1878,16 +1878,16 @@ function handleClientLoad() {
         jQuery('.infotable').append(
             '<tbody class="musiclistdata"><tr><td>登録曲</td>' +
                        '<td>' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm') + '</td>' +
-                       '<td>' + musics.infoJSON.music_count + '曲 / ' + musics.infoJSON.chart_count_all + '譜面</td>' +
-                       '<td>' + musics.infoJSON.chart_single_all + '譜面</td>' +
-                       '<td class="spb">' + musics.infoJSON.chart_single_beginner + '譜面</td>' +
-                       '<td class="spn">' + musics.infoJSON.chart_single_normal + '譜面</td>' +
-                       '<td class="sph">' + musics.infoJSON.chart_single_hyper + '譜面</td>' +
-                       '<td class="spa">' + musics.infoJSON.chart_single_another + '譜面</td>' +
-                       '<td>' + musics.infoJSON.chart_double_all + '譜面</td>' +
-                       '<td class="dpn">' + musics.infoJSON.chart_double_normal + '譜面</td>' +
-                       '<td class="dph">' + musics.infoJSON.chart_double_hyper + '譜面</td>' +
-                       '<td class="dpa">' + musics.infoJSON.chart_double_another + '譜面</td>' +
+                       '<td>' + musics.infoJSON.music_count + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all + '&nbsp;譜面</td>' +
+                       '<td>' + musics.infoJSON.chart_single_all + '&nbsp;譜面</td>' +
+                       '<td class="spb">' + musics.infoJSON.chart_single_beginner + '&nbsp;譜面</td>' +
+                       '<td class="spn">' + musics.infoJSON.chart_single_normal + '&nbsp;譜面</td>' +
+                       '<td class="sph">' + musics.infoJSON.chart_single_hyper + '&nbsp;譜面</td>' +
+                       '<td class="spa">' + musics.infoJSON.chart_single_another + '&nbsp;譜面</td>' +
+                       '<td>' + musics.infoJSON.chart_double_all + '&nbsp;譜面</td>' +
+                       '<td class="dpn">' + musics.infoJSON.chart_double_normal + '&nbsp;譜面</td>' +
+                       '<td class="dph">' + musics.infoJSON.chart_double_hyper + '&nbsp;譜面</td>' +
+                       '<td class="dpa">' + musics.infoJSON.chart_double_another + '&nbsp;譜面</td>' +
                        '<!-- <td>' + musics.infoJSON.user_count + '人</td> -->' +
             '</tr></tbody>');
         jQuery('#filter-button').prop('disabled',false);

@@ -529,6 +529,7 @@ table.infotable .dpa, table.musiclist .dpa {
 --------------------------------------------------*/
 table.infotable {
     border: 2px solid #9b9b9b;
+    font-size: 0.8rem;
 }
 
 table.infotable .level {
