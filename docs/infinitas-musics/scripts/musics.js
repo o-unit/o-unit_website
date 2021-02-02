@@ -1786,10 +1786,10 @@ function getFile(fid) {
         fileId: fid,
         alt: 'media'
     }).then(function(obj){
-        console.log(obj.result);
-        appendPre('Get Complete. See Console Logs.');
+        userJSON = obj.result;
     },function(error) {
-        appendPre(JSON.stringify(error, null, 2));
+        jQuery('#debug').empty();
+        jQuery('#debug').append('<p>' + JSON.stringify(error, null, 2) + '</p>');
     });
 };
 
@@ -1835,8 +1835,7 @@ function updateFileContentSample() {
  */
 function handleClientLoad() {
     // googleAPIクライアントの初期化
-    //gapi.load('client:auth2', initClient);
-//    musics.getJSON("musiclist.js");
+    gapi.load('client:auth2', initClient);
     // musiclist
     musics.JSON = musiclist.musics;
     musics.infoJSON = musiclist.info;
