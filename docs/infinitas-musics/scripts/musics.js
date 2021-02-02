@@ -50,6 +50,7 @@ let BPMArray = [    '-99','100-109','110-119','120-129','130-139','140-149','150
 let NotesArray = [      '-99',  '100-199',  '200-299',  '300-399',  '400-499',  '500-599',  '600-699',  '700-799',  '800-899',  '900-999',
                   '1000-1099','1100-1199','1200-1299','1300-1399','1400-1499','1500-1599','1600-1699','1700-1799','1800-1899','1900-1999',
                   '2000-',    'NO'];
+
 let userJSON = [];
 
 let PROJECT_ID = 'infinitas-musiclist';
@@ -946,25 +947,28 @@ let musics = {
         // 前回の結果を初期化
         jQuery(".musiclist .music, .musiclist .music_other").remove();
 
+        // 曲数・譜面数計算用
+        let resultMusicSP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let resultMusicDP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
         // BIT計算用
-        let allBit        = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let sumBit        = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let usedBit       = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRallBit      = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRsumBit      = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRusedBit     = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let allMusicSP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let sumMusicSP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let usedMusicSP   = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRallMusicSP  = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRsumMusicSP  = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRusedMusicSP = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let allMusicDP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let sumMusicDP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let usedMusicDP   = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRallMusicDP  = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRsumMusicDP  = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
-        let NRusedMusicDP = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let allBit           = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let sumBit           = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let usedBit          = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRallBit         = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRsumBit         = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRusedBit        = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let bitMusicSP       = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let sumBitMusicSP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let usedBitMusicSP   = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRbitMusicSP     = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRsumBitMusicSP  = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRusedBitMusicSP = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let bitMusicDP       = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let sumBitMusicDP    = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let usedBitMusicDP   = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRbitMusicDP     = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRsumBitMusicDP  = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
+        let NRusedBitMusicDP = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0, 'ALL': 0 };
 
         // テーブルのデータ作成
         let tabledata = {};
@@ -1068,67 +1072,77 @@ let musics = {
             };
 
             // BIT・譜面数計算(Beginner)
+            if (!isNaN(SPB.Lv)) { resultMusicSP.Beginner++; };
+            if (!isNaN(DPB.Lv)) { resultMusicDP.Beginner++; };
             if ( isBitCalc && !isNaN(rBit.Beginner) ) {
                 if ( rTypeClass.search(/beforerelease|nobit/) == -1 ){
                     allBit.Beginner += rBit.Beginner; canplay.Beginner ? usedBit.Beginner += rBit.Beginner : sumBit.Beginner += rBit.Beginner;
-                    if (!isNaN(SPB.Lv)) { allMusicSP.Beginner++; canplay.Beginner ? usedMusicSP.Beginner++ : sumMusicSP.Beginner++; };
-                    if (!isNaN(DPB.Lv)) { allMusicDP.Beginner++; canplay.Beginner ? usedMusicDP.Beginner++ : sumMusicDP.Beginner++; };
+                    if (!isNaN(SPB.Lv)) { bitMusicSP.Beginner++; canplay.Beginner ? usedBitMusicSP.Beginner++ : sumBitMusicSP.Beginner++; };
+                    if (!isNaN(DPB.Lv)) { bitMusicDP.Beginner++; canplay.Beginner ? usedBitMusicDP.Beginner++ : sumBitMusicDP.Beginner++; };
                 } else {
                     NRallBit.Beginner += rBit.Beginner; canplay.Beginner ? NRusedBit.Beginner += rBit.Beginner : NRsumBit.Beginner += rBit.Beginner;
-                    if (!isNaN(SPB.Lv)) { NRallMusicSP.Beginner++; canplay.Beginner ? NRusedMusicSP.Beginner++ : NRsumMusicSP.Beginner++; };
-                    if (!isNaN(DPB.Lv)) { NRallMusicDP.Beginner++; canplay.Beginner ? NRusedMusicDP.Beginner++ : NRsumMusicDP.Beginner++; };
+                    if (!isNaN(SPB.Lv)) { NRbitMusicSP.Beginner++; canplay.Beginner ? NRusedBitMusicSP.Beginner++ : NRsumBitMusicSP.Beginner++; };
+                    if (!isNaN(DPB.Lv)) { NRbitMusicDP.Beginner++; canplay.Beginner ? NRusedBitMusicDP.Beginner++ : NRsumBitMusicDP.Beginner++; };
                 };
             };
 
             // BIT・譜面数計算(Normal)
+            if (!isNaN(SPN.Lv)) { resultMusicSP.Normal++; };
+            if (!isNaN(DPN.Lv)) { resultMusicDP.Normal++; };
             if ( isBitCalc && !isNaN(rBit.Normal) ) {
                 if ( rTypeClass.search(/beforerelease|nobit/) == -1 ){
                     allBit.Normal += rBit.Normal; canplay.Normal ? usedBit.Normal += rBit.Normal : sumBit.Normal += rBit.Normal;
-                    if (!isNaN(SPN.Lv)) { allMusicSP.Normal++; canplay.Normal ? usedMusicSP.Normal++ : sumMusicSP.Normal++; };
-                    if (!isNaN(DPN.Lv)) { allMusicDP.Normal++; canplay.Normal ? usedMusicDP.Normal++ : sumMusicDP.Normal++; };
+                    if (!isNaN(SPN.Lv)) { bitMusicSP.Normal++; canplay.Normal ? usedBitMusicSP.Normal++ : sumBitMusicSP.Normal++; };
+                    if (!isNaN(DPN.Lv)) { bitMusicDP.Normal++; canplay.Normal ? usedBitMusicDP.Normal++ : sumBitMusicDP.Normal++; };
                 } else {
                     NRallBit.Normal += rBit.Normal; canplay.Normal ? NRusedBit.Normal += rBit.Normal : NRsumBit.Normal += rBit.Normal;
-                    if (!isNaN(SPN.Lv)) { NRallMusicSP.Normal++; canplay.Normal ? NRusedMusicSP.Normal++ : NRsumMusicSP.Normal++; };
-                    if (!isNaN(DPN.Lv)) { NRallMusicDP.Normal++; canplay.Normal ? NRusedMusicDP.Normal++ : NRsumMusicDP.Normal++; };
+                    if (!isNaN(SPN.Lv)) { NRbitMusicSP.Normal++; canplay.Normal ? NRusedBitMusicSP.Normal++ : NRsumBitMusicSP.Normal++; };
+                    if (!isNaN(DPN.Lv)) { NRbitMusicDP.Normal++; canplay.Normal ? NRusedBitMusicDP.Normal++ : NRsumBitMusicDP.Normal++; };
                 };
             };
 
             // BIT・譜面数計算(Hyper)
+            if (!isNaN(SPH.Lv)) { resultMusicSP.Hyper++; };
+            if (!isNaN(DPH.Lv)) { resultMusicDP.Hyper++; };
             if ( isBitCalc && !isNaN(rBit.Hyper) ) {
                 if ( rTypeClass.search(/beforerelease|nobit/) == -1 ){
                     allBit.Hyper += rBit.Hyper; canplay.Hyper ? usedBit.Hyper += rBit.Hyper : sumBit.Hyper += rBit.Hyper;
-                    if (!isNaN(SPH.Lv)) { allMusicSP.Hyper++; canplay.Hyper ? usedMusicSP.Hyper++ : sumMusicSP.Hyper++; };
-                    if (!isNaN(DPH.Lv)) { allMusicDP.Hyper++; canplay.Hyper ? usedMusicDP.Hyper++ : sumMusicDP.Hyper++; };
+                    if (!isNaN(SPH.Lv)) { bitMusicSP.Hyper++; canplay.Hyper ? usedBitMusicSP.Hyper++ : sumBitMusicSP.Hyper++; };
+                    if (!isNaN(DPH.Lv)) { bitMusicDP.Hyper++; canplay.Hyper ? usedBitMusicDP.Hyper++ : sumBitMusicDP.Hyper++; };
                 } else {
                     NRallBit.Hyper += rBit.Hyper; canplay.Hyper ? NRusedBit.Hyper += rBit.Hyper : NRsumBit.Hyper += rBit.Hyper;
-                    if (!isNaN(SPH.Lv)) { NRallMusicSP.Hyper++; canplay.Hyper ? NRusedMusicSP.Hyper++ : NRsumMusicSP.Hyper++; };
-                    if (!isNaN(DPH.Lv)) { NRallMusicDP.Hyper++; canplay.Hyper ? NRusedMusicDP.Hyper++ : NRsumMusicDP.Hyper++; };
+                    if (!isNaN(SPH.Lv)) { NRbitMusicSP.Hyper++; canplay.Hyper ? NRusedBitMusicSP.Hyper++ : NRsumBitMusicSP.Hyper++; };
+                    if (!isNaN(DPH.Lv)) { NRbitMusicDP.Hyper++; canplay.Hyper ? NRusedBitMusicDP.Hyper++ : NRsumBitMusicDP.Hyper++; };
                 };
             };
 
             // BIT・譜面数計算(Another)
+            if (!isNaN(SPA.Lv)) { resultMusicSP.Another++; };
+            if (!isNaN(DPA.Lv)) { resultMusicDP.Another++; };
             if ( isBitCalc && !isNaN(rBit.Another) ) {
                 if ( rTypeClass.search(/beforerelease|nobit/) == -1 ){
                     allBit.Another += rBit.Another; canplay.Another ? usedBit.Another += rBit.Another : sumBit.Another += rBit.Another;
-                    if (!isNaN(SPA.Lv)) { allMusicSP.Another++; canplay.Another ? usedMusicSP.Another++ : sumMusicSP.Another++; };
-                    if (!isNaN(DPA.Lv)) { allMusicDP.Another++; canplay.Another ? usedMusicDP.Another++ : sumMusicDP.Another++; };
+                    if (!isNaN(SPA.Lv)) { bitMusicSP.Another++; canplay.Another ? usedBitMusicSP.Another++ : sumBitMusicSP.Another++; };
+                    if (!isNaN(DPA.Lv)) { bitMusicDP.Another++; canplay.Another ? usedBitMusicDP.Another++ : sumBitMusicDP.Another++; };
                 } else {
                     NRallBit.Another += rBit.Another; canplay.Another ? NRusedBit.Another += rBit.Another : NRsumBit.Another += rBit.Another;
-                    if (!isNaN(SPA.Lv)) { NRallMusicSP.Another++; canplay.Another ? NRusedMusicSP.Another++ : NRsumMusicSP.Another++; };
-                    if (!isNaN(DPA.Lv)) { NRallMusicDP.Another++; canplay.Another ? NRusedMusicDP.Another++ : NRsumMusicDP.Another++; };
+                    if (!isNaN(SPA.Lv)) { NRbitMusicSP.Another++; canplay.Another ? NRusedBitMusicSP.Another++ : NRsumBitMusicSP.Another++; };
+                    if (!isNaN(DPA.Lv)) { NRbitMusicDP.Another++; canplay.Another ? NRusedBitMusicDP.Another++ : NRsumBitMusicDP.Another++; };
                 };
             };
 
             // BIT・譜面数計算(Leggendaria)
+            if (!isNaN(SPL.Lv)) { resultMusicSP.Leggendaria++; };
+            if (!isNaN(DPL.Lv)) { resultMusicDP.Leggendaria++; };
             if ( isBitCalc && !isNaN(rBit.Leggendaria) ) {
                 if ( rTypeClass.search(/beforerelease|nobit/) == -1 ){
                     allBit.Leggendaria += rBit.Leggendaria; canplay.Leggendaria ? usedBit.Leggendaria += rBit.Leggendaria : sumBit.Leggendaria += rBit.Leggendaria;
-                    if (!isNaN(SPL.Lv)) { allMusicSP.Leggendaria++; canplay.Leggendaria ? usedMusicSP.Leggendaria++ : sumMusicSP.Leggendaria++; };
-                    if (!isNaN(DPL.Lv)) { allMusicDP.Leggendaria++; canplay.Leggendaria ? usedMusicDP.Leggendaria++ : sumMusicDP.Leggendaria++; };
+                    if (!isNaN(SPL.Lv)) { bitMusicSP.Leggendaria++; canplay.Leggendaria ? usedBitMusicSP.Leggendaria++ : sumBitMusicSP.Leggendaria++; };
+                    if (!isNaN(DPL.Lv)) { bitMusicDP.Leggendaria++; canplay.Leggendaria ? usedBitMusicDP.Leggendaria++ : sumBitMusicDP.Leggendaria++; };
                 } else {
                     NRallBit.Leggendaria += rBit.Leggendaria; canplay.Leggendaria ? NRusedBit.Leggendaria += rBit.Leggendaria : NRsumBit.Leggendaria += rBit.Leggendaria;
-                    if (!isNaN(SPL.Lv)) { NRallMusicSP.Leggendaria++; canplay.Leggendaria ? NRusedMusicSP.Leggendaria++ : NRsumMusicSP.Leggendaria++; };
-                    if (!isNaN(DPL.Lv)) { NRallMusicDP.Leggendaria++; canplay.Leggendaria ? NRusedMusicDP.Leggendaria++ : NRsumMusicDP.Leggendaria++; };
+                    if (!isNaN(SPL.Lv)) { NRbitMusicSP.Leggendaria++; canplay.Leggendaria ? NRusedBitMusicSP.Leggendaria++ : NRsumBitMusicSP.Leggendaria++; };
+                    if (!isNaN(DPL.Lv)) { NRbitMusicDP.Leggendaria++; canplay.Leggendaria ? NRusedBitMusicDP.Leggendaria++ : NRsumBitMusicDP.Leggendaria++; };
                 };
             };
 
@@ -1294,54 +1308,63 @@ let musics = {
         });
 
         // 全難易度合計を計算しておく
-        allMusicSP.ALL    = allMusicSP.Beginner    + allMusicSP.Normal    + allMusicSP.Hyper    + allMusicSP.Another;
-        allMusicDP.ALL    = allMusicDP.Beginner    + allMusicDP.Normal    + allMusicDP.Hyper    + allMusicDP.Another;
-        allBit.ALL        = allBit.Beginner        + allBit.Normal        + allBit.Hyper        + allBit.Another;
-        NRallMusicSP.ALL  = NRallMusicSP.Beginner  + NRallMusicSP.Normal  + NRallMusicSP.Hyper  + NRallMusicSP.Another;
-        NRallMusicDP.ALL  = NRallMusicDP.Beginner  + NRallMusicDP.Normal  + NRallMusicDP.Hyper  + NRallMusicDP.Another;
-        NRallBit.ALL      = NRallBit.Beginner      + NRallBit.Normal      + NRallBit.Hyper      + NRallBit.Another;
-        sumMusicSP.ALL    = sumMusicSP.Beginner    + sumMusicSP.Normal    + sumMusicSP.Hyper    + sumMusicSP.Another;
-        sumMusicDP.ALL    = sumMusicDP.Beginner    + sumMusicDP.Normal    + sumMusicDP.Hyper    + sumMusicDP.Another;
-        sumBit.ALL        = sumBit.Beginner        + sumBit.Normal        + sumBit.Hyper        + sumBit.Another;
-        NRsumMusicSP.ALL  = NRsumMusicSP.Beginner  + NRsumMusicSP.Normal  + NRsumMusicSP.Hyper  + NRsumMusicSP.Another;
-        NRsumMusicDP.ALL  = NRsumMusicDP.Beginner  + NRsumMusicDP.Normal  + NRsumMusicDP.Hyper  + NRsumMusicDP.Another;
-        NRsumBit.ALL      = NRsumBit.Beginner      + NRsumBit.Normal      + NRsumBit.Hyper      + NRsumBit.Another;
-        usedMusicSP.ALL   = usedMusicSP.Beginner   + usedMusicSP.Normal   + usedMusicSP.Hyper   + usedMusicSP.Another;
-        usedMusicDP.ALL   = usedMusicDP.Beginner   + usedMusicDP.Normal   + usedMusicDP.Hyper   + usedMusicDP.Another;
-        usedBit.ALL       = usedBit.Beginner       + usedBit.Normal       + usedBit.Hyper       + usedBit.Another;
-        NRusedMusicSP.ALL = NRusedMusicSP.Beginner + NRusedMusicSP.Normal + NRusedMusicSP.Hyper + NRusedMusicSP.Another;
-        NRusedMusicDP.ALL = NRusedMusicDP.Beginner + NRusedMusicDP.Normal + NRusedMusicDP.Hyper + NRusedMusicDP.Another;
-        NRusedBit.ALL     = NRusedBit.Beginner     + NRusedBit.Normal     + NRusedBit.Hyper     + NRusedBit.Another;
+        resultMusicSP.ALL    = resultMusicSP.Beginner    + resultMusicSP.Normal    + resultMusicSP.Hyper    + resultMusicSP.Another    + resultMusicSP.Leggendaria;
+        resultMusicDP.ALL    = resultMusicDP.Beginner    + resultMusicDP.Normal    + resultMusicDP.Hyper    + resultMusicDP.Another    + resultMusicDP.Leggendaria;
+        bitMusicSP.ALL       = bitMusicSP.Beginner       + bitMusicSP.Normal       + bitMusicSP.Hyper       + bitMusicSP.Another       + bitMusicSP.Leggendaria;
+        bitMusicDP.ALL       = bitMusicDP.Beginner       + bitMusicDP.Normal       + bitMusicDP.Hyper       + bitMusicDP.Another       + bitMusicDP.Leggendaria;
+        bitMusicSP.ALL       = bitMusicSP.Beginner       + bitMusicSP.Normal       + bitMusicSP.Hyper       + bitMusicSP.Another       + bitMusicSP.Leggendaria;
+        bitMusicDP.ALL       = bitMusicDP.Beginner       + bitMusicDP.Normal       + bitMusicDP.Hyper       + bitMusicDP.Another       + bitMusicDP.Leggendaria;
+        allBit.ALL           = allBit.Beginner           + allBit.Normal           + allBit.Hyper           + allBit.Another           + allBit.Leggendaria;
+        NRbitMusicSP.ALL     = NRbitMusicSP.Beginner     + NRbitMusicSP.Normal     + NRbitMusicSP.Hyper     + NRbitMusicSP.Another     + NRbitMusicSP.Leggendaria;
+        NRbitMusicDP.ALL     = NRbitMusicDP.Beginner     + NRbitMusicDP.Normal     + NRbitMusicDP.Hyper     + NRbitMusicDP.Another     + NRbitMusicDP.Leggendaria;
+        NRallBit.ALL         = NRallBit.Beginner         + NRallBit.Normal         + NRallBit.Hyper         + NRallBit.Another         + NRallBit.Leggendaria;
+        sumBitMusicSP.ALL    = sumBitMusicSP.Beginner    + sumBitMusicSP.Normal    + sumBitMusicSP.Hyper    + sumBitMusicSP.Another    + sumBitMusicSP.Leggendaria;
+        sumBitMusicDP.ALL    = sumBitMusicDP.Beginner    + sumBitMusicDP.Normal    + sumBitMusicDP.Hyper    + sumBitMusicDP.Another    + sumBitMusicDP.Leggendaria;
+        sumBit.ALL           = sumBit.Beginner           + sumBit.Normal           + sumBit.Hyper           + sumBit.Another           + sumBit.Leggendaria;
+        NRsumBitMusicSP.ALL  = NRsumBitMusicSP.Beginner  + NRsumBitMusicSP.Normal  + NRsumBitMusicSP.Hyper  + NRsumBitMusicSP.Another  + NRsumBitMusicSP.Leggendaria;
+        NRsumBitMusicDP.ALL  = NRsumBitMusicDP.Beginner  + NRsumBitMusicDP.Normal  + NRsumBitMusicDP.Hyper  + NRsumBitMusicDP.Another  + NRsumBitMusicDP.Leggendaria;
+        NRsumBit.ALL         = NRsumBit.Beginner         + NRsumBit.Normal         + NRsumBit.Hyper         + NRsumBit.Another         + NRsumBit.Leggendaria;
+        usedBitMusicSP.ALL   = usedBitMusicSP.Beginner   + usedBitMusicSP.Normal   + usedBitMusicSP.Hyper   + usedBitMusicSP.Another   + usedBitMusicSP.Leggendaria;
+        usedBitMusicDP.ALL   = usedBitMusicDP.Beginner   + usedBitMusicDP.Normal   + usedBitMusicDP.Hyper   + usedBitMusicDP.Another   + usedBitMusicDP.Leggendaria;
+        usedBit.ALL          = usedBit.Beginner          + usedBit.Normal          + usedBit.Hyper          + usedBit.Another          + usedBit.Leggendaria;
+        NRusedBitMusicSP.ALL = NRusedBitMusicSP.Beginner + NRusedBitMusicSP.Normal + NRusedBitMusicSP.Hyper + NRusedBitMusicSP.Another + NRusedBitMusicSP.Leggendaria;
+        NRusedBitMusicDP.ALL = NRusedBitMusicDP.Beginner + NRusedBitMusicDP.Normal + NRusedBitMusicDP.Hyper + NRusedBitMusicDP.Another + NRusedBitMusicDP.Leggendaria;
+        NRusedBit.ALL        = NRusedBit.Beginner        + NRusedBit.Normal        + NRusedBit.Hyper        + NRusedBit.Another        + NRusedBit.Leggendaria;
 
         let col = {
             b: {
-                total: allMusicSP.Beginner.toLocaleString()  + ' / ' + allMusicDP.Beginner.toLocaleString()  + '譜面<br />' + allBit.Beginner.toLocaleString()  + ' BIT',
-                sum:   sumMusicSP.Beginner.toLocaleString()  + ' / ' + sumMusicDP.Beginner.toLocaleString()  + '譜面<br />' + sumBit.Beginner.toLocaleString()  + ' BIT',
-                used:  usedMusicSP.Beginner.toLocaleString() + ' / ' + usedMusicDP.Beginner.toLocaleString() + '譜面<br />' + usedBit.Beginner.toLocaleString() + ' BIT'
+                total: bitMusicSP.Beginner.toLocaleString()  + ' / ' + bitMusicDP.Beginner.toLocaleString()  + '譜面<br />' + allBit.Beginner.toLocaleString()  + ' BIT',
+                sum:   sumBitMusicSP.Beginner.toLocaleString()  + ' / ' + sumBitMusicDP.Beginner.toLocaleString()  + '譜面<br />' + sumBit.Beginner.toLocaleString()  + ' BIT',
+                used:  usedBitMusicSP.Beginner.toLocaleString() + ' / ' + usedBitMusicDP.Beginner.toLocaleString() + '譜面<br />' + usedBit.Beginner.toLocaleString() + ' BIT'
             },
             n: {
-                total: allMusicSP.Normal.toLocaleString()   + ' / ' + allMusicDP.Normal.toLocaleString()   + '譜面<br />' + allBit.Normal.toLocaleString()   + ' BIT',
-                sum:   sumMusicSP.Normal.toLocaleString()   + ' / ' + sumMusicDP.Normal.toLocaleString()   + '譜面<br />' + sumBit.Normal.toLocaleString()   + ' BIT',
-                used:  usedMusicSP.Normal.toLocaleString()  + ' / ' + usedMusicDP.Normal.toLocaleString()  + '譜面<br />' + usedBit.Normal.toLocaleString()  + ' BIT'
+                total: bitMusicSP.Normal.toLocaleString()   + ' / ' + bitMusicDP.Normal.toLocaleString()   + '譜面<br />' + allBit.Normal.toLocaleString()   + ' BIT',
+                sum:   sumBitMusicSP.Normal.toLocaleString()   + ' / ' + sumBitMusicDP.Normal.toLocaleString()   + '譜面<br />' + sumBit.Normal.toLocaleString()   + ' BIT',
+                used:  usedBitMusicSP.Normal.toLocaleString()  + ' / ' + usedBitMusicDP.Normal.toLocaleString()  + '譜面<br />' + usedBit.Normal.toLocaleString()  + ' BIT'
             },
             h: {
-                total: allMusicSP.Hyper.toLocaleString()    + ' / ' + allMusicDP.Hyper.toLocaleString()    + '譜面<br />' + allBit.Hyper.toLocaleString()    + ' BIT',
-                sum:   sumMusicSP.Hyper.toLocaleString()    + ' / ' + sumMusicDP.Hyper.toLocaleString()    + '譜面<br />' + sumBit.Hyper.toLocaleString()    + ' BIT',
-                used:  usedMusicSP.Hyper.toLocaleString()   + ' / ' + usedMusicDP.Hyper.toLocaleString()   + '譜面<br />' + usedBit.Hyper.toLocaleString()   + ' BIT'
+                total: bitMusicSP.Hyper.toLocaleString()    + ' / ' + bitMusicDP.Hyper.toLocaleString()    + '譜面<br />' + allBit.Hyper.toLocaleString()    + ' BIT',
+                sum:   sumBitMusicSP.Hyper.toLocaleString()    + ' / ' + sumBitMusicDP.Hyper.toLocaleString()    + '譜面<br />' + sumBit.Hyper.toLocaleString()    + ' BIT',
+                used:  usedBitMusicSP.Hyper.toLocaleString()   + ' / ' + usedBitMusicDP.Hyper.toLocaleString()   + '譜面<br />' + usedBit.Hyper.toLocaleString()   + ' BIT'
             },
             a: {
-                total: allMusicSP.Another.toLocaleString()  + ' / ' + allMusicDP.Another.toLocaleString()  + '譜面<br />' + allBit.Another.toLocaleString()  + ' BIT',
-                sum:   sumMusicSP.Another.toLocaleString()  + ' / ' + sumMusicDP.Another.toLocaleString()  + '譜面<br />' + sumBit.Another.toLocaleString()  + ' BIT',
-                used:  usedMusicSP.Another.toLocaleString() + ' / ' + usedMusicDP.Another.toLocaleString() + '譜面<br />' + usedBit.Another.toLocaleString() + ' BIT'
+                total: bitMusicSP.Another.toLocaleString()  + ' / ' + bitMusicDP.Another.toLocaleString()  + '譜面<br />' + allBit.Another.toLocaleString()  + ' BIT',
+                sum:   sumBitMusicSP.Another.toLocaleString()  + ' / ' + sumBitMusicDP.Another.toLocaleString()  + '譜面<br />' + sumBit.Another.toLocaleString()  + ' BIT',
+                used:  usedBitMusicSP.Another.toLocaleString() + ' / ' + usedBitMusicDP.Another.toLocaleString() + '譜面<br />' + usedBit.Another.toLocaleString() + ' BIT'
+            },
+            l: {
+                total: bitMusicSP.Leggendaria.toLocaleString()  + ' / ' + bitMusicDP.Leggendaria.toLocaleString()  + '譜面<br />' + allBit.Leggendaria.toLocaleString()  + ' BIT',
+                sum:   sumBitMusicSP.Leggendaria.toLocaleString()  + ' / ' + sumBitMusicDP.Leggendaria.toLocaleString()  + '譜面<br />' + sumBit.Leggendaria.toLocaleString()  + ' BIT',
+                used:  usedBitMusicSP.Leggendaria.toLocaleString() + ' / ' + usedBitMusicDP.Leggendaria.toLocaleString() + '譜面<br />' + usedBit.Leggendaria.toLocaleString() + ' BIT'
             },
             t: {
-                total: allMusicSP.ALL.toLocaleString()      + ' / ' + allMusicDP.ALL.toLocaleString()      + '譜面<br />' + allBit.ALL.toLocaleString()      + ' BIT',
-                sum:   sumMusicSP.ALL.toLocaleString()      + ' / ' + sumMusicDP.ALL.toLocaleString()      + '譜面<br />' + sumBit.ALL.toLocaleString()      + ' BIT',
-                used:  usedMusicSP.ALL.toLocaleString()     + ' / ' + usedMusicDP.ALL.toLocaleString()     + '譜面<br />' + usedBit.ALL.toLocaleString()     + ' BIT'
+                total: bitMusicSP.ALL.toLocaleString()      + ' / ' + bitMusicDP.ALL.toLocaleString()      + '譜面<br />' + allBit.ALL.toLocaleString()      + ' BIT',
+                sum:   sumBitMusicSP.ALL.toLocaleString()      + ' / ' + sumBitMusicDP.ALL.toLocaleString()      + '譜面<br />' + sumBit.ALL.toLocaleString()      + ' BIT',
+                used:  usedBitMusicSP.ALL.toLocaleString()     + ' / ' + usedBitMusicDP.ALL.toLocaleString()     + '譜面<br />' + usedBit.ALL.toLocaleString()     + ' BIT'
             }
         };
-        jQuery('#search-message').html('<span>(&nbsp;検索結果：' + items.length + '曲&nbsp;)</span><br />' +
-                                       '<table><thead>' +
+        jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
+        jQuery('#search-message').html('<table><thead>' +
                                        '<tr><th rowspan="2">BIT解禁<br />概要</th><th colspan="3">譜面数(SP / DP)・BIT</th></tr>' +
                                        '<tr><th>合計</th><th>残り</th><th>解禁済</th></tr>' +
                                        '</thead>' +
@@ -1353,7 +1376,87 @@ let musics = {
                                        '<tr><th>合計</th><td>'     + col.t.total + '</td><td>' + col.t.sum + '</td><td>' + col.t.used + '</td></tr>' +
                                        '</tbody></table>'
                                        );
-    
+        jQuery('.infotable .resultdata, .infotable .bitdata').remove();
+        jQuery('.infotable').append('<tbody class="resultdata"><tr><th>検索結果</th><th>曲・譜面数</th>' +
+                                    '<td>' + (items.length).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (resultMusicSP.ALL + resultMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + resultMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb">' + resultMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn">' + resultMusicSP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph">' + resultMusicSP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa">' + resultMusicSP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + resultMusicDP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpn">' + resultMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph">' + resultMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa">' + resultMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '</tr><tr><th>BIT解禁</th><td>対象譜面数</td>' +
+                                    '<td>' + (bitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (bitMusicSP.ALL + bitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + bitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb">' + bitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn">' + bitMusicSP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph">' + bitMusicSP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa">' + bitMusicSP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + bitMusicDP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpn">' + bitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph">' + bitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa">' + bitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '</tr><tr><th>BIT解禁</th><td>残り譜面数</td>' +
+                                    '<td>' + (sumBitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (sumBitMusicSP.ALL + sumBitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + sumBitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb">' + sumBitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn">' + sumBitMusicSP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph">' + sumBitMusicSP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa">' + sumBitMusicSP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + sumBitMusicDP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpn">' + sumBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph">' + sumBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa">' + sumBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '</tr><tr><th>BIT解禁</th><td>解禁済譜面数</td>' +
+                                    '<td>' + (usedBitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (usedBitMusicSP.ALL + usedBitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + usedBitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb">' + usedBitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn">' + usedBitMusicSP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph">' + usedBitMusicSP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa">' + usedBitMusicSP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td>' + usedBitMusicDP.ALL.toLocaleString() + '譜面</td>' +
+                                    '<td class="dpn">' + usedBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph">' + usedBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa">' + usedBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '</tr><tr><th>BIT解禁</th><td>合計BIT数</td>' +
+                                    '<td>&nbsp;</td>' +
+                                    '<td>' + allBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spb">' + allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spn">' + allBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="sph">' + allBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spa">' + allBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td>&nbsp;</td>' +
+                                    '<td class="dpn">&nbsp;</td>' +
+                                    '<td class="dph">&nbsp;</td>' +
+                                    '<td class="dpa">&nbsp;</td>' +
+                                    '</tr><tr><th>BIT解禁</th><td>残り譜面数</td>' +
+                                    '<td>&nbsp;</td>' +
+                                    '<td>' + sumBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spb">' + sumBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spn">' + sumBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="sph">' + sumBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spa">' + sumBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td>&nbsp;</td>' +
+                                    '<td class="dpn">&nbsp;</td>' +
+                                    '<td class="dph">&nbsp;</td>' +
+                                    '<td class="dpa">&nbsp;</td>' +
+                                    '</tr><tr><th>BIT解禁</th><td>解禁済譜面数</td>' +
+                                    '<td>&nbsp;</td>' +
+                                    '<td>' + usedBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spb">' + usedBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spn">' + usedBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="sph">' + usedBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spa">' + usedBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td>&nbsp;</td>' +
+                                    '<td class="dpn">&nbsp;</td>' +
+                                    '<td class="dph">&nbsp;</td>' +
+                                    '<td class="dpa">&nbsp;</td>' +
+                      '</tr></tbody>');
+
+ 
     },
 
     getChartInfo: function (item) {
@@ -1771,9 +1874,10 @@ function handleClientLoad() {
         artistSet = new Set([...artistSet].sort());
         artistSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#artistlist'); });
 
-        jQuery('#search-message').html('<span>データファイル読み込み完了</span>');
+        jQuery('#search-message').html('<span>データファイル読込完了</span>');
         jQuery('.infotable').append(
-            '<tbody><tr><td>' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm') + '</td>' +
+            '<tbody class="musiclistdata"><tr><td>登録曲</td>' +
+                       '<td>' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm') + '</td>' +
                        '<td>' + musics.infoJSON.music_count + '曲 / ' + musics.infoJSON.chart_count_all + '譜面</td>' +
                        '<td>' + musics.infoJSON.chart_single_all + '譜面</td>' +
                        '<td class="spb">' + musics.infoJSON.chart_single_beginner + '譜面</td>' +
@@ -1980,6 +2084,12 @@ function handleClientLoad() {
     pushheaderLine('bity',  'par-bit-year', 'BIT&nbsp;UNLOCKED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate).concat(['NO']));
     pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
     makeHeaderLine(headerLine);
+
+    let csobj = jQuery('#musicsearch').find('input[data-checkgroup]');
+    csobj.on('click',function() {
+		var group = $(this).attr('data-checkgroup');
+		csobj.filter( function() { return $(this).attr('data-checkgroup') == group; } ).not(this).prop('checked', false);
+    });
 
     // 検索ボタン押下時
     jQuery('#filter-button').click(function() {
