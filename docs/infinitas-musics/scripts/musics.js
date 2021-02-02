@@ -1366,7 +1366,7 @@ let musics = {
         jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
 
         jQuery('.infotable .resultdata, .infotable .bitdata').remove();
-        jQuery('.infotable').append('<tbody class="resultdata"><tr><th>検索結果</th><th>曲・譜面数</th>' +
+        jQuery('.infotable').append('<tbody class="resultdata"><tr><th colspan="2">検索結果&nbsp;曲・譜面数</th>' +
                                     '<td>' + (items.length).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (resultMusicSP.ALL + resultMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + resultMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + resultMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1377,7 +1377,7 @@ let musics = {
                                     '<td class="dpn">' + resultMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + resultMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + resultMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th>BIT解禁</th><td>対象譜面数</td>' +
+                                    '</tr><tr><th rowspan="3">BIT解禁</th><th>対象譜面</th>' +
                                     '<td>' + (bitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (bitMusicSP.ALL + bitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + bitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + bitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1388,7 +1388,7 @@ let musics = {
                                     '<td class="dpn">' + bitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + bitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + bitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th>BIT解禁</th><td>残り譜面数</td>' +
+                                    '</tr><tr><th>残り譜面</th>' +
                                     '<td>' + (sumBitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (sumBitMusicSP.ALL + sumBitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + sumBitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + sumBitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1399,7 +1399,7 @@ let musics = {
                                     '<td class="dpn">' + sumBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + sumBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + sumBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th>BIT解禁</th><td>解禁済譜面数</td>' +
+                                    '</tr><tr><th>解禁済譜面</th>' +
                                     '<td>' + (usedBitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (usedBitMusicSP.ALL + usedBitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + usedBitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + usedBitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1410,7 +1410,7 @@ let musics = {
                                     '<td class="dpn">' + usedBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + usedBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + usedBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr></tbody><tbody class="resultdata"><tr><th>BIT解禁</th><td>合計BIT数</td>' +
+                                    '</tr></tbody><tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th>合計BIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + allBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1421,7 +1421,7 @@ let musics = {
                                     '<td class="dpn">&nbsp;</td>' +
                                     '<td class="dph">&nbsp;</td>' +
                                     '<td class="dpa">&nbsp;</td>' +
-                                    '</tr><tr><th>BIT解禁</th><td>残り譜面数</td>' +
+                                    '</tr><tr><th>残りBIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + sumBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + sumBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1432,7 +1432,7 @@ let musics = {
                                     '<td class="dpn">&nbsp;</td>' +
                                     '<td class="dph">&nbsp;</td>' +
                                     '<td class="dpa">&nbsp;</td>' +
-                                    '</tr><tr><th>BIT解禁</th><td>解禁済譜面数</td>' +
+                                    '</tr><tr><th>解禁済BIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + usedBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + usedBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +

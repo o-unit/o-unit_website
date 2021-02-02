@@ -138,7 +138,7 @@
     height: 38px;
     border-bottom: 3px solid #5ab4bd;
     background-color: #d9d9d9;
-    font-size: 1rem;
+    font-size: 0.925rem;
     text-align: center;
     color: #565656;
     display: block;
@@ -148,6 +148,7 @@
     transition: all 0.2s ease;
     margin-bottom: 0px;
 }
+
 .tab_item:not(:last-child) {
     border-right: 1px dotted #9b9b9b;
 }
@@ -165,7 +166,7 @@ input[name="formtab"] {
     display: none;
     padding: 20px 20px 20px;
     clear: both;
-    overflow: hidden;
+    overflow: auto;
     border: 3px solid #5ab4bd;
     border-top: 0px;
 }
@@ -539,6 +540,9 @@ table.infotable .level {
     color: #000000;
 }
 
+table.infotable th {
+    background-color: #cecfd1;
+}
 table.infotable tbody:not(:last-child) {
     border-bottom: 3px double #9b9b9b;
 }
@@ -758,6 +762,15 @@ table.musiclist .bss {
     background-color: #ff3333;
     visibility: visible;
 }
+/*--------------------------------------------------
+  画面サイズ：横800px以下の場合
+--------------------------------------------------*/
+@media screen and (max-width:800px){
+    .tab_item {
+        width: calc(100%/4);
+    }
+}
+
 /*--------------------------------------------------
   画面サイズ：横512px以下の場合
 --------------------------------------------------*/

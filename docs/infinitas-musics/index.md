@@ -27,31 +27,6 @@ Add buttons to initiate auth sequence and sign out
 
 <div id="toastbox"></div>
 
-<!-- <div class="table-outer">
-    <table class="infotable">
-        <thead>
-            <tr>
-                <th rowspan="2" class="release">更新日</th>
-                <th rowspan="2" class="genre">曲数<br />譜面数</th>
-                <th colspan="5" class="sp">譜面数：single</th>
-                <th colspan="4" class="dp">譜面数：double</th>
-                <th rowspan="2" class="dp">登録人数</th>
-            </tr>
-            <tr>
-                <th class="sp level all">合計</th>
-                <th class="sp level spb">B</th>
-                <th class="sp level spn">N</th>
-                <th class="sp level sph">H</th>
-                <th class="sp level spa">A</th>
-                <th class="sp level all">合計</th>
-                <th class="dp level dpn">N</th>
-                <th class="dp level dph">H</th>
-                <th class="dp level dpa">A</th>
-            </tr>
-        </thead>
-    </table>
-</div> -->
-
 <div id="musicsearch" class="table-outer">
     <input id="formtab-1" name="formtab" class="formtabinput" type="checkbox" value="1" data-checkgroup="formtab" /><label for="formtab-1" class="tab_item">条件：譜面</label>
     <input id="formtab-2" name="formtab" class="formtabinput" type="checkbox" value="2" data-checkgroup="formtab" /><label for="formtab-2" class="tab_item">条件：その他</label>
