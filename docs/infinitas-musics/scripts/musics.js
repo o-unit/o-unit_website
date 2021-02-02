@@ -1364,18 +1364,7 @@ let musics = {
             }
         };
         jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
-        jQuery('#search-message').html('<table><thead>' +
-                                       '<tr><th rowspan="2">BIT解禁<br />概要</th><th colspan="3">譜面数(SP / DP)・BIT</th></tr>' +
-                                       '<tr><th>合計</th><th>残り</th><th>解禁済</th></tr>' +
-                                       '</thead>' +
-                                       '<tbody>' +
-                                       '<tr><th>BEGINNER</th><td>' + col.b.total + '</td><td>' + col.b.sum + '</td><td>' + col.b.used + '</td></tr>' +
-                                       '<tr><th>NORMAL</th><td>'   + col.n.total + '</td><td>' + col.n.sum + '</td><td>' + col.n.used + '</td></tr>' +
-                                       '<tr><th>HYPER</th><td>'    + col.h.total + '</td><td>' + col.h.sum + '</td><td>' + col.h.used + '</td></tr>' +
-                                       '<tr><th>ANOTHER</th><td>'  + col.a.total + '</td><td>' + col.a.sum + '</td><td>' + col.a.used + '</td></tr>' +
-                                       '<tr><th>合計</th><td>'     + col.t.total + '</td><td>' + col.t.sum + '</td><td>' + col.t.used + '</td></tr>' +
-                                       '</tbody></table>'
-                                       );
+
         jQuery('.infotable .resultdata, .infotable .bitdata').remove();
         jQuery('.infotable').append('<tbody class="resultdata"><tr><th>検索結果</th><th>曲・譜面数</th>' +
                                     '<td>' + (items.length).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (resultMusicSP.ALL + resultMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +

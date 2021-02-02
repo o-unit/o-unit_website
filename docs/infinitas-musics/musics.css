@@ -287,7 +287,6 @@ input:checked + .tab_item {
     border-color: #ff8f22;
 }
 
-
 #musicsearch input[type="text"], #musicsearch input[type="password"], #musicsearch select {
     color: #000000;
     background-color: #f2f2ff;
@@ -302,11 +301,11 @@ input:checked + .tab_item {
 }
 #musicsearch .slider_outer {
     min-width: 200px;
-    max-width: 300px;
+    max-width: 265px;
     width: 100%;
 }
 #musicsearch .score_opt {
-    width: 90px;
+    width: 82px;
     margin: 14px 0px 0px;
 }
 #musicsearch .bpm_opt {
