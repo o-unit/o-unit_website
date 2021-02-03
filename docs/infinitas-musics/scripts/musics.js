@@ -449,11 +449,11 @@ function makeScorefilter(target,items){
         let max_label = '<span id="' + item[0] + '-levels-max" class="level_number"></span>';
         let min_input = '<input id="opt_' + item[0] + '_notes_min" name="opt_' + item[0] + '_notes_min" type="text" placeholder="0" class="input-60" />';
         let max_input = '<input id="opt_' + item[0] + '_notes_max" name="opt_' + item[0] + '_notes_max" type="text" placeholder="99999" class="input-60" />';
-        addHtml += '<div class="clearfix">' +
+        addHtml += '<div class="inblock sliderbox">' +
                    '<div class="fieldname">' + item[0] + '&nbsp;:&nbsp;' + min_label + '～' + max_label + '</div>' +
                    '<div class="inblock slider_outer"><div id="' + item[0] + '-levels"></div></div>' +
                    '</div>' +
-                   '<div class="clearfix">' +
+                   '<div class="inblock">' +
                    '<div class="fieldname">特殊ノート</div>' +
                    '<div class="vname score_opt">' +
                    '<input id="opt_' + item[0] + '_CN" name="opt_' + item[0] + '_CN" type="number" class="opt hidden" value="0" />' +
@@ -468,7 +468,7 @@ function makeScorefilter(target,items){
                    '<label for="opt_' + item[0] + '_HCN">HCN : -</label>' +
                    '</div>' +
                    '</div>' +
-                   '<div class="clearfix">' +
+                   '<div class="inblock">' +
                    '<div class="fieldname">ノート数</div>' +
                    '<div class="notes-menu">' + min_input + '</div>' +
                    '<div class="inblock pad-lr5">～</div>' +
@@ -1366,7 +1366,7 @@ let musics = {
         jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
 
         jQuery('.infotable .resultdata, .infotable .bitdata').remove();
-        jQuery('.infotable').append('<tbody class="resultdata"><tr><th colspan="2">検索結果&nbsp;曲・譜面数</th>' +
+        jQuery('.infotable').append('<tbody class="resultdata"><tr><th colspan="2" class="section2">検索結果</th>' +
                                     '<td>' + (items.length).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (resultMusicSP.ALL + resultMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + resultMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + resultMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1377,7 +1377,7 @@ let musics = {
                                     '<td class="dpn">' + resultMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + resultMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + resultMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th rowspan="3">BIT解禁</th><th>対象譜面</th>' +
+                                    '</tr></tbody><tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">対象譜面</th>' +
                                     '<td>' + (bitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (bitMusicSP.ALL + bitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + bitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + bitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1388,7 +1388,7 @@ let musics = {
                                     '<td class="dpn">' + bitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + bitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + bitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th>残り譜面</th>' +
+                                    '</tr><tr><th class="section2">残り譜面</th>' +
                                     '<td>' + (sumBitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (sumBitMusicSP.ALL + sumBitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + sumBitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + sumBitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1399,7 +1399,7 @@ let musics = {
                                     '<td class="dpn">' + sumBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + sumBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + sumBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr><tr><th>解禁済譜面</th>' +
+                                    '</tr><tr><th class="section2">解禁済譜面</th>' +
                                     '<td>' + (usedBitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (usedBitMusicSP.ALL + usedBitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + usedBitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + usedBitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1410,7 +1410,7 @@ let musics = {
                                     '<td class="dpn">' + usedBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + usedBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + usedBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr></tbody><tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th>合計BIT</th>' +
+                                    '</tr></tbody><tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">合計BIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + allBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1421,7 +1421,7 @@ let musics = {
                                     '<td class="dpn">&nbsp;</td>' +
                                     '<td class="dph">&nbsp;</td>' +
                                     '<td class="dpa">&nbsp;</td>' +
-                                    '</tr><tr><th>残りBIT</th>' +
+                                    '</tr><tr><th class="section2">残りBIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + sumBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + sumBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1432,7 +1432,7 @@ let musics = {
                                     '<td class="dpn">&nbsp;</td>' +
                                     '<td class="dph">&nbsp;</td>' +
                                     '<td class="dpa">&nbsp;</td>' +
-                                    '</tr><tr><th>解禁済BIT</th>' +
+                                    '</tr><tr><th class="section2">解禁済BIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + usedBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + usedBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1444,8 +1444,7 @@ let musics = {
                                     '<td class="dph">&nbsp;</td>' +
                                     '<td class="dpa">&nbsp;</td>' +
                       '</tr></tbody>');
-
- 
+        jQuery('#search-message').empty();
     },
 
     getChartInfo: function (item) {
@@ -1863,9 +1862,9 @@ function handleClientLoad() {
         artistSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#artistlist'); });
 
         jQuery('#search-message').html('<span>データファイル読込完了</span>');
+        jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
         jQuery('.infotable').append(
-            '<tbody class="musiclistdata"><tr><td>登録曲</td>' +
-                       '<td>' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm') + '</td>' +
+            '<tbody class="musiclistdata"><tr><th colspan="2" class="section2"></th>' +
                        '<td>' + musics.infoJSON.music_count + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all + '&nbsp;譜面</td>' +
                        '<td>' + musics.infoJSON.chart_single_all + '&nbsp;譜面</td>' +
                        '<td class="spb">' + musics.infoJSON.chart_single_beginner + '&nbsp;譜面</td>' +

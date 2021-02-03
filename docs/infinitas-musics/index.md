@@ -354,15 +354,19 @@ Add buttons to initiate auth sequence and sign out
         <div id="purchasebox" class="sg2 purchase"></div>
     </div>
     <div id="formtab-5_content" class="table-outer tab_content">
+        <div class="info-lastupdated"></div>
         <table class="infotable">
+            <colgroup span="1" class="section1"></colgroup>
+            <colgroup span="1" class="section2"></colgroup>
+            <colgroup span="1" class="total"></colgroup>
+            <colgroup span="5" class="scoreinfo single"></colgroup>
+            <colgroup span="4" class="scoreinfo double"></colgroup>
             <thead>
                 <tr>
-                    <th rowspan="2" class="type">&nbsp;</th>
-                    <th rowspan="2" class="release">更新日</th>
-                    <th rowspan="2" class="genre">曲数 / 譜面数</th>
+                    <th rowspan="2" colspan="2">&nbsp;</th>
+                    <th rowspan="2" class="total">曲数 / 譜面数</th>
                     <th colspan="5" class="sp">譜面数：single</th>
                     <th colspan="4" class="dp">譜面数：double</th>
-                    <!-- <th rowspan="2" class="dp">登録人数</th> -->
                 </tr>
                 <tr>
                     <th class="sp level all">合計</th>
@@ -370,7 +374,7 @@ Add buttons to initiate auth sequence and sign out
                     <th class="sp level spn">N</th>
                     <th class="sp level sph">H</th>
                     <th class="sp level spa">A</th>
-                    <th class="sp level all">合計</th>
+                    <th class="dp level all">合計</th>
                     <th class="dp level dpn">N</th>
                     <th class="dp level dph">H</th>
                     <th class="dp level dpa">A</th>

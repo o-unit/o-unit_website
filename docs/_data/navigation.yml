@@ -69,3 +69,7 @@ sidemenu-default:
     children:
       - title: "楽曲一覧"
         url: /infinitas-musics/
+  - title: "Github 制作物"
+    children:
+      - title: "plugin.video.epgstation"
+        url: https://github.com/o-unit/plugin.video.epgstation

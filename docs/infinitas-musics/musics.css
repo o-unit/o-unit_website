@@ -75,6 +75,8 @@
     width: 6.5rem;
     font-weight: bold;
     font-size: 0.825rem;
+    text-align: right;
+    margin-right: 0.5rem;
 }
 .settings-check {
     display: inline-block;
@@ -300,14 +302,17 @@ input:checked + .tab_item {
 #musicsearch select {
     padding: 1px 10px;
 }
-#musicsearch .slider_outer {
-    min-width: 200px;
-    max-width: 265px;
+#musicsearch .sliderbox {
+    min-width: 300px;
+    max-width: 420px;
     width: 100%;
+}
+#musicsearch .slider_outer {
+    width: 280px;
 }
 #musicsearch .score_opt {
     width: 82px;
-    margin: 14px 0px 0px;
+    margin: 14px 0px 14px;
 }
 #musicsearch .bpm_opt {
     width: 90px;
@@ -533,7 +538,8 @@ table.infotable {
 }
 
 table.infotable .level {
-    width: 102px;
+    width: 8.2rem;
+    min-width: 6rem;
     padding: 0px;
     text-align: center;
     vertical-align: top;
@@ -543,6 +549,30 @@ table.infotable .level {
 table.infotable th {
     background-color: #cecfd1;
 }
+table.infotable .section1 {
+    border-right: 1px dotted #9b9b9b;
+    min-width: 4rem;
+}
+table.infotable .section2 {
+    border-right: 1px solid #9b9b9b;
+    text-align: right;
+    min-width: 5rem;
+}
+table.infotable .total {
+    border-right: 1px solid #9b9b9b;
+    width: 8.2rem;
+    min-width: 8.2rem;
+}
+table.infotable .single {
+    border-right: 1px solid #9b9b9b;
+    width: 6rem;
+    min-width: 6rem;
+    max-width: 6rem;
+}
+table.infotable .double {
+    border-right: 1px solid #9b9b9b;
+}
+
 table.infotable tbody:not(:last-child) {
     border-bottom: 3px double #9b9b9b;
 }
@@ -769,6 +799,9 @@ table.musiclist .bss {
     .tab_item {
         width: calc(100%/4);
     }
+    #musicsearch .slider_outer {
+        width: 240px;
+    }
 }
 
 /*--------------------------------------------------
@@ -777,6 +810,12 @@ table.musiclist .bss {
 @media screen and (max-width:512px){
     .vname {
         width: 33%;
+    }
+    #musicsearch .score_opt {
+        width: 72px;
+    }
+    #musicsearch .slider_outer {
+        width: 200px;
     }
 }
 
