@@ -276,28 +276,29 @@ Add buttons to initiate auth sequence and sign out
             <div>
             データ保存設定の利用にあたり、以下について同意されたものとみなします。<br />
             <ul>
-                <li>入力された「ID」「参照・編集パス」および「楽曲解禁状況」をサーバ上に保存すること。</li>
-                <li>現時点で登録された「ID」「参照・編集パス」の変更・削除が出来ないこと。</li>
-                <li>保存された「楽曲解禁状況」を「ID」「参照パス」を知りうる第三者が閲覧できること。</li>
-                <li>ログイン状況の管理のため、cookieを利用すること。</li>
-                <li>検索条件 / 表示設定を保持するため、cookieを利用すること。</li>
+                <li>手動入力の場合、</li>
+                <li>google Driveに保存する場合、「ファイルID」を知りうる第三者がファイルを閲覧できること。</li>
+                <li>google Driveに保存する場合、「ファイルID」を記憶しておくためにcookieを利用すること。</li>
             </ul>
             </div>
         </div>
         <hr class="clearfix" />
-        <div class="clearfix sg1">
-            <div class="fieldname">ID</div>
-            <div class="inblock"><input id="id" name="id" type="text" placeholder="希望するID" class="input-200" /></div>
+        <div class="clearfix">
+            <div class="fieldname">ファイル</div>
+            <div class="inblock"><input id="localfile" name="localfile" type="file" placeholder="JSONファイルを指定…" class="input-200" /></div>
         </div>
-        <div class="clearfix sg1">
-            <div class="fieldname">┣参照パス</div>
-            <div class="inblock"><input id="readpassword" name="readpassword" type="text" placeholder="参照用パスワード" class="input-200" /></div>
+        <div class="clearfix">
+            <div class="fieldname">FileID</div>
+            <div class="inblock"><input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" /></div>
         </div>
-        <div class="clearfix sg1">
-            <div class="fieldname">┗編集パス</div>
-            <div class="inblock"><input id="writepassword" name="writepassword" type="password" placeholder="編集用パスワード" class="input-200" /></div>
+        <div class="clearfix">
+            <div class="fieldname"></div><div id="json-message" class="inblock"></div>
         </div>
-        <div class="clearfix sg1">
+        <div class="clearfix height-8">
+            <div class="fieldname">JSON</div>
+            <div class="inblock wide height-8"><textarea id="userjsonarea" name="userjsonarea" placeholder="ここにJSONを入力してください…" class="textarea-100p"></textarea></div>
+        </div>
+        <div class="clearfix">
             <input id="setmyid" name="setmyid" type="checkbox" class="hidden" />
             <label for="setmyid">上記IDでログイン or 新規登録</label>
         </div>

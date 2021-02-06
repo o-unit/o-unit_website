@@ -51,7 +51,7 @@ let NotesArray = [      '-99',  '100-199',  '200-299',  '300-399',  '400-499',  
                   '1000-1099','1100-1199','1200-1299','1300-1399','1400-1499','1500-1599','1600-1699','1700-1799','1800-1899','1900-1999',
                   '2000-',    'NO'];
 
-let userJSON = [];
+let userJSON = {};
 
 let PROJECT_ID = 'infinitas-musiclist';
 
@@ -174,7 +174,7 @@ function execLogin(token = ''){
                 let canplayReq = getJSONFile('/customapi/infinitas/get/status/user/', '{"token":"' + userJSON.token + '"}');
                 canplayReq.done(function(getData,textStatus,jqXHR) {
                     if ( 'Canplay' in getData ) {
-                        userJSON.Canplay = ('Musics' in getData.Canplay) ? getData.Canplay.Musics : {};
+                        userJSON.musics = ('Musics' in getData.musics) ? getData.musics.Musics : {};
 
                         let packlist = [ {'mid':'0000001','inputid':'#purchase-Pack1'},
                                          {'mid':'0000002','inputid':'#purchase-Pack2'},
@@ -218,13 +218,13 @@ function execLogin(token = ''){
                                          {'mid':'0001010','inputid':'#purchase-PackSS10'},
                                         ];
                         for(let pack of packlist){
-                            if (pack.mid in userJSON.Canplay) {
-                                jQuery(pack.inputid).prop('checked',(userJSON.Canplay[pack.mid].Normal === '1'));
+                            if (pack.mid in userJSON.musics) {
+                                jQuery(pack.inputid).prop('checked',(userJSON.musics[pack.mid].Normal === '1'));
                                 togglePackButton(jQuery(pack.inputid), false);
                             };
                         };
                     } else {
-                        userJSON.Canplay = {};
+                        userJSON.musics = {};
                     };
                 } )
                 .fail(function(jqXHR, textStatus, errorThrown ) {
@@ -314,6 +314,60 @@ function execLogout() {
         jQuery('#setmyid').prop('checked', true);
         return false;
     };
+};
+
+/**
+ * ユーザデータJSONの読み込み
+ *
+ * @param {jQueryObject} obj - JSONが記載されたinput[type=textarea]のjQueryObj
+ * @return なし
+ *
+**/
+function readUserJSON(obj) {
+    let inData = obj.val();
+    let jsonData;
+    let msgObj = jQuery('#json-message');
+    try {
+        // とりあえず読み込み
+        jsonData = JSON.parse(inData);
+    } catch (e) {
+        // エラー時はメッセージ表示
+        msgObj.html('<span class="warn">JSONが読み込めません！</span>');
+        return;
+    };
+
+    // userJSONの項目チェック
+    if ( !("info" in jsonData)) {msgObj.html('<span class="warn">JSON内に"info"が見つかりません！</span>'); return;};
+    if ( !("id" in jsonData.info) ) { msgObj.html('<span class="warn">JSON内に"info.id"が見つかりません！</span>'); return;};
+    if ( !("createdDate" in jsonData.info) ) { msgObj.html('<span class="warn">JSON内に"info.createdDate"が見つかりません！</span>'); return; };
+    if ( !("musics" in jsonData) ) { msgObj.html('<span class="warn">JSON内に"musics"が見つかりません！</span>'); return; };
+
+    userJSON.info = jsonData.info;
+    userJSON.musics = {};
+    for (item of musics.JSON) {
+        hasID =      (item.ID in jsonData.musics);
+        hasCanplay = (hasID && ('Canplay' in jsonData.musics[item.ID]));
+        hasScores =  (hasID && ('EXScores'  in jsonData.musics[item.ID]));
+        
+        userJSON.musics[item.ID] = {
+            'title': ( hasID && ('title' in jsonData.musics[item.ID])) ? jsonData.musics[item.ID].title : item.Title,
+            'Canplay':{
+                'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Beginner    : '0',
+                'Normal'     : ( hasID && hasCanplay && ('Normal'      in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Normal      : '0',
+                'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Hyper       : '0',
+                'Another'    : ( hasID && hasCanplay && ('Another'     in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Another     : '0',
+                'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Leggendaria : '0',
+            },
+            'EXScores':{
+                'Beginner'   : ( hasID && hasScores && ('Beginner'    in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Beginner    : '0',
+                'Normal'     : ( hasID && hasScores && ('Normal'      in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Normal      : '0',
+                'Hyper'      : ( hasID && hasScores && ('Hyper'       in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Hyper       : '0',
+                'Another'    : ( hasID && hasScores && ('Another'     in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Another     : '0',
+                'Leggendaria': ( hasID && hasScores && ('Leggendaria' in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Leggendaria : '0',
+            }
+        };
+    };
+
 };
 
 /**
@@ -505,7 +559,7 @@ function toggleScoreOptButton(obj, noToggle = false) {
     let objid = jqobj.attr('id');
     let optText = ["–", "有", "無"];
 
-    if (!noToggle) { jqobj.val(optText.length-1  <= Number(jqobj.val()) ? 0 : Number(jqobj.val()) + 1); };
+    if (!noToggle) { jqobj.val(optText.length - 1 <= Number(jqobj.val()) ? 0 : Number(jqobj.val()) + 1); };
     if (jqobj.val() == 0) { jqobj.removeClass("checked"); }
     else { jqobj.addClass("checked"); };
     jQuery("label[for='" + objid + "']").text( objid.replace(/^opt_.*_/g, "") + " : " + optText[jqobj.val()] );
@@ -516,7 +570,7 @@ function toggleBPMOptButton(obj, noToggle = false) {
     let objid = jqobj.attr('id');
     let optText = ["–", "有", "無"];
 
-    if (!noToggle) { jqobj.val(optText.length-1  <= Number(jqobj.val()) ? 0 : Number(jqobj.val()) + 1); };
+    if (!noToggle) { jqobj.val(optText.length - 1 <= Number(jqobj.val()) ? 0 : Number(jqobj.val()) + 1); };
     if (jqobj.val() == 0) { jqobj.removeClass("checked"); }
     else { jqobj.addClass("checked"); };
     jQuery("label[for='" + objid + "']").text( '可変 : ' + optText[jqobj.val()] );
@@ -618,8 +672,8 @@ let update = {
                     case 'l': tmpVal[1] = 'Leggendaria'; break;
                 };
 
-                if (!(tmpVal[0] in userJSON.Canplay)) { userJSON.Canplay[tmpVal[0]] = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
-                userJSON.Canplay[tmpVal[0]][tmpVal[1]] = item.isAdd ? '1' : '0';
+                if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]] = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
+                userJSON.musics[tmpVal[0]][tmpVal[1]] = item.isAdd ? '1' : '0';
             }
             self.toastObj.html(self.updateArray.list.length + '件の楽曲解禁状況を更新しました。');
             self.updateArray.list = [];
@@ -797,7 +851,7 @@ let musics = {
                     if ( s.unlocked === 'partially' || s.unlocked === 'partiallyno' || s.unlocked === 'no' ) { return false; };
                 } else {
                     let canplay = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'};
-                    if ('Canplay' in userJSON && item.ID in userJSON.Canplay) { canplay = userJSON.Canplay[item.ID]; };
+                    if ('Canplay' in userJSON && item.ID in userJSON.musics) { canplay = userJSON.musics[item.ID]; };
                     if (!check_canplay(canplay, item.Scores, s.unlocked)) { return false; };
                 };
             };
@@ -1064,11 +1118,11 @@ let musics = {
             // 解禁状況の取得・加工
             let canplay = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
             if ('Canplay' in userJSON) {
-                canplay.Beginner     = (item.ID in userJSON.Canplay) && (userJSON.Canplay[item.ID].Beginner    == '1') ? true : false;
-                canplay.Normal       = (item.ID in userJSON.Canplay) && (userJSON.Canplay[item.ID].Normal      == '1') ? true : false;
-                canplay.Hyper        = (item.ID in userJSON.Canplay) && (userJSON.Canplay[item.ID].Hyper       == '1') ? true : false;
-                canplay.Another      = (item.ID in userJSON.Canplay) && (userJSON.Canplay[item.ID].Another     == '1') ? true : false;
-                canplay.Leggendaria  = (item.ID in userJSON.Canplay) && (userJSON.Canplay[item.ID].Leggendaria == '1') ? true : false;
+                canplay.Beginner     = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Beginner    == '1') ? true : false;
+                canplay.Normal       = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Normal      == '1') ? true : false;
+                canplay.Hyper        = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Hyper       == '1') ? true : false;
+                canplay.Another      = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Another     == '1') ? true : false;
+                canplay.Leggendaria  = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Leggendaria == '1') ? true : false;
             };
 
             // BIT・譜面数計算(Beginner)
@@ -1206,13 +1260,13 @@ let musics = {
                       '<td class="artist">' + item.Artist + '</td>' +
                       '<td class="title">' + item.Title + '</td>' +
                       '<td class="bpm">' + BPM + '</td>' +
-                      '<td class="sp level spb' + scoreClass.canplay.SPB + '">' + scoreClass.cn.SPB + scoreClass.bss.SPB + SPB.Lv + '</td>' +
-                      '<td class="sp level spn' + scoreClass.canplay.SPN + '">' + scoreClass.cn.SPN + scoreClass.bss.SPN + SPN.Lv + '</td>' +
-                      '<td class="sp level sph' + scoreClass.canplay.SPH + '">' + scoreClass.cn.SPH + scoreClass.bss.SPH + SPH.Lv + '</td>' +
-                      '<td class="sp level spa' + scoreClass.canplay.SPA + '">' + scoreClass.cn.SPA + scoreClass.bss.SPA + SPA.Lv + '</td>' +
-                      '<td class="dp level dpn' + scoreClass.canplay.DPN + '">' + scoreClass.cn.DPN + scoreClass.bss.DPN + DPN.Lv + '</td>' +
-                      '<td class="dp level dph' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
-                      '<td class="dp level dpa' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
+                      '<td class="sp level spb' + scoreClass.musics.SPB + '">' + scoreClass.cn.SPB + scoreClass.bss.SPB + SPB.Lv + '</td>' +
+                      '<td class="sp level spn' + scoreClass.musics.SPN + '">' + scoreClass.cn.SPN + scoreClass.bss.SPN + SPN.Lv + '</td>' +
+                      '<td class="sp level sph' + scoreClass.musics.SPH + '">' + scoreClass.cn.SPH + scoreClass.bss.SPH + SPH.Lv + '</td>' +
+                      '<td class="sp level spa' + scoreClass.musics.SPA + '">' + scoreClass.cn.SPA + scoreClass.bss.SPA + SPA.Lv + '</td>' +
+                      '<td class="dp level dpn' + scoreClass.musics.DPN + '">' + scoreClass.cn.DPN + scoreClass.bss.DPN + DPN.Lv + '</td>' +
+                      '<td class="dp level dph' + scoreClass.musics.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
+                      '<td class="dp level dpa' + scoreClass.musics.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
                       '</tr>' +
                       '<tr class="music_other" style="display: none;">' +
                       '<td class="" rowspan="' + ((jQuery('#setmyid').prop('checked')) ? '2' : '1')+ '"></td>' +
@@ -1377,7 +1431,12 @@ let musics = {
                                     '<td class="dpn">' + resultMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + resultMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + resultMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr></tbody><tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">対象譜面</th>' +
+                                    '</tr></tbody>' +
+                                    '<thead class="resultdata"><tr><th colspan="2">BIT解禁&nbsp;:&nbsp;譜面数</th>' +
+                                    '<th class="total">曲数 / 譜面数</th>' +
+                                    '<th colspan="5" class="sp">譜面数：single</th>' +
+                                    '<th colspan="4" class="dp">譜面数：double</th></tr></thead>' +
+                                    '<tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">対象譜面</th>' +
                                     '<td>' + (bitMusicSP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + (bitMusicSP.ALL + bitMusicDP.ALL).toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td>' + bitMusicSP.ALL.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="spb">' + bitMusicSP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
@@ -1410,7 +1469,12 @@ let musics = {
                                     '<td class="dpn">' + usedBitMusicDP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dph">' + usedBitMusicDP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
                                     '<td class="dpa">' + usedBitMusicDP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '</tr></tbody><tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">合計BIT</th>' +
+                                    '</tr></tbody>' +
+                                    '<thead class="resultdata"><tr><th colspan="2">BIT解禁&nbsp;:&nbsp;BIT数</th>' +
+                                    '<th class="total">&nbsp;</th>' +
+                                    '<th colspan="5" class="sp">BIT数</th>' +
+                                    '<th colspan="4" class="dp">&nbsp;</th></tr></thead>' +
+                                    '<tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">合計BIT</th>' +
                                     '<td>&nbsp;</td>' +
                                     '<td>' + allBit.ALL.toLocaleString() + '&nbsp;BIT</td>' +
                                     '<td class="spb">' + allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
@@ -1864,7 +1928,7 @@ function handleClientLoad() {
         jQuery('#search-message').html('<span>データファイル読込完了</span>');
         jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
         jQuery('.infotable').append(
-            '<tbody class="musiclistdata"><tr><th colspan="2" class="section2"></th>' +
+            '<tbody class="musiclistdata"><tr><th colspan="2" class="section2">全データ</th>' +
                        '<td>' + musics.infoJSON.music_count + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all + '&nbsp;譜面</td>' +
                        '<td>' + musics.infoJSON.chart_single_all + '&nbsp;譜面</td>' +
                        '<td class="spb">' + musics.infoJSON.chart_single_beginner + '&nbsp;譜面</td>' +
@@ -1875,7 +1939,6 @@ function handleClientLoad() {
                        '<td class="dpn">' + musics.infoJSON.chart_double_normal + '&nbsp;譜面</td>' +
                        '<td class="dph">' + musics.infoJSON.chart_double_hyper + '&nbsp;譜面</td>' +
                        '<td class="dpa">' + musics.infoJSON.chart_double_another + '&nbsp;譜面</td>' +
-                       '<!-- <td>' + musics.infoJSON.user_count + '人</td> -->' +
             '</tr></tbody>');
         jQuery('#filter-button').prop('disabled',false);
     };
