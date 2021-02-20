@@ -12,7 +12,24 @@
 /****** musics.js 独自実装部 ******/
 let now = new Date();
 let LaunchDate = new Date( 2015, 12 - 1,1 ) // サービス開始年月日 2015-12-01 ( jsの月は0 - 11 なので -1 してる )
-let confirmWindow = true;
+let JSONmsgObj = jQuery('#json-message');
+
+let packlist = { '0000001': {'type':'Standard',  'name':'楽曲パック vol.1',                          'shortName':'Pack1',   'inputid':'#purchase-Pack1'  },
+                 '0000002': {'type':'Standard',  'name':'楽曲パック vol.2',                          'shortName':'Pack2',   'inputid':'#purchase-Pack2'  },
+                 '0000003': {'type':'Standard',  'name':'楽曲パック vol.3',                          'shortName':'Pack3',   'inputid':'#purchase-Pack3'  },
+                 '0000004': {'type':'Standard',  'name':'楽曲パック vol.4',                          'shortName':'Pack4',   'inputid':'#purchase-Pack4'  },
+                 '0000005': {'type':'Standard',  'name':'楽曲パック vol.5',                          'shortName':'Pack5',   'inputid':'#purchase-Pack5'  },
+                 '0000006': {'type':'Standard',  'name':'楽曲パック vol.6',                          'shortName':'Pack6',   'inputid':'#purchase-Pack6'  },
+                 '0000007': {'type':'Standard',  'name':'楽曲パック vol.7',                          'shortName':'Pack7',   'inputid':'#purchase-Pack7'  },
+                 '0000008': {'type':'Standard',  'name':'楽曲パック vol.8',                          'shortName':'Pack8',   'inputid':'#purchase-Pack8'  },
+                 '0000009': {'type':'Standard',  'name':'楽曲パック vol.9',                          'shortName':'Pack9',   'inputid':'#purchase-Pack9'  },
+                 '0000010': {'type':'Standard',  'name':'楽曲パック vol.10',                         'shortName':'Pack10',  'inputid':'#purchase-Pack10' },
+                 '0000011': {'type':'Standard',  'name':'楽曲パック vol.11',                         'shortName':'Pack11',  'inputid':'#purchase-Pack11' },
+                 '0000012': {'type':'Standard',  'name':'楽曲パック vol.12',                         'shortName':'Pack12',  'inputid':'#purchase-Pack12' },
+                 '0000013': {'type':'Standard',  'name':'楽曲パック vol.13',                         'shortName':'Pack13',  'inputid':'#purchase-Pack13' },
+                 '0010001': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.1', 'shortName':'PackSS1', 'inputid':'#purchase-PackSS1'},
+                 '0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1', 'shortName':'PackPM1', 'inputid':'#purchase-PackPM1'}, };
+
 let headerLine = [
     ['v01-header','par-version','1st style'],
     ['v02-header','par-version','substream'],
@@ -43,15 +60,16 @@ let headerLine = [
     ['v27-header','par-version','Rootage'],
     ['v28-header','par-version','HEROIC VERSE'],
     ['v29-header','par-version','BISTROVER'],
-    ['v999-header','par-version','INFINITAS']
-];
+    ['v999-header','par-version','INFINITAS'] ];
 let BPMArray = [    '-99','100-109','110-119','120-129','130-139','140-149','150-159','160-169','170-179','180-189',
                 '190-199','200-209','210-219','220-',                                                               'BPM_CHANGE'];
 let NotesArray = [      '-99',  '100-199',  '200-299',  '300-399',  '400-499',  '500-599',  '600-699',  '700-799',  '800-899',  '900-999',
                   '1000-1099','1100-1199','1200-1299','1300-1399','1400-1499','1500-1599','1600-1699','1700-1799','1800-1899','1900-1999',
                   '2000-',    'NO'];
+let DifficultNameArray = ['Beginner', 'Normal', 'Hyper', 'Another', 'Leggendaria'];
 
 let userJSON = {};
+let confirmWindow = true;
 
 let PROJECT_ID = 'infinitas-musiclist';
 
@@ -317,56 +335,176 @@ function execLogout() {
 };
 
 /**
+ * ローカルファイルの読込
+ *
+ * @param 
+ * @return なし
+ *
+**/
+function readGoogleDrive(fid){
+    try {
+        let retval = false;
+        let req = gapi.client.drive.files.get({
+            fileId: fid,
+            alt: 'media'
+        });
+        req.then(function(obj){
+            retval = obj.body;
+        },function(error) {
+            jQuery('#debug').empty();
+            jQuery('#debug').append('<p>' + JSON.stringify(error, null, 2) + '</p>');
+            JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！ / ' + JSON.stringify(error, null, 2) + '</span>');
+        });
+        return retval;
+    } catch (e) {
+        // エラー時はメッセージ表示
+        JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！</span>');
+        return false;
+    };
+}
+
+/**
+ * ローカルファイルの読込
+ *
+ * @param 
+ * @return なし
+ *
+**/
+function readLocalFile(fileObj){
+    let r = new FileReader();
+
+    try {
+        r.readAsText(fileObj);
+//        while () {};
+        return r.result;
+    } catch (e) {
+        // エラー時はメッセージ表示
+        JSONmsgObj.html('<span class="warn">指定したファイルが読み込めませんでした！</span>');
+        return false;
+    };
+}
+
+/**
+ * ローカルストレージの読込
+ *
+ * @param 
+ * @return なし
+ *
+**/
+function readLocalStorage(key='infinitas'){
+    let st = localStorage;
+    let JSONmsgObj = jQuery('#json-message');
+
+    try {
+        return st.getItem(key);
+    } catch (e) {
+        // エラー時はメッセージ表示
+        JSONmsgObj.html('<span class="warn">ローカルストレージが読み込めませんでした！</span>');
+        return false;
+    };
+}
+
+/**
+ * ユーザデータJSONをtextareaに出力
+ *
+ * @param {jQueryObject} obj - JSONを記載するinput[type=textarea]のjQueryObj
+ * @return なし
+ *
+**/
+function outputUserJSON(obj=jQuery('#userjsonarea')) {
+    try {
+        obj.val(JSON.stringify(userJSON, undefined, 2));
+    } catch (e) {
+        // エラー時はメッセージ表示
+        JSONmsgObj.html('<span class="warn">JSONが出力できませんでした！</span>');
+        return null;
+    };
+};
+
+/**
  * ユーザデータJSONの読み込み
  *
+ * @param {String} readType - 'new','localstorage','file','googleDrive','jsonarea' のうちいずれか
  * @param {jQueryObject} obj - JSONが記載されたinput[type=textarea]のjQueryObj
  * @return なし
  *
 **/
-function readUserJSON(obj) {
-    let inData = obj.val();
-    let jsonData;
-    let msgObj = jQuery('#json-message');
-    try {
-        // とりあえず読み込み
-        jsonData = JSON.parse(inData);
-    } catch (e) {
-        // エラー時はメッセージ表示
-        msgObj.html('<span class="warn">JSONが読み込めません！</span>');
-        return;
+function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
+    let jsonData = {};
+
+    if (readType == "new") {
+        inData = {};
+
+        jsonData.info = {
+            "id": "NONAME",
+            "created": dateFormat.format(new Date(), 'yyyy-MM-ddThh:mm:ss+00:00'),
+            "updated": dateFormat.format(new Date(), 'yyyy-MM-ddThh:mm:ss+00:00')
+        };
+        userJSON.info = jsonData.info;
+        jsonData.musics = {};
+    
+    } else {
+        try {
+            // とりあえず読み込み
+            switch (readType) {
+                case 'localstorage' : jsonData = JSON.parse(readLocalStorage()); break;
+                case 'file'         : jsonData = JSON.parse(readLocalFile(jQuery('#localfile')[0].files[0]));    break;
+                case 'googleDrive'  : jsonData = JSON.parse(readGoogleDrive());  break;
+                case 'jsonarea'     : jsonData = JSON.parse(obj.val());          break;
+            };
+        } catch (e) {
+            // エラー時はメッセージ表示
+            JSONmsgObj.html('<span class="warn">読込タイプ : ' + readType + ' / エラー / JSONが読み込めません！</span>');
+            return;
+        };
+    
+        // userJSONの項目チェック
+        if ( !("info" in jsonData)) {JSONmsgObj.html('<span class="warn">JSON内に"info"が見つかりません！</span>'); return;};
+        if ( !("id" in jsonData.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.id"が見つかりません！</span>'); return;};
+        if ( !("created" in jsonData.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.created"が見つかりません！</span>'); return; };
+        if ( !("updated" in jsonData.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.updated"が見つかりません！</span>'); return; };
+        if ( !("musics" in jsonData) ) { JSONmsgObj.html('<span class="warn">JSON内に"musics"が見つかりません！</span>'); return; };
+
+        userJSON.info = jsonData.info;
     };
 
-    // userJSONの項目チェック
-    if ( !("info" in jsonData)) {msgObj.html('<span class="warn">JSON内に"info"が見つかりません！</span>'); return;};
-    if ( !("id" in jsonData.info) ) { msgObj.html('<span class="warn">JSON内に"info.id"が見つかりません！</span>'); return;};
-    if ( !("createdDate" in jsonData.info) ) { msgObj.html('<span class="warn">JSON内に"info.createdDate"が見つかりません！</span>'); return; };
-    if ( !("musics" in jsonData) ) { msgObj.html('<span class="warn">JSON内に"musics"が見つかりません！</span>'); return; };
-
-    userJSON.info = jsonData.info;
     userJSON.musics = {};
     for (item of musics.JSON) {
         hasID =      (item.ID in jsonData.musics);
         hasCanplay = (hasID && ('Canplay' in jsonData.musics[item.ID]));
         hasScores =  (hasID && ('EXScores'  in jsonData.musics[item.ID]));
         
-        userJSON.musics[item.ID] = {
-            'title': ( hasID && ('title' in jsonData.musics[item.ID])) ? jsonData.musics[item.ID].title : item.Title,
-            'Canplay':{
-                'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Beginner    : '0',
-                'Normal'     : ( hasID && hasCanplay && ('Normal'      in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Normal      : '0',
-                'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Hyper       : '0',
-                'Another'    : ( hasID && hasCanplay && ('Another'     in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Another     : '0',
-                'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Leggendaria : '0',
-            },
-            'EXScores':{
-                'Beginner'   : ( hasID && hasScores && ('Beginner'    in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Beginner    : '0',
-                'Normal'     : ( hasID && hasScores && ('Normal'      in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Normal      : '0',
-                'Hyper'      : ( hasID && hasScores && ('Hyper'       in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Hyper       : '0',
-                'Another'    : ( hasID && hasScores && ('Another'     in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Another     : '0',
-                'Leggendaria': ( hasID && hasScores && ('Leggendaria' in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Leggendaria : '0',
-            }
+        if (item.Release.Type != 'Default') {
+            userJSON.musics[item.ID] = {
+                'title': ( hasID && ('title' in jsonData.musics[item.ID])) ? jsonData.musics[item.ID].title : item.Title,
+                'Canplay':{
+                    'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Beginner    : '0',
+                    'Normal'     : ( hasID && hasCanplay && ('Normal'      in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Normal      : '0',
+                    'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Hyper       : '0',
+                    'Another'    : ( hasID && hasCanplay && ('Another'     in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Another     : '0',
+                    'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Leggendaria : '0',
+                },
+                'EXScores':{
+                    'Beginner'   : ( hasID && hasScores && ('Beginner'    in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Beginner    : '0',
+                    'Normal'     : ( hasID && hasScores && ('Normal'      in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Normal      : '0',
+                    'Hyper'      : ( hasID && hasScores && ('Hyper'       in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Hyper       : '0',
+                    'Another'    : ( hasID && hasScores && ('Another'     in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Another     : '0',
+                    'Leggendaria': ( hasID && hasScores && ('Leggendaria' in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Leggendaria : '0',
+                }
+            };
         };
     };
+
+    userJSON.packs = {};
+    for(let pid in packlist){
+        if (pid in userJSON.packs) {
+            jQuery(packlist[pid].inputid).prop('checked',(userJSON.packs[pid].isPurchased === '1'));
+            togglePackButton(jQuery(pid), false);
+        };
+    };
+
+    // 最終的なJSONをtextareaに出力
+    outputUserJSON();
 
 };
 
@@ -392,7 +530,7 @@ function makeHeaderLine(items) {
  * 検索条件のシリーズ項目の作成
  *
  * @param {String}  target  - 対象セレクトタグのid(jQueryのセレクタ)
- *        {{String,String,Boolean,String,{String, ... }}, ... } items - {name属性, VNo, isChecked?, 表示テキスト, {追加クラス, …}}の配列
+ * @param {{String,String,Boolean,String,{String, ... }}, ... } items - {name属性, VNo, isChecked?, 表示テキスト, {追加クラス, …}}の配列
  * @return なし
  *
 **/
@@ -644,6 +782,59 @@ function getJSONFile(requestURL, serialized) {
 };
 
 /**
+ * トーストボックス表示用オブジェクト
+ */
+let toastbox = {
+    toastObj: jQuery('#toastbox'),
+    defaultTimer: 5000, // ポップアップ時間(ミリ秒)
+    timerID: null,
+
+    status: function(val='') {
+        let self = this;
+
+    },
+    message: function(msg='') {
+        let self = this;
+        
+        if (self.toastObj.is(':hidden')) {
+            self.fadeIn(msg);
+        } else {
+            self.toastObj.html(msg);
+        };
+    },
+    fadeIn: function(msg='', type='fast') {
+        let self = this;
+
+        self.toastObj.fadeIn(type);
+        if (msg != '') { self.toastObj.html(msg); };
+    },
+    fadeOut: function(type='fast') {
+        let self = this;
+
+        self.toastObj.fadeOut(type);
+        self.toastObj.html('');
+    },
+    timerFadeIn: function(msg='', timer=defaultTimer, type='fast') {
+        let self = this;
+
+        self.timerID = window.setTimeout(function() {self.fadeIn(msg, type);}, timer);
+    },
+    timerFadeOut: function(timer=defaultTimer, type='fast') {
+        let self = this;
+
+        self.timerID = window.setTimeout(function() {self.fadeIn(msg, type);}, timer);
+    },
+    timerCancel: function() {
+        let self = this;
+
+        if(typeof self.timerID == "number") {
+            window.clearTimeout(self.timerID);
+            delete self.timerID;
+        };
+    }
+};
+
+ /**
  * 解禁情報更新用タイマー
  *
  * @param なし
@@ -652,60 +843,46 @@ function getJSONFile(requestURL, serialized) {
 **/
 let update = {
     timeoutID: null,
-    updateArray: {token:"",list:[]},
-    toastObj: jQuery('#toastbox'),
+    updateArray: [],
 
     execUpdate: function () {
         let self = this;
         delete self.timeoutID;
-        self.updateArray.token = userJSON.token;
-        let serialized = JSON.stringify(self.updateArray);
-        let result = getJSONFile('/customapi/infinitas/set/status/user/', serialized );
-        result.done(function(getData,textStatus,jqXHR) {
-            for (item of self.updateArray.list) {
-                let tmpVal = item.mid_diff.split('_');
-                switch (tmpVal[1]) {
-                    case 'b': tmpVal[1] = 'Beginner'; break;
-                    case 'n': tmpVal[1] = 'Normal'; break;
-                    case 'h': tmpVal[1] = 'Hyper'; break;
-                    case 'a': tmpVal[1] = 'Another'; break;
-                    case 'l': tmpVal[1] = 'Leggendaria'; break;
-                };
+        for (item of self.updateArray) {
+            let tmpVal = item.mid_diff.split('_');
+            switch (tmpVal[1]) {
+                case '0': case '1': case '2': case '3': case '4': tmpval[1] = DifficultNameArray[tmpVal[1]]; break;
+                case 'b': tmpVal[1] = 'Beginner'; break;
+                case 'n': tmpVal[1] = 'Normal'; break;
+                case 'h': tmpVal[1] = 'Hyper'; break;
+                case 'a': tmpVal[1] = 'Another'; break;
+                case 'l': tmpVal[1] = 'Leggendaria'; break;
+            };
 
-                if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]] = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
-                userJSON.musics[tmpVal[0]][tmpVal[1]] = item.isAdd ? '1' : '0';
-            }
-            self.toastObj.html(self.updateArray.list.length + '件の楽曲解禁状況を更新しました。');
-            self.updateArray.list = [];
+            if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]] = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
+            userJSON.musics[tmpVal[0]][tmpVal[1]] = item.isAdd ? '1' : '0';
+        }
 
-            self.timeoutID = window.setTimeout(function() {self.after();}, 5000);
-
-        } )
-        .fail(function(jqXHR, textStatus, errorThrown ) {
-        } )
-        .always(function(getData,textStatus,jqXHR) {
-        });
-    },
-    after: function() {
-        this.toastObj.fadeOut('fast');
-        this.toastObj.html('');
+        toastbox.message(self.updateArray.length + '件の楽曲解禁状況を更新しました。');
+        self.updateArray = [];
+        toastbox.timerFadeOut();
     },
     cancel: function() {
-        if(typeof this.timeoutID == "number") {
-            window.clearTimeout(this.timeoutID);
-            delete this.timeoutID;
+        let self = this;
+        if(typeof self.timeoutID == "number") {
+            window.clearTimeout(self.timeoutID);
+            delete self.timeoutID;
         };
     },
     start: function(val, isAdd) {
         let self = this;
         self.cancel();
 
-        let index = self.updateArray.list.findIndex((v) => v.mid_diff === val);
-        if (index >= 0) { self.updateArray.list.splice(index ,1 ); };
-        self.updateArray.list.push({"mid_diff":val, "isAdd":isAdd});
+        let index = self.updateArray.findIndex((v) => v.mid_diff === val);
+        if (index >= 0) { self.updateArray.splice(index ,1 ); };
+        self.updateArray.push({"mid_diff":val, "isAdd":isAdd});
         self.timeoutID = window.setTimeout(function() {self.execUpdate();}, 5000);
-        self.toastObj.html(self.updateArray.list.length + '件の楽曲解禁状況の更新中…');
-        self.toastObj.fadeIn('fast');
+        toastbox.timerFadeIn(self.updateArray.length + '件の楽曲解禁状況の更新中…');
     }
 };
 
@@ -1260,13 +1437,13 @@ let musics = {
                       '<td class="artist">' + item.Artist + '</td>' +
                       '<td class="title">' + item.Title + '</td>' +
                       '<td class="bpm">' + BPM + '</td>' +
-                      '<td class="sp level spb' + scoreClass.musics.SPB + '">' + scoreClass.cn.SPB + scoreClass.bss.SPB + SPB.Lv + '</td>' +
-                      '<td class="sp level spn' + scoreClass.musics.SPN + '">' + scoreClass.cn.SPN + scoreClass.bss.SPN + SPN.Lv + '</td>' +
-                      '<td class="sp level sph' + scoreClass.musics.SPH + '">' + scoreClass.cn.SPH + scoreClass.bss.SPH + SPH.Lv + '</td>' +
-                      '<td class="sp level spa' + scoreClass.musics.SPA + '">' + scoreClass.cn.SPA + scoreClass.bss.SPA + SPA.Lv + '</td>' +
-                      '<td class="dp level dpn' + scoreClass.musics.DPN + '">' + scoreClass.cn.DPN + scoreClass.bss.DPN + DPN.Lv + '</td>' +
-                      '<td class="dp level dph' + scoreClass.musics.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
-                      '<td class="dp level dpa' + scoreClass.musics.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
+                      '<td class="sp level spb' + scoreClass.canplay.SPB + '">' + scoreClass.cn.SPB + scoreClass.bss.SPB + SPB.Lv + '</td>' +
+                      '<td class="sp level spn' + scoreClass.canplay.SPN + '">' + scoreClass.cn.SPN + scoreClass.bss.SPN + SPN.Lv + '</td>' +
+                      '<td class="sp level sph' + scoreClass.canplay.SPH + '">' + scoreClass.cn.SPH + scoreClass.bss.SPH + SPH.Lv + '</td>' +
+                      '<td class="sp level spa' + scoreClass.canplay.SPA + '">' + scoreClass.cn.SPA + scoreClass.bss.SPA + SPA.Lv + '</td>' +
+                      '<td class="dp level dpn' + scoreClass.canplay.DPN + '">' + scoreClass.cn.DPN + scoreClass.bss.DPN + DPN.Lv + '</td>' +
+                      '<td class="dp level dph' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
+                      '<td class="dp level dpa' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
                       '</tr>' +
                       '<tr class="music_other" style="display: none;">' +
                       '<td class="" rowspan="' + ((jQuery('#setmyid').prop('checked')) ? '2' : '1')+ '"></td>' +
@@ -1746,11 +1923,11 @@ function initClient() {
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
         // ボタン押下時の処理追加
-        authorizeButton.onclick = handleAuthClick;
-        signoutButton.onclick = handleSignoutClick;
-        getButton.onclick = handleGetClick;
+//        authorizeButton.onclick = handleAuthClick;
+//        signoutButton.onclick = handleSignoutClick;
+//        getButton.onclick = handleGetClick;
     }, function(error) {
-        appendPre(JSON.stringify(error, null, 2));
+        //appendPre(JSON.stringify(error, null, 2));
     });
 };
 
@@ -1761,12 +1938,11 @@ function initClient() {
  */
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
-        authorizeButton.style.display = 'none';
-        signoutButton.style.display = 'block';
-        listFiles();
+        jQuery('#gdid').attr('disabled', false);
+        jQuery('#googleSignin').text('ログアウト');
     } else {
-        authorizeButton.style.display = 'block';
-        signoutButton.style.display = 'none';
+        jQuery('#gdid').attr('disabled', true);
+        jQuery('#googleSignin').text('ログイン');
     }
 };
 
@@ -1788,7 +1964,7 @@ function handleSignoutClick(event) {
  *  Sign out the user upon button click.
  */
 function handleGetClick(event) {
-    getFile('1Gh6A8eIwCyuRTtqvI6IY5PVQ6rvwGisL');
+    getGoogleDriveFile('1Gh6A8eIwCyuRTtqvI6IY5PVQ6rvwGisL');
 };
 
 /**
@@ -1797,11 +1973,11 @@ function handleGetClick(event) {
  *
  * @param {string} message Text to be placed in pre element.
  */
-function appendPre(message) {
-    let pre = document.getElementById('content');
-    let textContent = document.createTextNode(message + '\n');
-    pre.appendChild(textContent);
-}
+// function appendPre(message) {
+//     let pre = document.getElementById('content');
+//     let textContent = document.createTextNode(message + '\n');
+//     pre.appendChild(textContent);
+// }
 
 /**
  * Print files.
@@ -1844,7 +2020,7 @@ function listFiles() {
  * ファイルの内容を取得する
  * @param {string} fid ファイルID
  */
-function getFile(fid) {
+function getGoogleDriveFile(fid) {
     gapi.client.drive.files.get({
         fileId: fid,
         alt: 'media'
@@ -1950,7 +2126,7 @@ function handleClientLoad() {
     });
 
     // ログイン後に使用する項目をいったん非表示
-    jQuery('.sg2').addClass('hidden');
+    //jQuery('.sg2').addClass('hidden');
 
     // 検索条件のシリーズ項目作成
     makeCheckbox('#seriesbox',[ ['series',   1, true, '1st style', ['series-CS']],
@@ -2076,6 +2252,28 @@ function handleClientLoad() {
         jQuery('#releasedate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
     });
 
+    // データ新規作成ボタン押下時
+    jQuery('#newtext').on('click', function() {
+        if ('info' in userJSON) {
+            if (!confirm('読込済みのデータがありますが、新規作成しますか？')) { return false; };
+        };
+        readUserJSON('new');
+    });
+    // 「表示中のJSONを読込」ボタン押下時
+    jQuery('#texttojson').on('click', function() {
+        if ('info' in userJSON) {
+            if (!confirm('読込済みのデータがありますが、JSONを読み込みなおしますか？')) { return false; };
+        };
+        readUserJSON();
+    });
+    // 「読込済のJSONを表示」ボタン押下時
+    jQuery('#jsontotext').on('click', function() {
+        if (!('info' in userJSON)) {
+            if (confirm('読込済みのデータがありません。新規作成しますか？')) { readUserJSON('new'); };
+        };
+        outputUserJSON();
+    });
+
     // ログインボタン押下
     jQuery('#setmyid').change(function() {
         if ( !jQuery('#setmyid').prop('checked') ) {
@@ -2191,8 +2389,10 @@ function handleClientLoad() {
         if (userJSON.id) { confirmWindow = false; };
     };
 
-    // 
+    // 譜面検索条件ボタンのクリックイベントを実行しておく
     jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
+
+    // 購入済みパックボタンのクリックイベントを実行しておく
     jQuery('.purchase input').each(function() {togglePackButton(this, false); });
 
 };

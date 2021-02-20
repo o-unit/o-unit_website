@@ -76,7 +76,6 @@
 .textarea-100p {
     padding: 2px !important;
     width: 100%;
-    height: 100%;
     background-color: #f2f2ff;
 }
 .height-4 {
@@ -229,24 +228,6 @@ input:checked + .tab_item {
     padding: 0px;
     border: 2px solid #e9e9e9;
 }
-#musicsearch legend {
-    width: auto;
-    margin-left: 36px;
-    padding: 0px 20px 0px;
-}
-#musicsearch legend input[type="checkbox"] {
-    display: none;
-}
-#musicsearch legend input[type="checkbox"] + label:before {
-    content: "\f078";
-    font-family: FontAwesome;
-    font-weight: 400;
-    font-size: 1rem;
-}
-#musicsearch legend input[type="checkbox"]:checked + label:before {
-    content: "\f077";
-    font-family: FontAwesome;
-}
 #musicsearch .changeselect {
     margin: 0rem 1rem 0rem 0rem;
     display: inline-block;
@@ -270,20 +251,20 @@ input:checked + .tab_item {
     padding-right: 3px;
     cursor: pointer;
     color: #333333;
-    border: 2px solid #ff8f22;
+    border: 2px solid #3b9cba;
     border-radius: 8px;
     user-select: none;
 }
 #musicsearch .vname input[type="checkbox"]:checked + label {
-    background-color: #ff8f22;
+    background-color: #3b9cba;
     color: #000000;
     border-color: #ffffff;
     font-weight: bold;
 }
 #musicsearch input[type="checkbox"][disabled] + label {
-    background-color: #ff8f22;
+    background-color: #3b9cba;
     color: #333333;
-    border-color: #ff8f22;
+    border-color: #3b9cba;
 }
 
 #musicsearch .vname input.opt {
@@ -300,20 +281,20 @@ input:checked + .tab_item {
     padding-right: 3px;
     cursor: pointer;
     color: #333333;
-    border: 2px solid #ff8f22;
+    border: 2px solid #3b9cba;
     border-radius: 8px;
     user-select: none;
 }
 #musicsearch .vname input.opt.checked + label {
-    background-color: #ff8f22;
+    background-color: #3b9cba;
     color: #000000;
     border-color: #ffffff;
     font-weight: bold;
 }
 #musicsearch .vname input.opt[disabled] + label {
-    background-color: #ff8f22;
+    background-color: #3b9cba;
     color: #333333;
-    border-color: #ff8f22;
+    border-color: #3b9cba;
 }
 
 #musicsearch input[type="text"], #musicsearch input[type="password"], #musicsearch select {
@@ -365,7 +346,7 @@ input:checked + .tab_item {
     cursor: pointer;
     overflow: hidden;
     padding: 1px 18px 1px 5px;
-    border-color: #ff8f22;
+    border-color: #3b9cba;
 
 }
 #musicsearch .selectbutton select::-ms-expand {
@@ -385,7 +366,7 @@ input:checked + .tab_item {
     content: '';
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 6px solid #e9831c;
+    border-top: 6px solid #3b9cba;
     pointer-events: none;
 }
 #musicsearch .noUi-target {
@@ -404,7 +385,7 @@ input:checked + .tab_item {
     left: 0.5rem;
 }
 #musicsearch .noUi-connect {
-    background: #ff8f22;
+    background: #3b9cba;
 }
 #musicsearch .noUi-tooltip {
     display: none;
@@ -419,74 +400,6 @@ input:checked + .tab_item {
 .level_number {
     margin: 0px 3px 0px;
     font-size: 1.06rem;
-}
-#loginform input::placeholder {
-    color: #aaaaaa;
-}
-#loginform fieldset {
-    padding: 0px;
-    border: 2px solid #e9e9e9;
-}
-#loginform legend {
-    width: auto;
-    margin-left: 36px;
-    padding: 0px 20px 0px;
-}
-
-#loginform .vname {
-    width: 160px;
-    display: inline-block;
-}
-#loginform .vname input[type="checkbox"] {
-    display: none;
-}
-#loginform .vname input[type="checkbox"] + label {
-    position: relative;
-    padding: 1px 3px 1px 3px;
-    margin: 2px;
-    width: 95%;
-    text-align: center;
-    line-height: 26px;
-    padding-left: 3px;
-    padding-right: 3px;
-    cursor: pointer;
-    color: #333333;
-    border: 2px solid #ff8f22;
-    border-radius: 8px;
-}
-#loginform .vname input[type="checkbox"]:checked + label {
-    background-color: #ff8f22;
-    color: #000000;
-    border-color: #ffffff;
-    font-weight: bold;
-}
-#loginform input[type="checkbox"][disabled] + label {
-    background-color: #ff8f22;
-    color: #333333;
-    border-color: #ff8f22;
-}
-
-#loginform legend input[type="checkbox"] {
-    display: none;
-}
-#loginform legend input[type="checkbox"] + label:before {
-    content: "\f078";
-    font-family: FontAwesome;
-    font-weight: 400;
-    font-size: 1rem;
-}
-#loginform legend input[type="checkbox"]:checked + label:before {
-    content: "\f077";
-    font-family: FontAwesome;
-}
-#loginform input[type="text"], #loginform input[type="password"], #loginform select {
-    color: #000000;
-    background-color: #f2f2ff;
-    border-radius: 8px;
-}
-#loginform input[type="text"][disabled], #loginform input[type="password"][disabled], #loginform select[disabled] {
-    color: #666666;
-    background-color: #cccccc;
 }
 #setmyid + label, #setrivalid + label, .purchase input + label {
     position: relative;

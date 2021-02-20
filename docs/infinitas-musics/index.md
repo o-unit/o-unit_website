@@ -284,23 +284,38 @@ Add buttons to initiate auth sequence and sign out
         </div>
         <hr class="clearfix" />
         <div class="clearfix">
-            <div class="fieldname">ファイル</div>
-            <div class="inblock"><input id="localfile" name="localfile" type="file" placeholder="JSONファイルを指定…" class="input-200" /></div>
+            <div class="fieldname">ファイル読込</div>
+            <div class="inblock">
+                <input id="localfile" name="localfile" type="file" placeholder="JSONファイルを指定…" class="hidden" />
+                <label for="localfile" class="btn btn--info">ファイル選択( or ここにドロップ )</label>
+                <div id="localfilename" class=""></div>
+            </div>
         </div>
+        <hr class="clearfix" />
         <div class="clearfix">
-            <div class="fieldname">FileID</div>
-            <div class="inblock"><input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" /></div>
+            <div class="fieldname">GoogleDrive</div>
+            <div class="inblock">
+                <div class="clearfix">
+                    <a id="googleSignin" class="btn btn--info">ログイン</a>
+                </div>
+                <input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" disabled />
+            </div>
         </div>
+        <hr class="clearfix" />
         <div class="clearfix">
+            <div class="fieldname"></div>
+            <a id="newtext" class="btn btn--info">データを新規作成</a>
+            <a id="texttojson" class="btn btn--info">表示中のJSONをデータとして読込</a>
+            <a id="jsontotext" class="btn btn--info">読込済のデータをJSONとして表示</a>
+        </div>
+        <div class="clearfix" id="json-message-outer" class="hidden">
             <div class="fieldname"></div><div id="json-message" class="inblock"></div>
         </div>
         <div class="clearfix height-8">
             <div class="fieldname">JSON</div>
-            <div class="inblock wide height-8"><textarea id="userjsonarea" name="userjsonarea" placeholder="ここにJSONを入力してください…" class="textarea-100p"></textarea></div>
-        </div>
-        <div class="clearfix">
-            <input id="setmyid" name="setmyid" type="checkbox" class="hidden" />
-            <label for="setmyid">上記IDでログイン or 新規登録</label>
+            <div class="inblock wide height-8">
+                <textarea id="userjsonarea" name="userjsonarea" placeholder="ここにJSONを入力してください…" class="textarea-100p height-8"></textarea>
+            </div>
         </div>
         <!-- <hr class="clearfix sg2" />
         <div class="clearfix sg2 rival">
@@ -352,7 +367,11 @@ Add buttons to initiate auth sequence and sign out
             <label for="setrivalid">ライバル情報更新</label>
         </div> -->
         <hr class="sg2 clearfix" />
-        <div id="purchasebox" class="sg2 purchase"></div>
+        <div class="clearfix">
+            <div class="fieldname">購入済パック</div>
+            <hr class="clearfix" />
+            <div id="purchasebox" class="sg2 purchase"></div>
+        </div>
     </div>
     <div id="formtab-5_content" class="table-outer tab_content">
         <div class="info-lastupdated"></div>
