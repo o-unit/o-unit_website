@@ -34,7 +34,7 @@ Add buttons to initiate auth sequence and sign out
     <input id="formtab-4" name="formtab" class="formtabinput" type="checkbox" value="4" data-checkgroup="formtab" /><label for="formtab-4" class="tab_item">データ設定</label>
     <input id="formtab-5" name="formtab" class="formtabinput" type="checkbox" value="5" data-checkgroup="formtab" /><label for="formtab-5" class="tab_item">楽曲数・BIT</label>
     <input id="formtab-6" name="formtab" class="formtabinput" type="checkbox" value="6" data-checkgroup="formtab" /><label for="formtab-6" class="tab_item">？？？</label>
-    <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" /><label for="formtab-7" class="tab_item">？？？</label>
+    <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" /><label for="formtab-7" class="tab_item">楽曲追加</label>
     <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" /><label for="formtab-8" class="tab_item">？？？</label>
     <div id="formtab-1_content" class="tab_content">
         <div id="scorefilterbox"></div>
@@ -402,6 +402,19 @@ Add buttons to initiate auth sequence and sign out
             </thead>
         </table>
     </div>
+    <div id="formtab-6_content" class="tab_content">
+        <div id="scorefilterbox"></div>
+    </div>
+    <div id="formtab-7_content" class="tab_content">
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_title">曲名</label></div>
+            <div class="inblock"><input id="new_title" name="new_title" type="text" placeholder="曲名…" class="input-260" /></div>
+        </div>
+    </div>
+    <div id="formtab-8_content" class="tab_content">
+        <div id="scorefilterbox"></div>
+    </div>
+
 </div>
 
 <form id="searchbuttonform" enctype="application/x-www-form-urlencoded" onsubmit="return false;">

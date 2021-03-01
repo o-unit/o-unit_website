@@ -14,58 +14,93 @@ let now = new Date();
 let LaunchDate = new Date( 2015, 12 - 1,1 ) // サービス開始年月日 2015-12-01 ( jsの月は0 - 11 なので -1 してる )
 let JSONmsgObj = jQuery('#json-message');
 
-let packlist = { '0000001': {'type':'Standard',  'name':'楽曲パック vol.1',                          'shortName':'Pack1',   'inputid':'#purchase-Pack1'  },
-                 '0000002': {'type':'Standard',  'name':'楽曲パック vol.2',                          'shortName':'Pack2',   'inputid':'#purchase-Pack2'  },
-                 '0000003': {'type':'Standard',  'name':'楽曲パック vol.3',                          'shortName':'Pack3',   'inputid':'#purchase-Pack3'  },
-                 '0000004': {'type':'Standard',  'name':'楽曲パック vol.4',                          'shortName':'Pack4',   'inputid':'#purchase-Pack4'  },
-                 '0000005': {'type':'Standard',  'name':'楽曲パック vol.5',                          'shortName':'Pack5',   'inputid':'#purchase-Pack5'  },
-                 '0000006': {'type':'Standard',  'name':'楽曲パック vol.6',                          'shortName':'Pack6',   'inputid':'#purchase-Pack6'  },
-                 '0000007': {'type':'Standard',  'name':'楽曲パック vol.7',                          'shortName':'Pack7',   'inputid':'#purchase-Pack7'  },
-                 '0000008': {'type':'Standard',  'name':'楽曲パック vol.8',                          'shortName':'Pack8',   'inputid':'#purchase-Pack8'  },
-                 '0000009': {'type':'Standard',  'name':'楽曲パック vol.9',                          'shortName':'Pack9',   'inputid':'#purchase-Pack9'  },
-                 '0000010': {'type':'Standard',  'name':'楽曲パック vol.10',                         'shortName':'Pack10',  'inputid':'#purchase-Pack10' },
-                 '0000011': {'type':'Standard',  'name':'楽曲パック vol.11',                         'shortName':'Pack11',  'inputid':'#purchase-Pack11' },
-                 '0000012': {'type':'Standard',  'name':'楽曲パック vol.12',                         'shortName':'Pack12',  'inputid':'#purchase-Pack12' },
-                 '0000013': {'type':'Standard',  'name':'楽曲パック vol.13',                         'shortName':'Pack13',  'inputid':'#purchase-Pack13' },
-                 '0010001': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.1', 'shortName':'PackSS1', 'inputid':'#purchase-PackSS1'},
-                 '0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1', 'shortName':'PackPM1', 'inputid':'#purchase-PackPM1'}, };
+VerArray = { "001": {"VName":"1st style",     "VShortName":"1st"},
+             "002": {"VName":"substream",     "VShortName":"sub"},
+             "003": {"VName":"2nd style",     "VShortName":"2nd"},
+             "004": {"VName":"3rd style",     "VShortName":"3rd"},
+             "005": {"VName":"4th style",     "VShortName":"4th"},
+             "006": {"VName":"5th style",     "VShortName":"5th"},
+             "007": {"VName":"6th style",     "VShortName":"6th"},
+             "008": {"VName":"7th style",     "VShortName":"7th"},
+             "009": {"VName":"8th style",     "VShortName":"8th"},
+             "010": {"VName":"9th style",     "VShortName":"9th"},
+             "011": {"VName":"10th style",    "VShortName":"10th"},
+             "012": {"VName":"IIDX RED",      "VShortName":"RED"},
+             "013": {"VName":"HAPPY SKY",     "VShortName":"HS"},
+             "014": {"VName":"DistorteD",     "VShortName":"DD"},
+             "015": {"VName":"GOLD",          "VShortName":"GLD"},
+             "016": {"VName":"DJ TROOPERS",   "VShortName":"DJT"},
+             "017": {"VName":"EMPRESS",       "VShortName":"EMP"},
+             "018": {"VName":"SIRIUS",        "VShortName":"SIR"},
+             "019": {"VName":"Resort Anthem", "VShortName":"RA"},
+             "020": {"VName":"Lincle",        "VShortName":"Lin"},
+             "021": {"VName":"tricolo",       "VShortName":"tri"},
+             "022": {"VName":"SPADA",         "VShortName":"SPA"},
+             "023": {"VName":"PENDUAL",       "VShortName":"PEN"},
+             "024": {"VName":"copula",        "VShortName":"cop"},
+             "025": {"VName":"SINOBUZ",       "VShortName":"SIN"},
+             "026": {"VName":"CANNON BALLERS","VShortName":"CB"},
+             "027": {"VName":"Rootage",       "VShortName":"Rt"},
+             "028": {"VName":"HEROIC VERSE",  "VShortName":"HV"},
+             "029": {"VName":"BISTROVER",     "VShortName":"BIS"},
+             "999": {"VName":"INFINITAS",     "VShortName":"INF"}
+};
+
+let packlist = { '0000001': {'type':'Standard',  'name':'楽曲パック vol.1',                            'inputName':'楽曲パックVol.1',  'shortName':'Pack1',   'inputid':'#purchase-Pack0000001'},
+                 '0000002': {'type':'Standard',  'name':'楽曲パック vol.2',                            'inputName':'楽曲パックVol.2',  'shortName':'Pack2',   'inputid':'#purchase-Pack0000002'},
+                 '0000003': {'type':'Standard',  'name':'楽曲パック vol.3',                            'inputName':'楽曲パックVol.3',  'shortName':'Pack3',   'inputid':'#purchase-Pack0000003'},
+                 '0000004': {'type':'Standard',  'name':'楽曲パック vol.4',                            'inputName':'楽曲パックVol.4',  'shortName':'Pack4',   'inputid':'#purchase-Pack0000004'},
+                 '0000005': {'type':'Standard',  'name':'楽曲パック vol.5',                            'inputName':'楽曲パックVol.5',  'shortName':'Pack5',   'inputid':'#purchase-Pack0000005'},
+                 '0000006': {'type':'Standard',  'name':'楽曲パック vol.6',                            'inputName':'楽曲パックVol.6',  'shortName':'Pack6',   'inputid':'#purchase-Pack0000006'},
+                 '0000007': {'type':'Standard',  'name':'楽曲パック vol.7',                            'inputName':'楽曲パックVol.7',  'shortName':'Pack7',   'inputid':'#purchase-Pack0000007'},
+                 '0000008': {'type':'Standard',  'name':'楽曲パック vol.8',                            'inputName':'楽曲パックVol.8',  'shortName':'Pack8',   'inputid':'#purchase-Pack0000008'},
+                 '0000009': {'type':'Standard',  'name':'楽曲パック vol.9',                            'inputName':'楽曲パックVol.9',  'shortName':'Pack9',   'inputid':'#purchase-Pack0000009'},
+                 '0000010': {'type':'Standard',  'name':'楽曲パック vol.10',                           'inputName':'楽曲パックVol.10', 'shortName':'Pack10',  'inputid':'#purchase-Pack0000010'},
+                 '0000011': {'type':'Standard',  'name':'楽曲パック vol.11',                           'inputName':'楽曲パックVol.11', 'shortName':'Pack11',  'inputid':'#purchase-Pack0000011'},
+                 '0000012': {'type':'Standard',  'name':'楽曲パック vol.12',                           'inputName':'楽曲パックVol.12', 'shortName':'Pack12',  'inputid':'#purchase-Pack0000012'},
+                 '0000013': {'type':'Standard',  'name':'楽曲パック vol.13',                           'inputName':'楽曲パックVol.13', 'shortName':'Pack13',  'inputid':'#purchase-Pack0000013'},
+                 '0010001': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.1', 'inputName':'SSパックVol.1',    'shortName':'PackSS1', 'inputid':'#purchase-Pack0010001'},
+                 '0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'#purchase-Pack0020001'}, };
 
 let headerLine = [
-    ['v01-header','par-version','1st style'],
-    ['v02-header','par-version','substream'],
-    ['v03-header','par-version','2nd style'],
-    ['v04-header','par-version','3rd style'],
-    ['v05-header','par-version','4th style'],
-    ['v06-header','par-version','5th style'],
-    ['v07-header','par-version','6th style'],
-    ['v08-header','par-version','7th style'],
-    ['v09-header','par-version','8th style'],
-    ['v10-header','par-version','9th style'],
-    ['v11-header','par-version','10th style'],
-    ['v12-header','par-version','IIDXRED'],
-    ['v13-header','par-version','HAPPY SKY'],
-    ['v14-header','par-version','DistorteD'],
-    ['v15-header','par-version','GOLD'],
-    ['v16-header','par-version','DJ TROOPERS'],
-    ['v17-header','par-version','EMPRESS'],
-    ['v18-header','par-version','SIRIUS'],
-    ['v19-header','par-version','Resort Anthem'],
-    ['v20-header','par-version','Lincle'],
-    ['v21-header','par-version','tricoro'],
-    ['v22-header','par-version','SPADA'],
-    ['v23-header','par-version','PENDUAL'],
-    ['v24-header','par-version','copula'],
-    ['v25-header','par-version','SINOBUZ'],
-    ['v26-header','par-version','CANNON BALLERS'],
-    ['v27-header','par-version','Rootage'],
-    ['v28-header','par-version','HEROIC VERSE'],
-    ['v29-header','par-version','BISTROVER'],
+    ['v01-header', 'par-version','1st style'],
+    ['v02-header', 'par-version','substream'],
+    ['v03-header', 'par-version','2nd style'],
+    ['v04-header', 'par-version','3rd style'],
+    ['v05-header', 'par-version','4th style'],
+    ['v06-header', 'par-version','5th style'],
+    ['v07-header', 'par-version','6th style'],
+    ['v08-header', 'par-version','7th style'],
+    ['v09-header', 'par-version','8th style'],
+    ['v10-header', 'par-version','9th style'],
+    ['v11-header', 'par-version','10th style'],
+    ['v12-header', 'par-version','IIDXRED'],
+    ['v13-header', 'par-version','HAPPY SKY'],
+    ['v14-header', 'par-version','DistorteD'],
+    ['v15-header', 'par-version','GOLD'],
+    ['v16-header', 'par-version','DJ TROOPERS'],
+    ['v17-header', 'par-version','EMPRESS'],
+    ['v18-header', 'par-version','SIRIUS'],
+    ['v19-header', 'par-version','Resort Anthem'],
+    ['v20-header', 'par-version','Lincle'],
+    ['v21-header', 'par-version','tricoro'],
+    ['v22-header', 'par-version','SPADA'],
+    ['v23-header', 'par-version','PENDUAL'],
+    ['v24-header', 'par-version','copula'],
+    ['v25-header', 'par-version','SINOBUZ'],
+    ['v26-header', 'par-version','CANNON BALLERS'],
+    ['v27-header', 'par-version','Rootage'],
+    ['v28-header', 'par-version','HEROIC VERSE'],
+    ['v29-header', 'par-version','BISTROVER'],
     ['v999-header','par-version','INFINITAS'] ];
+
 let BPMArray = [    '-99','100-109','110-119','120-129','130-139','140-149','150-159','160-169','170-179','180-189',
-                '190-199','200-209','210-219','220-',                                                               'BPM_CHANGE'];
+                '190-199','200-209','210-219','220-',   'BPM_CHANGE'];
+
 let NotesArray = [      '-99',  '100-199',  '200-299',  '300-399',  '400-499',  '500-599',  '600-699',  '700-799',  '800-899',  '900-999',
                   '1000-1099','1100-1199','1200-1299','1300-1399','1400-1499','1500-1599','1600-1699','1700-1799','1800-1899','1900-1999',
                   '2000-',    'NO'];
+
 let DifficultNameArray = ['Beginner', 'Normal', 'Hyper', 'Another', 'Leggendaria'];
 
 let userJSON = {};
@@ -79,11 +114,6 @@ let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
 let SCOPES = 'https://www.googleapis.com/auth/drive';
-
-let authorizeButton = document.getElementById('authorize_button');
-let signoutButton = document.getElementById('signout_button');
-let getButton = document.getElementById('get_button');
-
 
 function zeroPadding(num,length){
     if (String(num).length >= length ) { return String(num); }
@@ -148,200 +178,13 @@ function pushheaderLine(prefix, className, label, values, isLabelWithVal = true)
 };
 
 /**
- * ログイン処理の実行
- *
- * @param 
- * @return なし
- *
-**/
-function execLogin(token = ''){
-    // 入力欄チェック
-//    if ( checkId() ||
-//         checkPassword() ) {
-//        alert('ID・参照パス・編集パスを正しく入力してください。');
-//        return false;
-//    };
-
-    // ログイン要求
-    let tokenLogin = !(token === '');
-    
-    let serialized = "";
-    if ( tokenLogin ) {
-        serialized = '{"token":"' + token + '"}';
-    } else {
-        let postdata = {};
-        postdata.id = jQuery('input#id').val();
-        postdata.readpassword = jQuery('input#readpassword').val();
-        postdata.writepassword = jQuery('input#writepassword').val();
-        serialized = JSON.stringify(postdata);
-    }
-    let loginReq = getJSONFile('/customapi/infinitas/login/', serialized);
-    loginReq.done(function(getData,textStatus,jqXHR) {
-        userJSON = getData;
-
-        switch (userJSON.status) {
-            case 'OK' :
-                if (!tokenLogin) { alert('ログインしました'); };
-                jQuery("label[for='setmyid']").text( 'ログイン済' );
-                jQuery('#setmyid').prop('checked', true);
-
-                Cookies.set('infinitas_rtoken', getData.rtoken, { expires: 30, path: '', sameSite: 'Lax', secure: true });
-                jQuery('.sg2').removeClass('hidden');
-
-                // 解禁状況の取得
-                let canplayReq = getJSONFile('/customapi/infinitas/get/status/user/', '{"token":"' + userJSON.token + '"}');
-                canplayReq.done(function(getData,textStatus,jqXHR) {
-                    if ( 'Canplay' in getData ) {
-                        userJSON.musics = ('Musics' in getData.musics) ? getData.musics.Musics : {};
-
-                        let packlist = [ {'mid':'0000001','inputid':'#purchase-Pack1'},
-                                         {'mid':'0000002','inputid':'#purchase-Pack2'},
-                                         {'mid':'0000003','inputid':'#purchase-Pack3'},
-                                         {'mid':'0000004','inputid':'#purchase-Pack4'},
-                                         {'mid':'0000005','inputid':'#purchase-Pack5'},
-                                         {'mid':'0000006','inputid':'#purchase-Pack6'},
-                                         {'mid':'0000007','inputid':'#purchase-Pack7'},
-                                         {'mid':'0000008','inputid':'#purchase-Pack8'},
-                                         {'mid':'0000009','inputid':'#purchase-Pack9'},
-                                         {'mid':'0000010','inputid':'#purchase-Pack10'},
-                                         {'mid':'0000011','inputid':'#purchase-Pack11'},
-                                         {'mid':'0000012','inputid':'#purchase-Pack12'},
-                                         {'mid':'0000013','inputid':'#purchase-Pack13'},
-                                         {'mid':'0000014','inputid':'#purchase-Pack14'},
-                                         {'mid':'0000015','inputid':'#purchase-Pack15'},
-                                         {'mid':'0000016','inputid':'#purchase-Pack16'},
-                                         {'mid':'0000017','inputid':'#purchase-Pack17'},
-                                         {'mid':'0000018','inputid':'#purchase-Pack18'},
-                                         {'mid':'0000019','inputid':'#purchase-Pack19'}, 
-                                         {'mid':'0000020','inputid':'#purchase-Pack20'},
-                                         {'mid':'0000021','inputid':'#purchase-Pack21'},
-                                         {'mid':'0000022','inputid':'#purchase-Pack22'},
-                                         {'mid':'0000023','inputid':'#purchase-Pack23'},
-                                         {'mid':'0000024','inputid':'#purchase-Pack24'},
-                                         {'mid':'0000025','inputid':'#purchase-Pack25'},
-                                         {'mid':'0000026','inputid':'#purchase-Pack26'},
-                                         {'mid':'0000027','inputid':'#purchase-Pack27'},
-                                         {'mid':'0000028','inputid':'#purchase-Pack28'},
-                                         {'mid':'0000029','inputid':'#purchase-Pack29'}, 
-                                         {'mid':'0000030','inputid':'#purchase-Pack30'},
-                                         {'mid':'0001001','inputid':'#purchase-PackSS1'},
-                                         {'mid':'0001002','inputid':'#purchase-PackSS2'},
-                                         {'mid':'0001003','inputid':'#purchase-PackSS3'},
-                                         {'mid':'0001004','inputid':'#purchase-PackSS4'},
-                                         {'mid':'0001005','inputid':'#purchase-PackSS5'},
-                                         {'mid':'0001006','inputid':'#purchase-PackSS6'},
-                                         {'mid':'0001007','inputid':'#purchase-PackSS7'},
-                                         {'mid':'0001008','inputid':'#purchase-PackSS8'},
-                                         {'mid':'0001009','inputid':'#purchase-PackSS9'},
-                                         {'mid':'0001010','inputid':'#purchase-PackSS10'},
-                                        ];
-                        for(let pack of packlist){
-                            if (pack.mid in userJSON.musics) {
-                                jQuery(pack.inputid).prop('checked',(userJSON.musics[pack.mid].Normal === '1'));
-                                togglePackButton(jQuery(pack.inputid), false);
-                            };
-                        };
-                    } else {
-                        userJSON.musics = {};
-                    };
-                } )
-                .fail(function(jqXHR, textStatus, errorThrown ) {
-                } )
-                .always(function(getData,textStatus,jqXHR) {
-                } );
-
-                // TODO:ログイン後のいろいろを追加する
-                break;
-            case 'Readonly Login' :
-                if (!tokenLogin) { alert('編集パスが確認できないため読み込み専用でログインしました'); };
-                jQuery('#setmyid').prop('checked', true);
-                jQuery("label[for='setmyid']").text( 'ログイン済(参照のみ)');
-
-                Cookies.set('infinitas_rtoken', getData.rtoken, { expires: 30, path: '', sameSite: 'Lax', secure: true });
-                // TODO:ログイン後のいろいろを追加する
-                jQuery('.sg2').removeClass('hidden');
-
-                break;
-            case 'newuser' :
-                if ( confirm('新規登録しますか？') ) {
-                    execLogin();
-                } else {
-                    // いいえの場合はログインボタンのチェックを外す
-                    jQuery('#setmyid').prop('checked', false);
-                };
-                break;
-            case 'login failed' :
-                if (!tokenLogin) { alert('ログインできませんでした。'); };
-                // ログインボタンのチェックを外す
-                jQuery('#setmyid').prop('checked', false);
-                break;
-            default:
-                if (!tokenLogin) { alert('不明な応答がありました。'); };
-                // ログインボタンのチェックを外す
-                jQuery('#setmyid').prop('checked', false);
-                break;
-        };
-    } )
-    .fail(function(jqXHR, textStatus, errorThrown ) {
-        if (!tokenLogin) { alert('ログインできませんでした。'); };
-        // ログインボタンのチェックを外す
-        jQuery('#setmyid').prop('checked', false);
-    } )
-    .always(function(getData,textStatus,jqXHR) {
-        // ライバル情報欄を有効/無効化
-        jQuery('#id').val(userJSON.id);
-        if ("readpassword" in userJSON) { jQuery('#readpassword').val(userJSON.readpassword); };
-        jQuery('#savesetting .sg2 input').prop('disabled',(!jQuery('#setmyid').prop('checked')));
-
-        if ( jQuery('#show-savesetting').prop('checked') ) {
-            jQuery('.sg2').show();
-        } else {
-            jQuery('.sg2').hide();
-        };
-
-    });
-};
-
-/**
- * ログアウト処理の実行
- *
- * @param なし
- * @return なし
- *
-**/
-function execLogout() {
-    if (confirm('ログアウトしますか？')) {
-        Cookies.remove('infinitas_rtoken');
-    
-        // JSONリクエスト
-        let postdata = {};
-        postdata.token = userJSON.token;
-        let serialized = JSON.stringify(postdata);
-        let logout = getJSONFile('/customapi/infinitas/logout/', serialized);
-    
-        jQuery('#id, #writepassword, #readpassword, #savesetting input[type=text]').val('');
-        jQuery('#setmyid, #setrivalid').prop('checked', false);
-        jQuery('#savesetting .sg2 input').prop('disabled', true);
-        jQuery("label[for='setmyid']").text('上記IDでログイン or 新規登録');
-        jQuery("label[for='setrivalid']").text('ライバル情報更新');
-        jQuery('.sg2').addClass('hidden');
-        jQuery('.sg2').hide();
-        
-        userJSON = undefined;
-    } else {
-        jQuery('#setmyid').prop('checked', true);
-        return false;
-    };
-};
-
-/**
  * ローカルファイルの読込
  *
  * @param 
  * @return なし
  *
 **/
-function readGoogleDrive(fid){
+function readUserJSONfromGoogleDrive(fid, callback=initializeUserJSON){
     try {
         let retval = false;
         let req = gapi.client.drive.files.get({
@@ -370,19 +213,23 @@ function readGoogleDrive(fid){
  * @return なし
  *
 **/
-function readLocalFile(fileObj){
+function readUserJSONfromLocalFile(fileObj, callback=initializeUserJSON){
     let r = new FileReader();
+
+    r.onload = function(reader) {
+        if (!checkUserJSON(reader.target.result)) { return false; };
+
+        callback(reader.target.result);
+    };
 
     try {
         r.readAsText(fileObj);
-//        while () {};
-        return r.result;
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">指定したファイルが読み込めませんでした！</span>');
+        JSONmsgObj.html('<span class="warn">readUserJSONfromLocalFile / 指定したファイルが読み込めませんでした！</span>');
         return false;
     };
-}
+};
 
 /**
  * ローカルストレージの読込
@@ -391,18 +238,26 @@ function readLocalFile(fileObj){
  * @return なし
  *
 **/
-function readLocalStorage(key='infinitas'){
+function readUserJSONfromLocalStorage(key='infinitas', callback=initializeUserJSON){
     let st = localStorage;
-    let JSONmsgObj = jQuery('#json-message');
 
     try {
-        return st.getItem(key);
+        let result = st.getItem(key);
+        if ( !checkUserJSON(result) ) { return false; };
+
+        callback(result);
     } catch (e) {
         // エラー時はメッセージ表示
         JSONmsgObj.html('<span class="warn">ローカルストレージが読み込めませんでした！</span>');
         return false;
     };
-}
+};
+
+function readUserJSONfromJSONarea(obj=jQuery('#userjsonarea'), callback=initializeUserJSON) {
+    if ( !checkUserJSON( obj.val() ) ) { return false; };
+
+    callback(obj.val());
+};
 
 /**
  * ユーザデータJSONをtextareaに出力
@@ -440,34 +295,67 @@ function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
             "created": dateFormat.format(new Date(), 'yyyy-MM-ddThh:mm:ss+00:00'),
             "updated": dateFormat.format(new Date(), 'yyyy-MM-ddThh:mm:ss+00:00')
         };
-        userJSON.info = jsonData.info;
         jsonData.musics = {};
+        jsonData.packs = {};
     
+        initializeUserJSON(JSON.stringify(jsonData));
     } else {
-        try {
-            // とりあえず読み込み
-            switch (readType) {
-                case 'localstorage' : jsonData = JSON.parse(readLocalStorage()); break;
-                case 'file'         : jsonData = JSON.parse(readLocalFile(jQuery('#localfile')[0].files[0]));    break;
-                case 'googleDrive'  : jsonData = JSON.parse(readGoogleDrive());  break;
-                case 'jsonarea'     : jsonData = JSON.parse(obj.val());          break;
-            };
-        } catch (e) {
-            // エラー時はメッセージ表示
-            JSONmsgObj.html('<span class="warn">読込タイプ : ' + readType + ' / エラー / JSONが読み込めません！</span>');
-            return;
+        switch (readType) {
+            case 'localstorage' : readUserJSONfromLocalStorage(); break;
+            case 'file'         : readUserJSONfromLocalFile(jQuery('#localfile')[0].files[0]);    break;
+            case 'googleDrive'  : readUserJSONfromGoogleDrive();  break;
+            case 'jsonarea'     : readUserJSONfromJSONarea(obj);  break;
         };
-    
-        // userJSONの項目チェック
-        if ( !("info" in jsonData)) {JSONmsgObj.html('<span class="warn">JSON内に"info"が見つかりません！</span>'); return;};
-        if ( !("id" in jsonData.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.id"が見つかりません！</span>'); return;};
-        if ( !("created" in jsonData.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.created"が見つかりません！</span>'); return; };
-        if ( !("updated" in jsonData.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.updated"が見つかりません！</span>'); return; };
-        if ( !("musics" in jsonData) ) { JSONmsgObj.html('<span class="warn">JSON内に"musics"が見つかりません！</span>'); return; };
+    };
+};
 
-        userJSON.info = jsonData.info;
+/**
+ * ユーザデータJSONの確認
+ *
+ * @param {Object} jsonData - 読み込んだjsonData
+ * @return {boolean} result - チェック結果
+ *
+**/
+function checkUserJSON(jsonData) {
+    // parse確認
+    let parsedJSON = {};
+    try {
+        parsedJSON = JSON.parse(jsonData);
+    } catch (e) {
+        JSONmsgObj.html('<span class="warn">JSON.parseが出来ませんでした！</span>');
+        return false;
+    }
+
+    // userJSONの項目チェック
+    if ( !("info" in parsedJSON) ) {         JSONmsgObj.html('<span class="warn">JSON内に"info"が見つかりません！</span>');         return false; };
+    if ( !("id" in parsedJSON.info) ) {      JSONmsgObj.html('<span class="warn">JSON内に"info.id"が見つかりません！</span>');      return false; };
+    if ( !("created" in parsedJSON.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.created"が見つかりません！</span>'); return false; };
+    if ( !("updated" in parsedJSON.info) ) { JSONmsgObj.html('<span class="warn">JSON内に"info.updated"が見つかりません！</span>'); return false; };
+    if ( !("musics" in parsedJSON) ) {       JSONmsgObj.html('<span class="warn">JSON内に"musics"が見つかりません！</span>');       return false; };
+    if ( !("packs" in parsedJSON) ) {        JSONmsgObj.html('<span class="warn">JSON内に"packs"が見つかりません！</span>');        return false; };
+
+    return true;
+};
+
+/**
+ * 
+ * @param {String} JSONString 
+ */
+function initializeUserJSON(JSONString) {
+    let jsonData = {};
+    try {
+        // とりあえず読み込み
+        jsonData = JSON.parse(JSONString);
+    } catch (e) {
+        // エラー時はメッセージ表示
+        JSONmsgObj.html('<span class="warn">発生関数 : initializeUserJSON / エラー / JSON.parseが失敗しました。</span>');
+        return;
     };
 
+    // info
+    userJSON.info = jsonData.info;
+
+    // 楽曲情報
     userJSON.musics = {};
     for (item of musics.JSON) {
         hasID =      (item.ID in jsonData.musics);
@@ -495,12 +383,18 @@ function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
         };
     };
 
+    // パック購入情報
     userJSON.packs = {};
-    for(let pid in packlist){
-        if (pid in userJSON.packs) {
-            jQuery(packlist[pid].inputid).prop('checked',(userJSON.packs[pid].isPurchased === '1'));
-            togglePackButton(jQuery(pid), false);
+    for (let pid in packlist) {
+        hasID = (pid in jsonData.packs);
+        hasPurchased = (hasID && ('purchased' in jsonData.packs[pid]));
+
+        userJSON.packs[pid] = {
+            'packname': (hasID && ('packname' in jsonData.packs[pid])) ? jsonData.packs[pid].packname : packlist[pid].name,
+            'purchased': (hasID && ('purchased' in jsonData.packs[pid])) ? jsonData.packs[pid].purchased : '0'
         };
+        jQuery(packlist[pid].inputid).prop('checked',(userJSON.packs[pid].purchased === '1'));
+        togglePackButton(jQuery('#purchase-Pack' + pid), false);
     };
 
     // 最終的なJSONをtextareaに出力
@@ -508,7 +402,7 @@ function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
 
 };
 
-/**
+ /**
  * ヘッダー行の作成
  *
  * @param {{String,String,String}...} items - {id名, class名, 表示テキスト}の配列
@@ -721,12 +615,20 @@ function togglePackButton(obj,isUpdate = true) {
     let jqobj = jQuery(obj);
     let objid = jqobj.attr('id');
 
-    jQuery("label[for='" + objid + "']").text( objid.replace("purchase-"," ") + ( jqobj.prop('checked') ? '購入済' : '未購入' ) );
+    jQuery("label[for='" + objid + "']").text( packlist[objid.replace("purchase-Pack","")].shortName + ( jqobj.prop('checked') ? '購入済' : '未購入' ) );
     if (!isUpdate) { return true; };
 
     update.start(objid.replace("purchase-Pack","pack_"),jqobj.prop('checked'));
+    let objIdNumber = Number( objid.replace("purchase-Pack","") );
+    let replacedObjId = "Pack" + objIdNumber;
+    if ( objIdNumber >= 10000 && objIdNumber < 20000 ) {
+        replacedObjId = "PackSS" + (objIdNumber - 10000);
+    } else if ( objIdNumber >= 20000 && objIdNumber < 30000 ) {
+        replacedObjId = "PackPM" + (objIdNumber - 20000);
+    };
+
     jQuery.each(musics.JSON,function (ind,val) {
-        if ('Type' in val.Release && val.Release.Type.indexOf(objid.replace("purchase-Pack","Pack")) >= 0 ) {
+        if ('Type' in val.Release && val.Release.Type == replacedObjId ) {
             update.start(val.ID + '_b',jqobj.prop('checked'));
             update.start(val.ID + '_n',jqobj.prop('checked'));
             update.start(val.ID + '_h',jqobj.prop('checked'));
@@ -775,13 +677,6 @@ function getNotesValue(inputNotes) {
 };
 
 /**
- * ログイン・ライバル情報取得
- */
-function getJSONFile(requestURL, serialized) {
-    return jQuery.post ( requestURL, serialized, null, 'json' );
-};
-
-/**
  * トーストボックス表示用オブジェクト
  */
 let toastbox = {
@@ -789,12 +684,17 @@ let toastbox = {
     defaultTimer: 5000, // ポップアップ時間(ミリ秒)
     timerID: null,
 
+    setObject: function(selector='#toastbox') {
+        this.toastObj = jQuery(selector);
+    },
     status: function(val='') {
         let self = this;
 
     },
     message: function(msg='') {
         let self = this;
+        if (self.toastObj.length == 0) { self.setObject(); };
+
         
         if (self.toastObj.is(':hidden')) {
             self.fadeIn(msg);
@@ -804,25 +704,27 @@ let toastbox = {
     },
     fadeIn: function(msg='', type='fast') {
         let self = this;
+        if (self.toastObj.length == 0) { self.setObject(); };
 
         self.toastObj.fadeIn(type);
         if (msg != '') { self.toastObj.html(msg); };
     },
     fadeOut: function(type='fast') {
         let self = this;
+        if (self.toastObj.length == 0) { self.setObject(); };
 
         self.toastObj.fadeOut(type);
         self.toastObj.html('');
     },
-    timerFadeIn: function(msg='', timer=defaultTimer, type='fast') {
+    timerFadeIn: function(msg='', timer=this.defaultTimer, type='fast') {
         let self = this;
 
         self.timerID = window.setTimeout(function() {self.fadeIn(msg, type);}, timer);
     },
-    timerFadeOut: function(timer=defaultTimer, type='fast') {
+    timerFadeOut: function(timer=this.defaultTimer, type='fast') {
         let self = this;
 
-        self.timerID = window.setTimeout(function() {self.fadeIn(msg, type);}, timer);
+        self.timerID = window.setTimeout(function() {self.fadeOut(type);}, timer);
     },
     timerCancel: function() {
         let self = this;
@@ -850,19 +752,33 @@ let update = {
         delete self.timeoutID;
         for (item of self.updateArray) {
             let tmpVal = item.mid_diff.split('_');
-            switch (tmpVal[1]) {
-                case '0': case '1': case '2': case '3': case '4': tmpval[1] = DifficultNameArray[tmpVal[1]]; break;
-                case 'b': tmpVal[1] = 'Beginner'; break;
-                case 'n': tmpVal[1] = 'Normal'; break;
-                case 'h': tmpVal[1] = 'Hyper'; break;
-                case 'a': tmpVal[1] = 'Another'; break;
-                case 'l': tmpVal[1] = 'Leggendaria'; break;
+            if (tmpVal[0] == 'pack') {
+                if (!(tmpVal[1] in userJSON.packs)) { userJSON.packs[tmpVal[1]] = {'packname': packlist[tmpVal[1]].name, 'purchased': '0'}};
+                userJSON.packs[tmpVal[1]].purchased = item.isAdd ? '1' : '0';
+            } else {
+                switch (tmpVal[1]) {
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                        tmpval[1] = DifficultNameArray[tmpVal[1]];
+                        break;
+                    case 'b': tmpVal[1] = 'Beginner'; break;
+                    case 'n': tmpVal[1] = 'Normal'; break;
+                    case 'h': tmpVal[1] = 'Hyper'; break;
+                    case 'a': tmpVal[1] = 'Another'; break;
+                    case 'l': tmpVal[1] = 'Leggendaria'; break;
+                };
+
+                if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]].Canplay = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
+                userJSON.musics[tmpVal[0]].Canplay[tmpVal[1]] = item.isAdd ? '1' : '0';
             };
+        };
 
-            if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]] = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
-            userJSON.musics[tmpVal[0]][tmpVal[1]] = item.isAdd ? '1' : '0';
-        }
-
+        // 更新日時を更新
+        userJSON.info.updated = dateFormat.format(new Date(), 'yyyy-MM-ddThh:mm:ss+00:00');
+        // 完了処理
         toastbox.message(self.updateArray.length + '件の楽曲解禁状況を更新しました。');
         self.updateArray = [];
         toastbox.timerFadeOut();
@@ -882,7 +798,7 @@ let update = {
         if (index >= 0) { self.updateArray.splice(index ,1 ); };
         self.updateArray.push({"mid_diff":val, "isAdd":isAdd});
         self.timeoutID = window.setTimeout(function() {self.execUpdate();}, 5000);
-        toastbox.timerFadeIn(self.updateArray.length + '件の楽曲解禁状況の更新中…');
+        toastbox.fadeIn(self.updateArray.length + '件の楽曲解禁状況の更新中…');
     }
 };
 
@@ -892,60 +808,6 @@ let update = {
 let musics = {
     JSON: {},
     infoJSON: {},
-
-    getJSON: function(URL) {
-        jQuery('#search-message').html('<span>データファイル読み込み中…</span>');
-
-        // JSONファイルの取得
-        let result = getJSONFile(URL, null );
-        let self = this;
-        result.done(function(getData,textStatus,jqXHR) {
-            self.JSON = getData.musics;
-            self.infoJSON = getData.info;
-
-            //ここにget error時の処理追加
-
-            // 曲名の自動補完
-            let titleSet = new Set();
-            self.JSON.forEach(function(val,idx,ar){ titleSet.add(val.Title); });
-            titleSet = new Set([...titleSet].sort());
-            titleSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#titlelist'); });
-
-            // ジャンル名の自動補完
-            let genreSet = new Set();
-            self.JSON.forEach(function(val,idx,ar){ genreSet.add(val.Genre); });
-            genreSet = new Set([...genreSet].sort());
-            genreSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#genrelist'); });
-
-            // アーティスト名の自動補完
-            let artistSet = new Set();
-            self.JSON.forEach(function(val,idx,ar){ artistSet.add(val.Artist); });
-            artistSet = new Set([...artistSet].sort());
-            artistSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#artistlist'); });
-
-            jQuery('#search-message').html('<span>データファイル読み込み完了</span>');
-            jQuery('.infotable').append(
-              '<tbody><tr><td>' + dateFormat.format(new Date(self.infoJSON.lastupdated), 'yyyy/MM/dd<br />hh:mm') + '</td>' +
-                         '<td>' + self.infoJSON.music_count + '曲<br />' + self.infoJSON.chart_count_all + '譜面</td>' +
-                         '<td>' + self.infoJSON.chart_single_all + '譜面</td>' +
-                         '<td class="spb">' + self.infoJSON.chart_single_beginner + '譜面</td>' +
-                         '<td class="spn">' + self.infoJSON.chart_single_normal + '譜面</td>' +
-                         '<td class="sph">' + self.infoJSON.chart_single_hyper + '譜面</td>' +
-                         '<td class="spa">' + self.infoJSON.chart_single_another + '譜面</td>' +
-                         '<td>' + self.infoJSON.chart_double_all + '譜面</td>' +
-                         '<td class="dpn">' + self.infoJSON.chart_double_normal + '譜面</td>' +
-                         '<td class="dph">' + self.infoJSON.chart_double_hyper + '譜面</td>' +
-                         '<td class="dpa">' + self.infoJSON.chart_double_another + '譜面</td>' +
-                         '<!-- <td>' + self.infoJSON.user_count + '人</td> -->' +
-              '</tr></tbody>');
-            jQuery('#filter-button').prop('disabled',false);
-        } )
-        .fail(function(jqXHR, textStatus, errorThrown ) {
-            jQuery("#debug").append('<div class="">楽曲情報が取得できませんでした… JSON取得失敗(' + errorThrown + ')</div>');
-        } )
-        .always(function(getData,textStatus,jqXHR) {
-        });
-    },
 
     filter: function(items) {
         jQuery('#search-message').html('<span>検索中…</span>');
@@ -1294,12 +1156,12 @@ let musics = {
 
             // 解禁状況の取得・加工
             let canplay = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
-            if ('Canplay' in userJSON) {
-                canplay.Beginner     = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Beginner    == '1') ? true : false;
-                canplay.Normal       = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Normal      == '1') ? true : false;
-                canplay.Hyper        = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Hyper       == '1') ? true : false;
-                canplay.Another      = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Another     == '1') ? true : false;
-                canplay.Leggendaria  = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Leggendaria == '1') ? true : false;
+            if ('musics' in userJSON) {
+                canplay.Beginner     = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Beginner    == '1') ? true : false;
+                canplay.Normal       = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Normal      == '1') ? true : false;
+                canplay.Hyper        = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Hyper       == '1') ? true : false;
+                canplay.Another      = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Another     == '1') ? true : false;
+                canplay.Leggendaria  = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Leggendaria == '1') ? true : false;
             };
 
             // BIT・譜面数計算(Beginner)
@@ -1446,8 +1308,8 @@ let musics = {
                       '<td class="dp level dpa' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
                       '</tr>' +
                       '<tr class="music_other" style="display: none;">' +
-                      '<td class="" rowspan="' + ((jQuery('#setmyid').prop('checked')) ? '2' : '1')+ '"></td>' +
-                      '<td class="other" colspan="4" rowspan="' + ((jQuery('#setmyid').prop('checked')) ? '2' : '1')+ '">' +
+                      '<td class="" rowspan="' + (('musics' in userJSON) ? '2' : '1')+ '"></td>' +
+                      '<td class="other" colspan="4" rowspan="' + (('musics' in userJSON) ? '2' : '1')+ '">' +
                       '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
                       'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
                       ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
@@ -1467,7 +1329,7 @@ let musics = {
                       '<td class="notes dph">' + DPH.Notes + '</td>' +
                       '<td class="notes dpa">' + DPA.Notes + '</td>' +
                       '</tr>' +
-                      ((jQuery('#setmyid').prop('checked')) ? 
+                      (('musics' in userJSON) ? 
                       '<tr class="music_other" style="display: none;">' +
                       '<td class="playable">解禁</td>' +
                       '<td class="playable spb">' + unlockCheckbox.B + '</td>' +
@@ -2129,23 +1991,23 @@ function handleClientLoad() {
     //jQuery('.sg2').addClass('hidden');
 
     // 検索条件のシリーズ項目作成
-    makeCheckbox('#seriesbox',[ ['series',   1, true, '1st style', ['series-CS']],
-                                ['series',   2, true, 'substream', ['series-CS']],
-                                ['series',   3, true, '2nd style', ['series-CS']],
-                                ['series',   4, true, '3rd style', ['series-CS']],
-                                ['series',   5, true, '4th style', ['series-CS']],
-                                ['series',   6, true, '5th style', ['series-CS']],
-                                ['series',   7, true, '6th style', ['series-CS']],
-                                ['series',   8, true, '7th style', ['series-CS']],
-                                ['series',   9, true, '8th style', ['series-CS']],
-                                ['series',  10, true, '9th style', ['series-CS']],
-                                ['series',  11, true, '10th style', ['series-CS']],
-                                ['series',  12, true, 'IIDX RED', ['series-CS']],
-                                ['series',  13, true, 'HAPPY SKY', ['series-CS']],
-                                ['series',  14, true, 'DistorteD', ['series-CS']],
-                                ['series',  15, true, 'GOLD', ['series-CS']],
+    makeCheckbox('#seriesbox',[ ['series',   1, true, '1st style',   ['series-CS']],
+                                ['series',   2, true, 'substream',   ['series-CS']],
+                                ['series',   3, true, '2nd style',   ['series-CS']],
+                                ['series',   4, true, '3rd style',   ['series-CS']],
+                                ['series',   5, true, '4th style',   ['series-CS']],
+                                ['series',   6, true, '5th style',   ['series-CS']],
+                                ['series',   7, true, '6th style',   ['series-CS']],
+                                ['series',   8, true, '7th style',   ['series-CS']],
+                                ['series',   9, true, '8th style',   ['series-CS']],
+                                ['series',  10, true, '9th style',   ['series-CS']],
+                                ['series',  11, true, '10th style',  ['series-CS']],
+                                ['series',  12, true, 'IIDX RED',    ['series-CS']],
+                                ['series',  13, true, 'HAPPY SKY',   ['series-CS']],
+                                ['series',  14, true, 'DistorteD',   ['series-CS']],
+                                ['series',  15, true, 'GOLD',        ['series-CS']],
                                 ['series',  16, true, 'DJ TROOPERS', ['series-CS']],
-                                ['series',  17, true, 'EMPRESS', ['series-CS']],
+                                ['series',  17, true, 'EMPRESS',     ['series-CS']],
                                 ['series',  18, true, 'SIRIUS'],
                                 ['series',  19, true, 'Resort Anthem'],
                                 ['series',  20, true, 'Lincle'],
@@ -2158,7 +2020,7 @@ function handleClientLoad() {
                                 ['series',  27, true, 'Rootage'],
                                 ['series',  28, true, 'HEROIC VERSE'],
                                 ['series',  29, true, 'BISTROVER'],
-                                ['series', 999, true, 'INFINITAS', ['series-CS']] ]);
+                                ['series', 999, true, 'INFINITAS',   ['series-CS']] ]);
 
     // 検索条件のシリーズ項目変更時に全選択・全解除の表示変更
     jQuery('.series-checkbox').change(function() {
@@ -2183,28 +2045,22 @@ function handleClientLoad() {
                                         ['DPH'],
                                         ['DPA'] ]);
     // 検索条件のリリース条件項目作成
-    makeCheckbox('#releasetypebox',[ ['releasetype', 'Default',       true, 'デフォルト楽曲'],
-                                     ['releasetype', 'Monthly',       true, '特定月プレイ特典'],
-                                     ['releasetype', 'BIT',           true, 'BIT解禁'],
-                                     ['releasetype', 'DJP',           true, 'DJP解禁'],
-                                     ['releasetype', 'Championship1', true, 'championship&nbsp;#1', ['releasetype-championship']],
-                                     ['releasetype', 'Championship2', true, 'championship&nbsp;#2', ['releasetype-championship']],
-                                     ['releasetype', 'Championship3', true, 'championship&nbsp;#3', ['releasetype-championship']],
-                                     ['releasetype', 'Championship4', true, 'championship&nbsp;#4', ['releasetype-championship']],
-                                     ['releasetype', 'Pack1',         true, '楽曲パックVol.1', ['releasetype-pack']],
-                                     ['releasetype', 'Pack2',         true, '楽曲パックVol.2', ['releasetype-pack']],
-                                     ['releasetype', 'Pack3',         true, '楽曲パックVol.3', ['releasetype-pack']],
-                                     ['releasetype', 'Pack4',         true, '楽曲パックVol.4', ['releasetype-pack']],
-                                     ['releasetype', 'Pack5',         true, '楽曲パックVol.5', ['releasetype-pack']],
-                                     ['releasetype', 'Pack6',         true, '楽曲パックVol.6', ['releasetype-pack']],
-                                     ['releasetype', 'Pack7',         true, '楽曲パックVol.7', ['releasetype-pack']],
-                                     ['releasetype', 'Pack8',         true, '楽曲パックVol.8', ['releasetype-pack']],
-                                     ['releasetype', 'Pack9',         true, '楽曲パックVol.9', ['releasetype-pack']],
-                                     ['releasetype', 'Pack10',        true, '楽曲パックVol.10', ['releasetype-pack']],
-                                     ['releasetype', 'Pack11',        true, '楽曲パックVol.11', ['releasetype-pack']],
-                                     ['releasetype', 'Pack12',        true, '楽曲パックVol.12', ['releasetype-pack']],
-                                     ['releasetype', 'Pack13',        true, '楽曲パックVol.13', ['releasetype-pack']],
-                                     ['releasetype', 'PackSS1',       true, 'SSパックVol.1', ['releasetype-pack', 'releasetype-packSS']] ]);
+    let releaseButtonList = [ ['releasetype', 'Default',       true, 'デフォルト楽曲'],
+                              ['releasetype', 'Monthly',       true, '特定月プレイ特典'],
+                              ['releasetype', 'BIT',           true, 'BIT解禁'],
+                              ['releasetype', 'DJP',           true, 'DJP解禁'],
+                              ['releasetype', 'Championship1', true, 'championship&nbsp;#1', ['releasetype-championship']],
+                              ['releasetype', 'Championship2', true, 'championship&nbsp;#2', ['releasetype-championship']],
+                              ['releasetype', 'Championship3', true, 'championship&nbsp;#3', ['releasetype-championship']],
+                              ['releasetype', 'Championship4', true, 'championship&nbsp;#4', ['releasetype-championship']] ];
+    // 楽曲パック情報を追加
+    for(let pid in packlist) {
+        let appendCSS = ['releasetype-pack'];
+        if (packlist[pid].shortName.search(/packSS/) != -1) { appendCSS.push('releasetype-packSS'); };
+        if (packlist[pid].shortName.search(/packPM/) != -1) { appendCSS.push('releasetype-packPM'); };
+        releaseButtonList.push(['releasetype', packlist[pid].shortName, true, packlist[pid].inputName, appendCSS] );
+    };
+    makeCheckbox('#releasetypebox', releaseButtonList);
 
     // 検索条件のリリース条件項目変更時に全選択・全解除の表示変更
     jQuery('.releasetype-checkbox').change(function() {
@@ -2219,20 +2075,11 @@ function handleClientLoad() {
     toggleSelectLink('#changeselect-releasetype-Pack','releasetype-pack', 'パック全');
 
     // データ保存条件のパック購入状況項目作成
-    makeCheckbox('#purchasebox',[ ['purchase', 'Pack1',  false, 'Pack1 未購入'],
-                                  ['purchase', 'Pack2',  false, 'Pack2 未購入'],
-                                  ['purchase', 'Pack3',  false, 'Pack3 未購入'],
-                                  ['purchase', 'Pack4',  false, 'Pack4 未購入'],
-                                  ['purchase', 'Pack5',  false, 'Pack5 未購入'],
-                                  ['purchase', 'Pack6',  false, 'Pack6 未購入'],
-                                  ['purchase', 'Pack7',  false, 'Pack7 未購入'],
-                                  ['purchase', 'Pack8',  false, 'Pack8 未購入'],
-                                  ['purchase', 'Pack9',  false, 'Pack9 未購入'],
-                                  ['purchase', 'Pack10', false, 'Pack10 未購入'],
-                                  ['purchase', 'Pack11', false, 'Pack11 未購入'],
-                                  ['purchase', 'Pack12', false, 'Pack12 未購入'],
-                                  ['purchase', 'Pack13', false, 'Pack13 未購入'],
-                                  ['purchase', 'PackSS1', false, 'PackSS1 未購入'] ]);
+    let purchaseButtonList = [];
+    for (let pid in packlist) {
+        purchaseButtonList.push( ['purchase', 'Pack' + pid, false, packlist[pid].shortName + ' 未購入'] );
+    };
+    makeCheckbox('#purchasebox',purchaseButtonList);
     
     // 日付のセレクトボックスを作成
     makeSelectMonth('#bitdate-min', LaunchDate, now, true);
@@ -2250,6 +2097,14 @@ function handleClientLoad() {
     });
     jQuery('#releasedate-min').change(function() {
         jQuery('#releasedate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
+    });
+
+    // ファイル選択ボタン押下時
+    jQuery('#localfile').on('change', function() {
+        if ('info' in userJSON) {
+            if (!confirm('読込済みのデータがありますが、読込みますか？')) { return false; };
+        };
+        readUserJSON('file');
     });
 
     // データ新規作成ボタン押下時
@@ -2274,35 +2129,21 @@ function handleClientLoad() {
         outputUserJSON();
     });
 
-    // ログインボタン押下
-    jQuery('#setmyid').change(function() {
-        if ( !jQuery('#setmyid').prop('checked') ) {
-            execLogout();
-            return false;
-        };
-
-        // 同意画面の表示有無確認
-        if ( confirmWindow ) {
-            // 同意しない場合は何もしない
-            if ( !confirm('データをcookieおよびサーバ内に保存することに同意しますか？') ) {
-                jQuery('#setmyid').prop('checked', false);
-                return false;
-            // 一度同意したら同意画面は出さない
-            } else {
-                confirmWindow = false;
-            };
-        };
-
-        execLogin();
-    });
-
     // ライバル情報ボタン押下
     jQuery('#setrivalid').change(function() {
         jQuery("label[for='setrivalid']").text( ( jQuery(this).prop('checked') ? 'ライバル情報を非表示にする' : 'ライバル情報を表示する' ) );
     });
 
     // パックボタン押下時
-    jQuery('.purchase input').change(function() { togglePackButton(this); });
+    jQuery('.purchase input').change(function() {
+        if ('packs' in userJSON) {
+            togglePackButton(this);
+        } else {
+            jQuery(this).prop('checked', false);
+            toastbox.fadeIn('先に「データを新規作成」してください。');
+            toastbox.timerFadeOut(5000);
+        };
+    });
 
     // 譜面オプションボタン押下時
     jQuery('.score_opt input[type="number"]').click(function() { toggleScoreOptButton(this); });
@@ -2342,6 +2183,7 @@ function handleClientLoad() {
     // 検索ボタン押下時
     jQuery('#filter-button').click(function() {
         try {
+            let musicJSON = musics.JSON;
             let filteredJSON = [];
             let sortedJSON = [];
 
@@ -2349,7 +2191,36 @@ function handleClientLoad() {
             jQuery(this).attr('disabled', true);
             s.getSearchParam();
 
-            filteredJSON = musics.filter(musics.JSON);
+            for (let i = 0; i < musicJSON.length; i++) {
+                // バージョン情報を追加
+                let sliceID = musicJSON[i].ID.substr(0,3);
+                musicJSON[i]['VNo'] = Number(sliceID);
+                musicJSON[i]['VName'] = VerArray[sliceID].VName;
+                musicJSON[i]['VShortName'] = VerArray[sliceID].VShortName;
+
+                // 解禁BITの計算
+                if ("BitDate" in musicJSON[i].Release) {
+                    BLv = Number("Beginner"    in musicJSON[i].Scores.Single ? musicJSON[i].Scores.Single.Beginner.Level    : 0)
+                        + Number("Beginner"    in musicJSON[i].Scores.Double ? musicJSON[i].Scores.Double.Beginner.Level    : 0);
+                    NLv = Number("Normal"      in musicJSON[i].Scores.Single ? musicJSON[i].Scores.Single.Normal.Level      : 0)
+                        + Number("Normal"      in musicJSON[i].Scores.Double ? musicJSON[i].Scores.Double.Normal.Level      : 0);
+                    HLv = Number("Hyper"       in musicJSON[i].Scores.Single ? musicJSON[i].Scores.Single.Hyper.Level       : 0)
+                        + Number("Hyper"       in musicJSON[i].Scores.Double ? musicJSON[i].Scores.Double.Hyper.Level       : 0);
+                    ALv = Number("Another"     in musicJSON[i].Scores.Single ? musicJSON[i].Scores.Single.Another.Level     : 0)
+                        + Number("Another"     in musicJSON[i].Scores.Double ? musicJSON[i].Scores.Double.Another.Level     : 0);
+                    LLv = Number("Leggendaria" in musicJSON[i].Scores.Single ? musicJSON[i].Scores.Single.Leggendaria.Level : 0)
+                        + Number("Leggendaria" in musicJSON[i].Scores.Double ? musicJSON[i].Scores.Double.Leggendaria.Level : 0);
+
+                    musicJSON[i].Release.Bit = {};
+                    if ( BLv > 0 ) { musicJSON[i].Release.Bit.Beginner    = BLv * 500; };
+                    if ( NLv > 0 ) { musicJSON[i].Release.Bit.Normal      = NLv * 500; };
+                    if ( HLv > 0 ) { musicJSON[i].Release.Bit.Hyper       = HLv * 500; };
+                    if ( ALv > 0 ) { musicJSON[i].Release.Bit.Another     = ALv * 500; };
+                    if ( LLv > 0 ) { musicJSON[i].Release.Bit.Leggendaria = LLv * 500; };
+                };
+            };
+
+            filteredJSON = musics.filter(musicJSON);
             sortedJSON = musics.sort(filteredJSON);
             musics.write(sortedJSON);
 
@@ -2383,17 +2254,10 @@ function handleClientLoad() {
         jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
     });
 
-    token = Cookies.get('infinitas_rtoken');
-    if (token) {
-        execLogin(token);
-        if (userJSON.id) { confirmWindow = false; };
-    };
-
     // 譜面検索条件ボタンのクリックイベントを実行しておく
     jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
 
     // 購入済みパックボタンのクリックイベントを実行しておく
-    jQuery('.purchase input').each(function() {togglePackButton(this, false); });
-
+    jQuery('.purchase input').each(function() { togglePackButton(this, false); });
 };
 

@@ -122,6 +122,10 @@
     padding-left: 5px;
 }
 
+#main {
+    z-index: 50;
+    position: relative;
+}
 /*--------------------------------------------------
   更新情報トースト
 --------------------------------------------------*/
@@ -677,6 +681,9 @@ table.musiclist .level {
     color: #000000;
     border-right: 1px dotted #9b9b9b;
 }
+table.musiclist .other {
+    border-right: 1px dotted #9b9b9b;
+}
 table.musiclist .canplay {
     font-size: 1rem;
     font-weight: bold;
@@ -686,16 +693,31 @@ table.musiclist input.check-playable {
 }
 table.musiclist label {
     margin-bottom: 0px;
+    position: relative;
 }
 table.musiclist input.check-playable + label:before {
-    content: "\f096";
-    font-family: FontAwesome;
-    font-weight: 400;
-    font-size: 1.2rem;
+    content: "";
+    display: block;
+    position: absolute;
+    top: -0.5rem;
+    left: 35%;
+    width: 0.825rem;
+    height: 0.825rem;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background-color: #ebebeb;
 }
-table.musiclist input.check-playable:checked + label:before {
-    content: "\f046";
-    font-family: FontAwesome;
+table.musiclist input.check-playable:checked + label::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -1rem;
+    left: 45%;
+    width: 0.325rem;
+    height: 1.2rem;
+    transform: rotate(36deg);
+    border-bottom: 3px solid #3b9cba;
+    border-right: 3px solid #3b9cba;
 }
 table.musiclist .notes {
     width: 48px;
