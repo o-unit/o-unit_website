@@ -34,7 +34,7 @@ Add buttons to initiate auth sequence and sign out
     <input id="formtab-4" name="formtab" class="formtabinput" type="checkbox" value="4" data-checkgroup="formtab" /><label for="formtab-4" class="tab_item">データ設定</label>
     <input id="formtab-5" name="formtab" class="formtabinput" type="checkbox" value="5" data-checkgroup="formtab" /><label for="formtab-5" class="tab_item">楽曲数・BIT</label>
     <input id="formtab-6" name="formtab" class="formtabinput" type="checkbox" value="6" data-checkgroup="formtab" /><label for="formtab-6" class="tab_item">？？？</label>
-    <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" /><label for="formtab-7" class="tab_item">楽曲追加</label>
+    <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" /><label for="formtab-7" class="tab_item">(管理用1)</label>
     <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" /><label for="formtab-8" class="tab_item">？？？</label>
     <div id="formtab-1_content" class="tab_content">
         <div id="scorefilterbox"></div>
@@ -283,12 +283,16 @@ Add buttons to initiate auth sequence and sign out
             </div>
         </div>
         <hr class="clearfix" />
+        <div class="clearfix" id="json-message-outer" class="hidden">
+            <div class="fieldname"></div><div id="json-message" class="inblock"></div>
+        </div>
         <div class="clearfix">
-            <div class="fieldname">ファイル読込</div>
+            <div class="fieldname">ファイル</div>
             <div class="inblock">
-                <input id="localfile" name="localfile" type="file" placeholder="JSONファイルを指定…" class="hidden" />
-                <label for="localfile" class="btn btn--info">ファイル選択( or ここにドロップ )</label>
-                <div id="localfilename" class=""></div>
+                <a id="newtext" class="btn btn--info">データを新規作成</a>
+                <input id="localfile" name="localfile" type="file" class="hidden" /><label for="localfile" class="btn btn--info"> ファイル選択 </label>
+                <a id="downloadButton" class="btn btn--info hidden">JSON ダウンロード</a>
+                <div id="localfilename"></div>
             </div>
         </div>
         <hr class="clearfix" />
@@ -299,22 +303,6 @@ Add buttons to initiate auth sequence and sign out
                     <a id="googleSignin" class="btn btn--info">ログイン</a>
                 </div>
                 <input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" disabled />
-            </div>
-        </div>
-        <hr class="clearfix" />
-        <div class="clearfix">
-            <div class="fieldname"></div>
-            <a id="newtext" class="btn btn--info">データを新規作成</a>
-            <a id="texttojson" class="btn btn--info">表示中のJSONをデータとして読込</a>
-            <a id="jsontotext" class="btn btn--info">読込済のデータをJSONとして表示</a>
-        </div>
-        <div class="clearfix" id="json-message-outer" class="hidden">
-            <div class="fieldname"></div><div id="json-message" class="inblock"></div>
-        </div>
-        <div class="clearfix height-8">
-            <div class="fieldname">JSON</div>
-            <div class="inblock wide height-8">
-                <textarea id="userjsonarea" name="userjsonarea" placeholder="ここにJSONを入力してください…" class="textarea-100p height-8"></textarea>
             </div>
         </div>
         <!-- <hr class="clearfix sg2" />
@@ -407,9 +395,130 @@ Add buttons to initiate auth sequence and sign out
     </div>
     <div id="formtab-7_content" class="tab_content">
         <div class="clearfix">
+            <div class="fieldname"><label for="new_genre">ジャンル</label></div>
+            <div class="inblock"><input id="new_genre" name="new_genre" type="text" placeholder="ジャンル名…" class="input-260" /></div>
+        </div>
+        <div class="clearfix">
             <div class="fieldname"><label for="new_title">曲名</label></div>
             <div class="inblock"><input id="new_title" name="new_title" type="text" placeholder="曲名…" class="input-260" /></div>
         </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_artist">アーティスト</label></div>
+            <div class="inblock"><input id="new_artist" name="new_artist" type="text" placeholder="アーティスト名…" class="input-260" /></div>
+        </div>
+        <hr class="clearfix" />
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_releasetype">配信条件</label></div>
+            <div class="inblock">
+                <input id="new_releasetype" name="new_releasetype" type="text" placeholder="配信条件…" class="input-260" list="releasetypelist" />
+                <datalist id="releasetypelist">
+                    <option value="Monthly" />
+                    <option value="BIT" />
+                    <option value="Default" />
+                    <option value="DJP" />
+                    <option value="Championship" />
+                    <option value="Pack" />
+                    <option value="PackSS" />
+                    <option value="PackPM" />
+                </datalist>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_releasedate">配信開始日</label></div>
+            <div class="inblock"><input id="new_releasedate" name="new_releasedate" type="date" placeholder="配信開始日…" class="input-260" /></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_bitdate">BIT解禁日</label></div>
+            <div class="inblock"><input id="new_bitdate" name="new_bitdate" type="date" placeholder="BIT解禁日…" class="input-260" /></div>
+        </div>
+        <hr class="clearfix" />
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_SPB_Lv">SPB</label></div>
+            <div class="inblock"><input id="new_SPB_Lv" name="new_SPB_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPB_notes" name="new_SPB_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPB_notesCN" name="new_SPB_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPB_notesBSS" name="new_SPB_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPB_BPM" name="new_SPB_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_SPB_CN" name="new_SPB_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_SPB_BSS" name="new_SPB_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_SPB_HCN" name="new_SPB_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_SPB_HBSS" name="new_SPB_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_HBSS">HBSS</label></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_SPN_Lv">SPN</label></div>
+            <div class="inblock"><input id="new_SPN_Lv" name="new_SPN_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPN_notes" name="new_SPN_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPN_notesCN" name="new_SPN_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPN_notesBSS" name="new_SPN_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPN_BPM" name="new_SPN_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_SPN_CN" name="new_SPN_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_SPN_BSS" name="new_SPN_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_SPN_HCN" name="new_SPN_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_SPN_HBSS" name="new_SPN_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_HBSS">HBSS</label></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_SPH_Lv">SPH</label></div>
+            <div class="inblock"><input id="new_SPH_Lv" name="new_SPH_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPH_notes" name="new_SPH_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPH_notesCN" name="new_SPH_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPH_notesBSS" name="new_SPH_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPH_BPM" name="new_SPH_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_SPH_CN" name="new_SPH_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_SPH_BSS" name="new_SPH_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_SPH_HCN" name="new_SPH_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_SPH_HBSS" name="new_SPH_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_HBSS">HBSS</label></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_SPA_Lv">SPA</label></div>
+            <div class="inblock"><input id="new_SPA_Lv" name="new_SPA_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPA_notes" name="new_SPA_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPA_notesCN" name="new_SPA_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPA_notesBSS" name="new_SPA_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_SPA_BPM" name="new_SPA_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_SPA_CN" name="new_SPA_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_SPA_BSS" name="new_SPA_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_SPA_HCN" name="new_SPA_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_SPA_HBSS" name="new_SPA_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_HBSS">HBSS</label></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_DPN_Lv">DPN</label></div>
+            <div class="inblock"><input id="new_DPN_Lv" name="new_DPN_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPN_notes" name="new_DPN_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPN_notesCN" name="new_DPN_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPN_notesBSS" name="new_DPN_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPN_BPM" name="new_DPN_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_DPN_CN" name="new_DPN_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_DPN_BSS" name="new_DPN_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_DPN_HCN" name="new_DPN_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_DPN_HBSS" name="new_DPN_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_HBSS">HBSS</label></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_DPH_Lv">DPH</label></div>
+            <div class="inblock"><input id="new_DPH_Lv" name="new_DPH_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPH_notes" name="new_DPH_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPH_notesCN" name="new_DPH_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPH_notesBSS" name="new_DPH_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPH_BPM" name="new_DPH_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_DPH_CN" name="new_DPH_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_DPH_BSS" name="new_DPH_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_DPH_HCN" name="new_DPH_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_DPH_HBSS" name="new_DPH_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_HBSS">HBSS</label></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname"><label for="new_DPA_Lv">DPA</label></div>
+            <div class="inblock"><input id="new_DPA_Lv" name="new_DPA_Lv" type="text" placeholder="LV" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPA_notes" name="new_DPA_notes" type="text" placeholder="note" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPA_notesCN" name="new_DPA_notesCN" type="text" placeholder="noteCN" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPA_notesBSS" name="new_DPA_notesBSS" type="text" placeholder="noteBSS" class="input-60" /></div>
+            <div class="inblock"><input id="new_DPA_BPM" name="new_DPA_BPM" type="text" placeholder="BPM" class="input-60" /></div>
+            <div class="vname addmusic"><input id="new_DPA_CN" name="new_DPA_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_CN">CN</label></div>
+            <div class="vname addmusic"><input id="new_DPA_BSS" name="new_DPA_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_BSS">BSS</label></div>
+            <div class="vname addmusic"><input id="new_DPA_HCN" name="new_DPA_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_HCN">HCN</label></div>
+            <div class="vname addmusic"><input id="new_DPA_HBSS" name="new_DPA_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_HBSS">HBSS</label></div>
+        </div>
+        <hr class="clearfix" />
+        <div class="clearfix"><textarea id="new_comment" name="new_comment" placeholder="コメントを入力…" class="textarea-100p height-8"></textarea></div>
+        <div class="clearfix"><textarea id="new_json" name="new_json" placeholder="ここにJSONが表示されます…" class="textarea-100p height-8"></textarea></div>
     </div>
     <div id="formtab-8_content" class="tab_content">
         <div id="scorefilterbox"></div>
