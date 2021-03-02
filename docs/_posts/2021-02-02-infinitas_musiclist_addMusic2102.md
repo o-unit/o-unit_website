@@ -3,7 +3,7 @@ title: INFINITAS 楽曲一覧ページの楽曲追加 [2021/02]
 #tag: 
 tags: INFINTIAS
 #category:
-categories: INFINTIAS 更新情報
+categories: INFINTIAS Update
 ---
 INFINITASの楽曲一覧に楽曲を追加。  
   

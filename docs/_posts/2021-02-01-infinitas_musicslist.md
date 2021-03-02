@@ -3,7 +3,7 @@ title: INFINITAS 楽曲一覧ページの作成作業中2
 #tag: 
 tags: INFINTIAS
 #category:
-categories: INFINTIAS 更新情報
+categories: INFINTIAS Update
 ---
 INFINITASの楽曲一覧をまだまだ作成中。  
   

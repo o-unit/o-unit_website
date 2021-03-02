@@ -1,9 +1,9 @@
 ---
 title: INFINITAS 楽曲一覧ページの作成作業中
 #tag: 
-tags: 第1回 INFINTIAS
+tags: FirstPost INFINTIAS
 #category:
-categories: 第1回 INFINTIAS 更新情報
+categories: FirstPost INFINTIAS Update
 ---
 INFINITASの楽曲一覧を作成中。  
 もともとwordpressで自分用に作成していたものを何とかして静的サイトに置換中。  
