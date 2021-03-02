@@ -219,6 +219,9 @@ function readUserJSONfromLocalFile(fileObj, callback=initializeUserJSON){
     r.onload = function(reader) {
         if (!checkUserJSON(reader.target.result)) { return false; };
 
+        jQuery('#localfilename').text('ファイル名：' + fileObj.name + ' 読込済');
+        toastbox.FadeInandTimerFadeOut(fileObj.name + ' を読み込みました。');
+
         callback(reader.target.result);
     };
 
@@ -245,6 +248,7 @@ function readUserJSONfromLocalStorage(key='infinitas', callback=initializeUserJS
         let result = st.getItem(key);
         if ( !checkUserJSON(result) ) { return false; };
 
+        toastbox.FadeInandTimerFadeOut('ローカルストレージのデータを読み込みました。');
         callback(result);
     } catch (e) {
         // エラー時はメッセージ表示
@@ -253,26 +257,24 @@ function readUserJSONfromLocalStorage(key='infinitas', callback=initializeUserJS
     };
 };
 
-function readUserJSONfromJSONarea(obj=jQuery('#userjsonarea'), callback=initializeUserJSON) {
-    if ( !checkUserJSON( obj.val() ) ) { return false; };
-
-    callback(obj.val());
-};
-
 /**
- * ユーザデータJSONをtextareaに出力
+ * ローカルストレージに保存
  *
- * @param {jQueryObject} obj - JSONを記載するinput[type=textarea]のjQueryObj
+ * @param {jQueryObject} key - JSONを保存する際のkey
+ * @param {callbackFunction} callback - 処理後に実行する関数
  * @return なし
  *
 **/
-function outputUserJSON(obj=jQuery('#userjsonarea')) {
+function outputUserJSONtoLocalStorage(key='infinitas', callback=toastbox.FadeInandTimerFadeOut){
+    let st = localStorage;
+
     try {
-        obj.val(JSON.stringify(userJSON, undefined, 2));
+        st.setItem(key,JSON.stringify(userJSON));
+        callback('ローカルストレージに保存しました。<br />');
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">JSONが出力できませんでした！</span>');
-        return null;
+        JSONmsgObj.html('<span class="warn">ローカルストレージに書き込めませんでした！</span>');
+        return false;
     };
 };
 
@@ -304,7 +306,6 @@ function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
             case 'localstorage' : readUserJSONfromLocalStorage(); break;
             case 'file'         : readUserJSONfromLocalFile(jQuery('#localfile')[0].files[0]);    break;
             case 'googleDrive'  : readUserJSONfromGoogleDrive();  break;
-            case 'jsonarea'     : readUserJSONfromJSONarea(obj);  break;
         };
     };
 };
@@ -397,9 +398,13 @@ function initializeUserJSON(JSONString) {
         togglePackButton(jQuery('#purchase-Pack' + pid), false);
     };
 
-    // 最終的なJSONをtextareaに出力
-    outputUserJSON();
+    // ダウンロードボタンを有効化
+    jQuery('#downloadButton').removeClass('hidden');
+    jQuery('#downloadButton').show('fast');
+    blob = new Blob([JSON.stringify(userJSON, undefined, 2)], {type: 'application\/json'});
+    url = URL.createObjectURL(blob);
 
+    jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
 };
 
  /**
@@ -677,6 +682,141 @@ function getNotesValue(inputNotes) {
 };
 
 /**
+ * musicJSONに追加する文字列の作成
+ */
+function makeNewMusicJSON() {
+    output = {
+        "ID": "0xx00yy",
+        "Genre": jQuery('#new_genre').val(),
+        "Title": jQuery('#new_title').val(),
+        "Artist": jQuery('#new_artist').val(),
+        "Comment": jQuery('#new_comment').val(),
+        "Release": {
+            "Date": jQuery('#new_releasedate').val(),
+            "Type": jQuery('#new_releasetype').val()
+        },
+        "Scores": {
+            "Single": {},
+            "Double": {}
+        }
+    };
+
+    let BPMArray = [];
+
+    if (jQuery('#new_SPB_Lv').val() > 1) {
+        output.Scores.Single.Beginner = {"Level": jQuery('#new_SPB_Lv').val()};
+        if (jQuery('#new_SPB_notes').val() != '') { output.Scores.Single.Beginner.Notes = jQuery('#new_SPB_notes').val(); };
+        if (jQuery('#new_SPB_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_SPB_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Single.Beginner.MinBPM = tmpBPM[0]; output.Scores.Single.Beginner.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Single.Beginner.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_SPB_BPM').val());
+        };
+        if (jQuery('#new_SPB_CN').prop('checked')  ) { output.Scores.Single.Beginner.CN   = '1'; };
+        if (jQuery('#new_SPB_BSS').prop('checked') ) { output.Scores.Single.Beginner.BSS  = '1'; };
+        if (jQuery('#new_SPB_HCN').prop('checked') ) { output.Scores.Single.Beginner.HCN  = '1'; };
+        if (jQuery('#new_SPB_HBSS').prop('checked')) { output.Scores.Single.Beginner.HBSS = '1'; };
+    };
+
+    if (jQuery('#new_SPN_Lv').val() > 1) {
+        output.Scores.Single.Normal = {"Level": jQuery('#new_SPN_Lv').val()};
+        if (jQuery('#new_SPN_notes').val() != '') { output.Scores.Single.Normal.Notes = jQuery('#new_SPN_notes').val(); };
+        if (jQuery('#new_SPN_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_SPN_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Single.Normal.MinBPM = tmpBPM[0]; output.Scores.Single.Normal.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Single.Normal.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_SPN_BPM').val());
+        };
+        if (jQuery('#new_SPN_CN').prop('checked')  ) { output.Scores.Single.Normal.CN   = '1'; };
+        if (jQuery('#new_SPN_BSS').prop('checked') ) { output.Scores.Single.Normal.BSS  = '1'; };
+        if (jQuery('#new_SPN_HCN').prop('checked') ) { output.Scores.Single.Normal.HCN  = '1'; };
+        if (jQuery('#new_SPN_HBSS').prop('checked')) { output.Scores.Single.Normal.HBSS = '1'; };
+    };
+
+    if (jQuery('#new_SPH_Lv').val() > 1) {
+        output.Scores.Single.Hyper = {"Level": jQuery('#new_SPH_Lv').val()};
+        if (jQuery('#new_SPH_notes').val() != '') { output.Scores.Single.Hyper.Notes = jQuery('#new_SPH_notes').val(); };
+        if (jQuery('#new_SPH_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_SPH_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Single.Hyper.MinBPM = tmpBPM[0]; output.Scores.Single.Hyper.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Single.Hyper.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_SPH_BPM').val());
+        };
+        if (jQuery('#new_SPH_CN').prop('checked')  ) { output.Scores.Single.Hyper.CN   = '1'; };
+        if (jQuery('#new_SPH_BSS').prop('checked') ) { output.Scores.Single.Hyper.BSS  = '1'; };
+        if (jQuery('#new_SPH_HCN').prop('checked') ) { output.Scores.Single.Hyper.HCN  = '1'; };
+        if (jQuery('#new_SPH_HBSS').prop('checked')) { output.Scores.Single.Hyper.HBSS = '1'; };
+    };
+
+    if (jQuery('#new_SPA_Lv').val() > 1) {
+        output.Scores.Single.Another = {"Level": jQuery('#new_SPA_Lv').val()};
+        if (jQuery('#new_SPA_notes').val() != '') { output.Scores.Single.Another.Notes = jQuery('#new_SPA_notes').val(); };
+        if (jQuery('#new_SPA_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_SPA_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Single.Another.MinBPM = tmpBPM[0]; output.Scores.Single.Another.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Single.Another.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_SPA_BPM').val());
+        };
+        if (jQuery('#new_SPA_CN').prop('checked')  ) { output.Scores.Single.Another.CN   = '1'; };
+        if (jQuery('#new_SPA_BSS').prop('checked') ) { output.Scores.Single.Another.BSS  = '1'; };
+        if (jQuery('#new_SPA_HCN').prop('checked') ) { output.Scores.Single.Another.HCN  = '1'; };
+        if (jQuery('#new_SPA_HBSS').prop('checked')) { output.Scores.Single.Another.HBSS = '1'; };
+    };
+
+    if (jQuery('#new_DPN_Lv').val() > 1) {
+        output.Scores.Double.Normal = {"Level": jQuery('#new_DPN_Lv').val()};
+        if (jQuery('#new_DPN_notes').val() != '') { output.Scores.Double.Normal.Notes = jQuery('#new_DPN_notes').val(); };
+        if (jQuery('#new_DPN_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_DPN_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Double.Normal.MinBPM = tmpBPM[0]; output.Scores.Double.Normal.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Double.Normal.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_DPN_BPM').val());
+        };
+        if (jQuery('#new_DPN_CN').prop('checked')  ) { output.Scores.Double.Normal.CN   = '1'; };
+        if (jQuery('#new_DPN_BSS').prop('checked') ) { output.Scores.Double.Normal.BSS  = '1'; };
+        if (jQuery('#new_DPN_HCN').prop('checked') ) { output.Scores.Double.Normal.HCN  = '1'; };
+        if (jQuery('#new_DPN_HBSS').prop('checked')) { output.Scores.Double.Normal.HBSS = '1'; };
+    };
+
+    if (jQuery('#new_DPH_Lv').val() > 1) {
+        output.Scores.Double.Hyper = {"Level": jQuery('#new_DPH_Lv').val()};
+        if (jQuery('#new_DPH_notes').val() != '') { output.Scores.Double.Hyper.Notes = jQuery('#new_DPH_notes').val(); };
+        if (jQuery('#new_DPH_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_DPH_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Double.Hyper.MinBPM = tmpBPM[0]; output.Scores.Double.Hyper.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Double.Hyper.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_DPH_BPM').val());
+        };
+        if (jQuery('#new_DPH_CN').prop('checked')  ) { output.Scores.Double.Hyper.CN   = '1'; };
+        if (jQuery('#new_DPH_BSS').prop('checked') ) { output.Scores.Double.Hyper.BSS  = '1'; };
+        if (jQuery('#new_DPH_HCN').prop('checked') ) { output.Scores.Double.Hyper.HCN  = '1'; };
+        if (jQuery('#new_DPH_HBSS').prop('checked')) { output.Scores.Double.Hyper.HBSS = '1'; };
+    };
+
+    if (jQuery('#new_DPA_Lv').val() > 1) {
+        output.Scores.Double.Another = {"Level": jQuery('#new_DPA_Lv').val()};
+        if (jQuery('#new_DPA_notes').val() != '') { output.Scores.Double.Another.Notes = jQuery('#new_DPA_notes').val(); };
+        if (jQuery('#new_DPA_BPM').val()   != '') {
+            let tmpBPM = jQuery('#new_DPA_BPM').val().split('-');
+            if (tmpBPM.length > 1) {output.Scores.Double.Another.MinBPM = tmpBPM[0]; output.Scores.Double.Another.MaxBPM = tmpBPM[1];}
+            else {output.Scores.Double.Another.BPM = tmpBPM[0];};
+            BPMArray.push(jQuery('#new_DPA_BPM').val());
+        };
+        if (jQuery('#new_DPA_CN').prop('checked')  ) { output.Scores.Double.Another.CN   = '1'; };
+        if (jQuery('#new_DPA_BSS').prop('checked') ) { output.Scores.Double.Another.BSS  = '1'; };
+        if (jQuery('#new_DPA_HCN').prop('checked') ) { output.Scores.Double.Another.HCN  = '1'; };
+        if (jQuery('#new_DPA_HBSS').prop('checked')) { output.Scores.Double.Another.HBSS = '1'; };
+    };
+
+    let BPMArray2 = [...new Set(BPMArray)];
+    if (BPMArray2.length > 1) {output.BPM = '-'; }
+    else { output.BPM = BPMArray2[0]; };
+
+    if (jQuery('#new_bitdate').val() != '') { output.Release.BitDate = jQuery('#new_bitdate').val(); };
+
+    jQuery('#new_json').val(JSON.stringify(output) + ',');
+}
+/**
  * トーストボックス表示用オブジェクト
  */
 let toastbox = {
@@ -725,6 +865,13 @@ let toastbox = {
         let self = this;
 
         self.timerID = window.setTimeout(function() {self.fadeOut(type);}, timer);
+    },
+    FadeInandTimerFadeOut: function(msg='', timer=this.defaultTimer, type='fast') {
+        let self = this;
+        if (self.toastObj.length == 0) { self.setObject(); };
+
+        self.fadeIn(msg, type);
+        self.timerFadeOut(timer, type);
     },
     timerCancel: function() {
         let self = this;
@@ -779,9 +926,15 @@ let update = {
         // 更新日時を更新
         userJSON.info.updated = dateFormat.format(new Date(), 'yyyy-MM-ddThh:mm:ss+00:00');
         // 完了処理
-        toastbox.message(self.updateArray.length + '件の楽曲解禁状況を更新しました。');
+        toastbox.FadeInandTimerFadeOut(self.updateArray.length + '件の楽曲解禁状況を更新しました。');
         self.updateArray = [];
-        toastbox.timerFadeOut();
+
+        blob = new Blob([JSON.stringify(userJSON, undefined, 2)], {type: 'application\/json'});
+        url = URL.createObjectURL(blob);
+    
+        jQuery('#downloadButton').attr({"href": url,
+                                        "download": "user.json"});
+    
     },
     cancel: function() {
         let self = this;
@@ -890,7 +1043,7 @@ let musics = {
                     if ( s.unlocked === 'partially' || s.unlocked === 'partiallyno' || s.unlocked === 'no' ) { return false; };
                 } else {
                     let canplay = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'};
-                    if ('Canplay' in userJSON && item.ID in userJSON.musics) { canplay = userJSON.musics[item.ID]; };
+                    if (item.ID in userJSON.musics && 'Canplay' in userJSON.musics[item.ID]) { canplay = userJSON.musics[item.ID].Canplay; };
                     if (!check_canplay(canplay, item.Scores, s.unlocked)) { return false; };
                 };
             };
@@ -1127,6 +1280,11 @@ let musics = {
                     rTypeStr   = 'スタートアップセレクションVol.' + m[2];
                     rTypeSStr  ='SS#' + m[2];
                     break;
+                case 'PackPM':
+                    rTypeClass = ' packPM packPM' + m[2];
+                    rTypeStr   = 'pop\'n music セレクションVol.' + m[2];
+                    rTypeSStr  ='PM#' + m[2];
+                    break;
                 case 'Championship':
                     rTypeClass = ' championship championship' + m[2];
                     rTypeStr   = 'Championship #' + m[2];
@@ -1250,11 +1408,11 @@ let musics = {
     
             // 挿入データの作成
             let unlockCheckbox = {
-                "B": ((!isNaN(SPB.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-b" name="check-playable" class="check-playable" value="' + item.ID + '_b" ' + (canplay.Beginner    ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-b"></label>' : '&nbsp;'),
-                "N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (canplay.Normal      ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
-                "H": ((!isNaN(SPH.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-h" name="check-playable" class="check-playable" value="' + item.ID + '_h" ' + (canplay.Hyper       ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-h"></label>' : '&nbsp;'),
-                "A": ((!isNaN(SPA.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-a" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Another     ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-a"></label>' : '&nbsp;'),
-                "L": ((!isNaN(SPL.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-l" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Leggendaria ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-l"></label>' : '&nbsp;')
+                "B": ((!isNaN(SPB.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-b" name="check-playable" class="check-playable" value="' + item.ID + '_b" ' + (canplay.Beginner    ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-b"></label>' : '&nbsp;'),
+                "N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (canplay.Normal      ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
+                "H": ((!isNaN(SPH.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-h" name="check-playable" class="check-playable" value="' + item.ID + '_h" ' + (canplay.Hyper       ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-h"></label>' : '&nbsp;'),
+                "A": ((!isNaN(SPA.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-a" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Another     ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-a"></label>' : '&nbsp;'),
+                "L": ((!isNaN(SPL.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-l" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Leggendaria ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-l"></label>' : '&nbsp;')
             };
             let scoreClass = {
                 "canplay": {
@@ -1940,11 +2098,43 @@ function handleClientLoad() {
     // musiclist
     musics.JSON = musiclist.musics;
     musics.infoJSON = musiclist.info;
+    musics.infoJSON.music_count = 0;
+    musics.infoJSON.chart_count_all = 0;
+    musics.infoJSON.chart_single_all = 0;
+    musics.infoJSON.chart_single_beginner = 0;
+    musics.infoJSON.chart_single_normal = 0;      
+    musics.infoJSON.chart_single_hyper = 0;       
+    musics.infoJSON.chart_single_another = 0;     
+    musics.infoJSON.chart_single_leggendaria = 0; 
+    musics.infoJSON.chart_double_all = 0;
+    musics.infoJSON.chart_double_beginner = 0;    
+    musics.infoJSON.chart_double_normal = 0;      
+    musics.infoJSON.chart_double_hyper = 0;       
+    musics.infoJSON.chart_double_another = 0;     
+    musics.infoJSON.chart_double_leggendaria = 0;
+ 
     delete musiclist;
 
     // 
     jQuery('#search-message').html('<span>準備中…</span>');
     if (musics.JSON.length > 0) {
+        // 楽曲数・譜面数の確認
+        for (item of musics.JSON) {
+            if ( item.Release.Type != 'Unreleased' ) {
+                musics.infoJSON.music_count++;
+                if ( 'Beginner'    in item.Scores.Single ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_single_all++; musics.infoJSON.chart_single_beginner++;    };
+                if ( 'Normal'      in item.Scores.Single ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_single_all++; musics.infoJSON.chart_single_normal++;      };
+                if ( 'Hyper'       in item.Scores.Single ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_single_all++; musics.infoJSON.chart_single_hyper++;       };
+                if ( 'Another'     in item.Scores.Single ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_single_all++; musics.infoJSON.chart_single_another++;     };
+                if ( 'Leggendaria' in item.Scores.Single ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_single_all++; musics.infoJSON.chart_single_leggendaria++; };
+                if ( 'Beginner'    in item.Scores.Double ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_double_all++; musics.infoJSON.chart_double_beginner++;    };
+                if ( 'Normal'      in item.Scores.Double ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_double_all++; musics.infoJSON.chart_double_normal++;      };
+                if ( 'Hyper'       in item.Scores.Double ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_double_all++; musics.infoJSON.chart_double_hyper++;       };
+                if ( 'Another'     in item.Scores.Double ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_double_all++; musics.infoJSON.chart_double_another++;     };
+                if ( 'Leggendaria' in item.Scores.Double ) { musics.infoJSON.chart_count_all++; musics.infoJSON.chart_double_all++; musics.infoJSON.chart_double_leggendaria++; };
+            };
+        };
+
         // 曲名の自動補完
         let titleSet = new Set();
         musics.JSON.forEach(function(val,idx,ar){ titleSet.add(val.Title); });
@@ -1967,16 +2157,16 @@ function handleClientLoad() {
         jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
         jQuery('.infotable').append(
             '<tbody class="musiclistdata"><tr><th colspan="2" class="section2">全データ</th>' +
-                       '<td>' + musics.infoJSON.music_count + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all + '&nbsp;譜面</td>' +
-                       '<td>' + musics.infoJSON.chart_single_all + '&nbsp;譜面</td>' +
-                       '<td class="spb">' + musics.infoJSON.chart_single_beginner + '&nbsp;譜面</td>' +
-                       '<td class="spn">' + musics.infoJSON.chart_single_normal + '&nbsp;譜面</td>' +
-                       '<td class="sph">' + musics.infoJSON.chart_single_hyper + '&nbsp;譜面</td>' +
-                       '<td class="spa">' + musics.infoJSON.chart_single_another + '&nbsp;譜面</td>' +
-                       '<td>' + musics.infoJSON.chart_double_all + '&nbsp;譜面</td>' +
-                       '<td class="dpn">' + musics.infoJSON.chart_double_normal + '&nbsp;譜面</td>' +
-                       '<td class="dph">' + musics.infoJSON.chart_double_hyper + '&nbsp;譜面</td>' +
-                       '<td class="dpa">' + musics.infoJSON.chart_double_another + '&nbsp;譜面</td>' +
+                       '<td>' + musics.infoJSON.music_count.toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td>' + musics.infoJSON.chart_single_all.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="spb">' + musics.infoJSON.chart_single_beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="spn">' + musics.infoJSON.chart_single_normal.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="sph">' + musics.infoJSON.chart_single_hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="spa">' + musics.infoJSON.chart_single_another.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td>' + musics.infoJSON.chart_double_all.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="dpn">' + musics.infoJSON.chart_double_normal.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="dph">' + musics.infoJSON.chart_double_hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="dpa">' + musics.infoJSON.chart_double_another.toLocaleString() + '&nbsp;譜面</td>' +
             '</tr></tbody>');
         jQuery('#filter-button').prop('disabled',false);
     };
@@ -2114,21 +2304,6 @@ function handleClientLoad() {
         };
         readUserJSON('new');
     });
-    // 「表示中のJSONを読込」ボタン押下時
-    jQuery('#texttojson').on('click', function() {
-        if ('info' in userJSON) {
-            if (!confirm('読込済みのデータがありますが、JSONを読み込みなおしますか？')) { return false; };
-        };
-        readUserJSON();
-    });
-    // 「読込済のJSONを表示」ボタン押下時
-    jQuery('#jsontotext').on('click', function() {
-        if (!('info' in userJSON)) {
-            if (confirm('読込済みのデータがありません。新規作成しますか？')) { readUserJSON('new'); };
-        };
-        outputUserJSON();
-    });
-
     // ライバル情報ボタン押下
     jQuery('#setrivalid').change(function() {
         jQuery("label[for='setrivalid']").text( ( jQuery(this).prop('checked') ? 'ライバル情報を非表示にする' : 'ライバル情報を表示する' ) );
@@ -2252,6 +2427,11 @@ function handleClientLoad() {
     jQuery('fieldset legend input').change(function() {
         let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)');
         jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
+    });
+
+    // 新曲追加用フォームの入力時
+    jQuery('#formtab-7_content input').change(function() {
+        makeNewMusicJSON();
     });
 
     // 譜面検索条件ボタンのクリックイベントを実行しておく
