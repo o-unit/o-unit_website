@@ -14,36 +14,36 @@ let now = new Date();
 let LaunchDate = new Date( 2015, 12 - 1,1 ) // サービス開始年月日 2015-12-01 ( jsの月は0 - 11 なので -1 してる )
 let JSONmsgObj = jQuery('#json-message');
 
-VerArray = { "001": {"VName":"1st style",     "VShortName":"1st"},
-             "002": {"VName":"substream",     "VShortName":"sub"},
-             "003": {"VName":"2nd style",     "VShortName":"2nd"},
-             "004": {"VName":"3rd style",     "VShortName":"3rd"},
-             "005": {"VName":"4th style",     "VShortName":"4th"},
-             "006": {"VName":"5th style",     "VShortName":"5th"},
-             "007": {"VName":"6th style",     "VShortName":"6th"},
-             "008": {"VName":"7th style",     "VShortName":"7th"},
-             "009": {"VName":"8th style",     "VShortName":"8th"},
-             "010": {"VName":"9th style",     "VShortName":"9th"},
-             "011": {"VName":"10th style",    "VShortName":"10th"},
-             "012": {"VName":"IIDX RED",      "VShortName":"RED"},
-             "013": {"VName":"HAPPY SKY",     "VShortName":"HS"},
-             "014": {"VName":"DistorteD",     "VShortName":"DD"},
-             "015": {"VName":"GOLD",          "VShortName":"GLD"},
-             "016": {"VName":"DJ TROOPERS",   "VShortName":"DJT"},
-             "017": {"VName":"EMPRESS",       "VShortName":"EMP"},
-             "018": {"VName":"SIRIUS",        "VShortName":"SIR"},
-             "019": {"VName":"Resort Anthem", "VShortName":"RA"},
-             "020": {"VName":"Lincle",        "VShortName":"Lin"},
-             "021": {"VName":"tricolo",       "VShortName":"tri"},
-             "022": {"VName":"SPADA",         "VShortName":"SPA"},
-             "023": {"VName":"PENDUAL",       "VShortName":"PEN"},
-             "024": {"VName":"copula",        "VShortName":"cop"},
-             "025": {"VName":"SINOBUZ",       "VShortName":"SIN"},
-             "026": {"VName":"CANNON BALLERS","VShortName":"CB"},
-             "027": {"VName":"Rootage",       "VShortName":"Rt"},
-             "028": {"VName":"HEROIC VERSE",  "VShortName":"HV"},
-             "029": {"VName":"BISTROVER",     "VShortName":"BIS"},
-             "999": {"VName":"INFINITAS",     "VShortName":"INF"}
+let VerArray = { "001": {"VName":"1st style",     "VShortName":"1st"},
+                 "002": {"VName":"substream",     "VShortName":"sub"},
+                 "003": {"VName":"2nd style",     "VShortName":"2nd"},
+                 "004": {"VName":"3rd style",     "VShortName":"3rd"},
+                 "005": {"VName":"4th style",     "VShortName":"4th"},
+                 "006": {"VName":"5th style",     "VShortName":"5th"},
+                 "007": {"VName":"6th style",     "VShortName":"6th"},
+                 "008": {"VName":"7th style",     "VShortName":"7th"},
+                 "009": {"VName":"8th style",     "VShortName":"8th"},
+                 "010": {"VName":"9th style",     "VShortName":"9th"},
+                 "011": {"VName":"10th style",    "VShortName":"10th"},
+                 "012": {"VName":"IIDX RED",      "VShortName":"RED"},
+                 "013": {"VName":"HAPPY SKY",     "VShortName":"HS"},
+                 "014": {"VName":"DistorteD",     "VShortName":"DD"},
+                 "015": {"VName":"GOLD",          "VShortName":"GLD"},
+                 "016": {"VName":"DJ TROOPERS",   "VShortName":"DJT"},
+                 "017": {"VName":"EMPRESS",       "VShortName":"EMP"},
+                 "018": {"VName":"SIRIUS",        "VShortName":"SIR"},
+                 "019": {"VName":"Resort Anthem", "VShortName":"RA"},
+                 "020": {"VName":"Lincle",        "VShortName":"Lin"},
+                 "021": {"VName":"tricolo",       "VShortName":"tri"},
+                 "022": {"VName":"SPADA",         "VShortName":"SPA"},
+                 "023": {"VName":"PENDUAL",       "VShortName":"PEN"},
+                 "024": {"VName":"copula",        "VShortName":"cop"},
+                 "025": {"VName":"SINOBUZ",       "VShortName":"SIN"},
+                 "026": {"VName":"CANNON BALLERS","VShortName":"CB"},
+                 "027": {"VName":"Rootage",       "VShortName":"Rt"},
+                 "028": {"VName":"HEROIC VERSE",  "VShortName":"HV"},
+                 "029": {"VName":"BISTROVER",     "VShortName":"BIS"},
+                 "999": {"VName":"INFINITAS",     "VShortName":"INF"}
 };
 
 let packlist = { '0000001': {'type':'Standard',  'name':'楽曲パック vol.1',                            'inputName':'楽曲パックVol.1',  'shortName':'Pack1',   'inputid':'#purchase-Pack0000001'},
@@ -704,8 +704,7 @@ function makeNewMusicJSON() {
     let BPMArray = [];
 
     if (jQuery('#new_SPB_Lv').val() > 1) {
-        output.Scores.Single.Beginner = {"Level": jQuery('#new_SPB_Lv').val()};
-        if (jQuery('#new_SPB_notes').val() != '') { output.Scores.Single.Beginner.Notes = jQuery('#new_SPB_notes').val(); };
+        output.Scores.Single.Beginner = {"Level": jQuery('#new_SPB_Lv').val(), Notes: jQuery('#new_SPB_notes').val()};
         if (jQuery('#new_SPB_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_SPB_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Single.Beginner.MinBPM = tmpBPM[0]; output.Scores.Single.Beginner.MaxBPM = tmpBPM[1];}
@@ -719,8 +718,7 @@ function makeNewMusicJSON() {
     };
 
     if (jQuery('#new_SPN_Lv').val() > 1) {
-        output.Scores.Single.Normal = {"Level": jQuery('#new_SPN_Lv').val()};
-        if (jQuery('#new_SPN_notes').val() != '') { output.Scores.Single.Normal.Notes = jQuery('#new_SPN_notes').val(); };
+        output.Scores.Single.Normal = {"Level": jQuery('#new_SPN_Lv').val(), "Notes": jQuery('#new_SPN_notes').val() };
         if (jQuery('#new_SPN_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_SPN_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Single.Normal.MinBPM = tmpBPM[0]; output.Scores.Single.Normal.MaxBPM = tmpBPM[1];}
@@ -734,8 +732,7 @@ function makeNewMusicJSON() {
     };
 
     if (jQuery('#new_SPH_Lv').val() > 1) {
-        output.Scores.Single.Hyper = {"Level": jQuery('#new_SPH_Lv').val()};
-        if (jQuery('#new_SPH_notes').val() != '') { output.Scores.Single.Hyper.Notes = jQuery('#new_SPH_notes').val(); };
+        output.Scores.Single.Hyper = {"Level": jQuery('#new_SPH_Lv').val(), "Notes": jQuery('#new_SPH_notes').val()};
         if (jQuery('#new_SPH_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_SPH_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Single.Hyper.MinBPM = tmpBPM[0]; output.Scores.Single.Hyper.MaxBPM = tmpBPM[1];}
@@ -749,8 +746,7 @@ function makeNewMusicJSON() {
     };
 
     if (jQuery('#new_SPA_Lv').val() > 1) {
-        output.Scores.Single.Another = {"Level": jQuery('#new_SPA_Lv').val()};
-        if (jQuery('#new_SPA_notes').val() != '') { output.Scores.Single.Another.Notes = jQuery('#new_SPA_notes').val(); };
+        output.Scores.Single.Another = {"Level": jQuery('#new_SPA_Lv').val(), "Notes": jQuery('#new_SPA_notes').val()};
         if (jQuery('#new_SPA_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_SPA_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Single.Another.MinBPM = tmpBPM[0]; output.Scores.Single.Another.MaxBPM = tmpBPM[1];}
@@ -764,8 +760,7 @@ function makeNewMusicJSON() {
     };
 
     if (jQuery('#new_DPN_Lv').val() > 1) {
-        output.Scores.Double.Normal = {"Level": jQuery('#new_DPN_Lv').val()};
-        if (jQuery('#new_DPN_notes').val() != '') { output.Scores.Double.Normal.Notes = jQuery('#new_DPN_notes').val(); };
+        output.Scores.Double.Normal = {"Level": jQuery('#new_DPN_Lv').val(), "Notes": jQuery('#new_DPN_notes').val()};
         if (jQuery('#new_DPN_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_DPN_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Double.Normal.MinBPM = tmpBPM[0]; output.Scores.Double.Normal.MaxBPM = tmpBPM[1];}
@@ -779,8 +774,7 @@ function makeNewMusicJSON() {
     };
 
     if (jQuery('#new_DPH_Lv').val() > 1) {
-        output.Scores.Double.Hyper = {"Level": jQuery('#new_DPH_Lv').val()};
-        if (jQuery('#new_DPH_notes').val() != '') { output.Scores.Double.Hyper.Notes = jQuery('#new_DPH_notes').val(); };
+        output.Scores.Double.Hyper = {"Level": jQuery('#new_DPH_Lv').val(), "Notes": jQuery('#new_DPH_notes').val()};
         if (jQuery('#new_DPH_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_DPH_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Double.Hyper.MinBPM = tmpBPM[0]; output.Scores.Double.Hyper.MaxBPM = tmpBPM[1];}
@@ -794,8 +788,7 @@ function makeNewMusicJSON() {
     };
 
     if (jQuery('#new_DPA_Lv').val() > 1) {
-        output.Scores.Double.Another = {"Level": jQuery('#new_DPA_Lv').val()};
-        if (jQuery('#new_DPA_notes').val() != '') { output.Scores.Double.Another.Notes = jQuery('#new_DPA_notes').val(); };
+        output.Scores.Double.Another = {"Level": jQuery('#new_DPA_Lv').val(), "Notes": jQuery('#new_DPA_notes').val()};
         if (jQuery('#new_DPA_BPM').val()   != '') {
             let tmpBPM = jQuery('#new_DPA_BPM').val().split('-');
             if (tmpBPM.length > 1) {output.Scores.Double.Another.MinBPM = tmpBPM[0]; output.Scores.Double.Another.MaxBPM = tmpBPM[1];}
