@@ -440,7 +440,10 @@ input:checked + .tab_item {
     margin-bottom: 15px;
 }
 #filter-button {
-    width: 260px;
+    width: 8.5rem;
+}
+#formreset {
+    width: 8.5rem;
 }
 
 /*--------------------------------------------------
