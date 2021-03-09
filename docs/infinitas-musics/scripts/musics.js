@@ -407,6 +407,9 @@ function initializeUserJSON(JSONString) {
     url = URL.createObjectURL(blob);
 
     jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
+
+    // googleログイン済で、FileIDが入力済の状態であればFileIDをcookieに保存
+    if (jQuery('#gdid').val() != ''){ Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31}); };
 };
 
  /**
@@ -869,9 +872,11 @@ let update = {
         blob = new Blob([JSON.stringify(userJSON, undefined, 2)], {type: 'application\/json'});
         url = URL.createObjectURL(blob);
     
-        jQuery('#downloadButton').attr({"href": url,
-                                        "download": "user.json"});
+        jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
     
+        if (jQuery('#gdid').val() != '') { updateFileContent(jQuery('#gdid').val(), blob, function(response) {
+            console.log(response);
+          }); };
     },
     cancel: function() {
         let self = this;
@@ -1525,7 +1530,7 @@ let musics = {
                                     '<td class="dpn">&nbsp;</td>' +
                                     '<td class="dph">&nbsp;</td>' +
                                     '<td class="dpa">&nbsp;</td>' +
-                      '</tr></tbody>');
+                                    '</tr></tbody>');
         jQuery('#search-message').empty();
     },
 
@@ -1660,7 +1665,7 @@ let s = {
         jQuery('#opt_' + score + '_notes_max').val(notesMax);
     },
     checkScore: function(score, scoretype) {
-        if ( ['SPB','SPN','SPH','SPA','SPL','DPN','DPH','DPA','DPL'].indexOf(scoretype) == -1 ) { return true; };
+        if ( ['SPB','SPN','SPH','SPA','SPL','DPB','DPN','DPH','DPA','DPL'].indexOf(scoretype) == -1 ) { return true; };
         let lv = this.params.lv[scoretype];
         let opt = this.params.opt[scoretype];
         
@@ -1710,9 +1715,9 @@ function initClient() {
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
         // ボタン押下時の処理追加
-//        authorizeButton.onclick = handleAuthClick;
-//        signoutButton.onclick = handleSignoutClick;
-//        getButton.onclick = handleGetClick;
+        jQuery('#googleSignin').click(function() { gapi.auth2.getAuthInstance().signIn(); });
+        jQuery('#googleSignout').click(function() { gapi.auth2.getAuthInstance().signOut(); });
+        jQuery('#gdfileget').click(function() { getGoogleDriveFile( jQuery('#gdid').val() ); });
     }, function(error) {
         //appendPre(JSON.stringify(error, null, 2));
     });
@@ -1726,45 +1731,16 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         jQuery('#gdid').attr('disabled', false);
-        jQuery('#googleSignin').text('ログアウト');
+        jQuery('#googleSignin').addClass('hidden');
+        jQuery('#googleSignout').removeClass('hidden');
+        jQuery('#gdid').val( Cookies.get('infinitas_gdid') );
+        if ( jQuery('#gdid').val() != '') { getGoogleDriveFile( jQuery('#gdid').val() ); };
     } else {
         jQuery('#gdid').attr('disabled', true);
-        jQuery('#googleSignin').text('ログイン');
+        jQuery('#googleSignin').removeClass('hidden');
+        jQuery('#googleSignout').addClass('hidden');
     }
 };
-
-/**
- *  Sign in the user upon button click.
- */
-function handleAuthClick(event) {
-    gapi.auth2.getAuthInstance().signIn();
-};
-
-/**
- *  Sign out the user upon button click.
- */
-function handleSignoutClick(event) {
-    gapi.auth2.getAuthInstance().signOut();
-};
-
-/**
- *  Sign out the user upon button click.
- */
-function handleGetClick(event) {
-    getGoogleDriveFile('1Gh6A8eIwCyuRTtqvI6IY5PVQ6rvwGisL');
-};
-
-/**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-// function appendPre(message) {
-//     let pre = document.getElementById('content');
-//     let textContent = document.createTextNode(message + '\n');
-//     pre.appendChild(textContent);
-// }
 
 /**
  * Print files.
@@ -1812,7 +1788,7 @@ function getGoogleDriveFile(fid) {
         fileId: fid,
         alt: 'media'
     }).then(function(obj){
-        userJSON = obj.result;
+        initializeUserJSON(obj.body);
     },function(error) {
         jQuery('#debug').empty();
         jQuery('#debug').append('<p>' + JSON.stringify(error, null, 2) + '</p>');
@@ -1829,31 +1805,12 @@ function updateFileContent(fileId, contentBlob, callback) {
     let xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.onreadystatechange = function() {
-      if (xhr.readyState != XMLHttpRequest.DONE) {
-        return;
-      }
+      if (xhr.readyState != XMLHttpRequest.DONE) { return; };
       callback(xhr.response);
     };
     xhr.open('PATCH', 'https://www.googleapis.com/upload/drive/v3/files/' + fileId + '?uploadType=media');
     xhr.setRequestHeader('Authorization', 'Bearer ' + gapi.auth.getToken().access_token);
     xhr.send(contentBlob);
-}
-
-// ファイル更新処理のサンプル
-function updateFileContentSample() {
-    let docId = '1PQbBPUDjJWadYJU6zGAxRtKtL4rmPWb2'; // 更新ファイルのID
-    let content = JSON.stringify({ // 更新ファイルの内容
-        "kind": "drive#file",
-        "id": docId,
-        "name": "testfromapi.json",
-        "mimeType": "text/plain"
-      },null,4);
-    let contentBlob = new  Blob([JSON.stringify(content,null,"\t")], {
-      'type': 'text/plain'
-    });
-    updateFileContent(docId, contentBlob, function(response) {
-      console.log(response);
-    });
 }
 
 /**
