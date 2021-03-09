@@ -301,6 +301,8 @@ Add buttons to initiate auth sequence and sign out
             <div class="inblock">
                 <div class="clearfix">
                     <a id="googleSignin" class="btn btn--info">ログイン</a>
+                    <a id="gdfileget" class="btn btn--info">ファイル読込</a>
+                    <a id="googleSignout" class="btn btn--info">ログアウト</a>
                 </div>
                 <input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" disabled />
             </div>
