@@ -409,7 +409,7 @@ function initializeUserJSON(JSONString) {
     jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
 
     // googleログイン済で、FileIDが入力済の状態であればFileIDをcookieに保存
-    if (jQuery('#gdid').val() != ''){ Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31}); };
+    if (jQuery('#gdid').val() != ''){ Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31, sameSite: 'strict'}); };
 };
 
  /**
@@ -1144,12 +1144,12 @@ let musics = {
             'allBit':     { ...cTmp }, // Bit解禁 総BIT
             'sumBit':     { ...cTmp }, // Bit解禁 未解禁BIT
             'usedBit':    { ...cTmp }, // Bit解禁 解禁済BIT
-            'allBitM':    { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // Bit解禁 総譜面数
-            'sumBitM':    { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // Bit解禁 未解禁譜面数
-            'usedBitM':   { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // Bit解禁 解禁済譜面数
             'NRallBit':   { ...cTmp }, // リリース前 Bit解禁 総BIT
             'NRsumBit':   { ...cTmp }, // リリース前 Bit解禁 未解禁BIT
             'NRusedBit':  { ...cTmp }, // リリース前 Bit解禁 解禁済BIT
+            'allBitM':    { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // Bit解禁 総譜面数
+            'sumBitM':    { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // Bit解禁 未解禁譜面数
+            'usedBitM':   { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // Bit解禁 解禁済譜面数
             'NRallBitM':  { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // リリース前 Bit解禁 総譜面数
             'NRsumBitM':  { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // リリース前 Bit解禁 未解禁譜面数
             'NRusedBitM': { 'SP': { ...cTmp }, 'DP': { ...cTmp }, 'ALL': function() { return this.SP.ALL() + this.DP.ALL(); } }, // リリース前 Bit解禁 解禁済譜面数
@@ -1186,7 +1186,7 @@ let musics = {
             let DPH = this.getChartInfo( item.Scores.Double.Hyper );
             let DPA = this.getChartInfo( item.Scores.Double.Another );
             let DPL = this.getChartInfo( item.Scores.Double.Leggendaria );
-            let BPMtmp = [SPB.BPM, SPN.BPM, SPH.BPM, SPA.BPM, SPL.BPM, DPB.BPM, DPN.BPM, DPH.BPM, DPA.BPM, DPL.BPM];
+            let BPMtmp = [SPB.BPM, SPN.BPM, SPH.BPM, SPA.BPM, SPL.BPM, DPB.BPM, DPN.BPM, DPH.BPM, DPA.BPM, DPL.BPM].filter(Boolean);
     
             // リリース情報の取得・加工
             let rTypeClass = '';
@@ -1281,7 +1281,7 @@ let musics = {
 
             // その他
             let comment = item.Comment;
-            let BPM = (BPMtmp.every( v => v === BPMtmp[0] ) ) ? BPMtmp[0] : '※';
+            let BPM = ( BPMtmp.length == 1 ) ? BPMtmp[0] : '※';
             if (BPM === '※') {
 
                 // 可変はどうしようね？
@@ -1353,12 +1353,12 @@ let musics = {
                       '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
                       'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
                       ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
-                                                     ((rBit.Beginner) ? '&nbsp;B=' + rBit.Beginner.toLocaleString() + ' / ' : '' ) +
-                                                     ((rBit.Normal)   ? '&nbsp;N='   + rBit.Normal.toLocaleString() + ' / ' : '' ) +
-                                                     ((rBit.Hyper)    ? '&nbsp;H='    + rBit.Hyper.toLocaleString() + ' / ' : '' ) +
-                                                     ((rBit.Another)  ? '&nbsp;A='  + rBit.Another.toLocaleString() + ' / ' : '' ) +
-                                                     '&nbsp;&nbsp;合計=' + rBit.ALL.toLocaleString() : "") +
-                      ((comment) ? '<br /><br />' + comment : "") +
+                                                     ((rBit.Beginner) ? '&nbsp;B = ' + rBit.Beginner.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Normal)   ? '&nbsp;N = '   + rBit.Normal.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Hyper)    ? '&nbsp;H = '    + rBit.Hyper.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Another)  ? '&nbsp;A = '  + rBit.Another.toLocaleString() + ' / ' : '' ) +
+                                                     '&nbsp;&nbsp;合計 = ' + rBit.ALL.toLocaleString() : "") +
+                      ((comment) ? '<br />' + comment : "") +
                       '</td>' +
                       '<td class="notes">Notes</td>' +
                       '<td class="notes spb">' + SPB.Notes + '</td>' +
@@ -1653,7 +1653,7 @@ let s = {
         jQuery("#genre").val('');
         jQuery("#artist").val('');
         jQuery("#opt_bpm_min").val('');
-        jQuery("#opt_bpm_min").val('');
+        jQuery("#opt_bpm_max").val('');
         jQuery('#opt_bpm_changing').val(0);
     },
     setScoreSearchParams: function(score, lvMin = 0, lvMax = 12, CN = 0, BSS = 0, HCN = 0, notesMin = '', notesMax = '') {
@@ -1718,6 +1718,7 @@ function initClient() {
         jQuery('#googleSignin').click(function() { gapi.auth2.getAuthInstance().signIn(); });
         jQuery('#googleSignout').click(function() { gapi.auth2.getAuthInstance().signOut(); });
         jQuery('#gdfileget').click(function() { getGoogleDriveFile( jQuery('#gdid').val() ); });
+        if ( jQuery('#gdid').val() != '') { getGoogleDriveFile( jQuery('#gdid').val() ); };
     }, function(error) {
         //appendPre(JSON.stringify(error, null, 2));
     });
@@ -1734,7 +1735,6 @@ function updateSigninStatus(isSignedIn) {
         jQuery('#googleSignin').addClass('hidden');
         jQuery('#googleSignout').removeClass('hidden');
         jQuery('#gdid').val( Cookies.get('infinitas_gdid') );
-        if ( jQuery('#gdid').val() != '') { getGoogleDriveFile( jQuery('#gdid').val() ); };
     } else {
         jQuery('#gdid').attr('disabled', true);
         jQuery('#googleSignin').removeClass('hidden');
@@ -1784,12 +1784,15 @@ function listFiles() {
  * @param {string} fid ファイルID
  */
 function getGoogleDriveFile(fid) {
+    toastbox.FadeInandTimerFadeOut('google Driveからファイル読込中…');
     gapi.client.drive.files.get({
         fileId: fid,
         alt: 'media'
     }).then(function(obj){
+        toastbox.FadeInandTimerFadeOut('google Driveから読込完了！');
         initializeUserJSON(obj.body);
     },function(error) {
+        toastbox.FadeInandTimerFadeOut('エラーが発生しました！');
         jQuery('#debug').empty();
         jQuery('#debug').append('<p>' + JSON.stringify(error, null, 2) + '</p>');
     });
