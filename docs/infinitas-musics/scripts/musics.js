@@ -1492,7 +1492,7 @@ let musics = {
     
         // データ挿入
         for(let className in tabledata){
-            // 楽曲データを追加した場合は検索結果追記と表示処理
+            // 楽曲データを追加した場合は検索結果の書き換えと表示処理
             if (tabledata[className] !== '') {
                 jQuery('#' + className).append(tabledata[className]);
                 jQuery('#' + className).find('span').remove();
@@ -1508,12 +1508,16 @@ let musics = {
                 let addText = '<span class="result">&nbsp;' + tmp.Music + ' 曲</span>' +
                           (addTextOutput ? '<span class="unlocklabel"> BIT解禁</span>' + addScoresText.join('') : '');
                 jQuery('#' + className).find('.headerline th').append(addText);
+                jQuery('#' + className).show();
                 if (jQuery('#searchopen').prop('checked') ) {
-                    jQuery('#' + className).children('.music_other').hide();
+                    if (jQuery('#extendopen').prop('checked')) {
+                        jQuery('#' + className).children('.music_other').show();
+                    } else {
+                        jQuery('#' + className).children('.music_other').hide();
+                    }
                     jQuery('#' + className).children('.music').show();
                     jQuery('#' + className).addClass('opened');
                 };
-                jQuery('#' + className).show();
             };
         };
 
@@ -2276,11 +2280,14 @@ function handleClientLoad() {
         // クリック対象が閉じていたら
         } else {
             if ( jQuery('#singleopen').prop("checked") ) {
-                jQuery('.musiclist tbody').children('.music_other,.music').hide();
-                jQuery(this).parent().children('.music').fadeIn('fast');
+                jQuery('.musiclist tbody').children('.music, .music_other').hide();
+                jQuery('.musiclist .headerline').not(this).removeClass('opened');
+                classStr = (jQuery('#extendopen').prop('checked') ? '.music, .music_other' : '.music');
+                jQuery(this).parent().children(classStr).fadeIn('fast');
             } else {
-                jQuery('.musiclist tbody').children('.music_other').hide();
-                jQuery(this).parent().children('.music').fadeToggle('fast');
+                // jQuery('.musiclist tbody').children('.music_other').hide();
+                classStr = (jQuery('#extendopen').prop('checked') ? '.music, .music_other' : '.music');
+                jQuery(this).parent().children(classStr).fadeIn('fast');
             };
         };
         jQuery(this).toggleClass('opened');

@@ -144,6 +144,10 @@ Add buttons to initiate auth sequence and sign out
             <div class="inblock"><label for="singleopen">フォルダを開く時に他のフォルダを閉じる</label></div>
         </div>
         <div class="clearfix">
+            <div class="settings-check"><input id="extendopen" name="extendopen" type="checkbox" value="1" /></div>
+            <div class="inblock"><label for="extendopen">フォルダを開く時に楽曲詳細も開く</label></div>
+        </div>
+        <div class="clearfix">
             <div class="settings-check">&nbsp;</div>
             <div class="fieldname">フォルダ</div>
             <div class="inblock selectbutton">
