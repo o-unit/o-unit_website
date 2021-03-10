@@ -57,6 +57,9 @@
     padding-left: 20px;
     padding-right: 20px;
 }
+.text-right {
+    text-align: right;
+}
 .input-60 {
     padding: 2px !important;
     width: 60px;

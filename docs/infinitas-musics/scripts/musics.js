@@ -235,12 +235,12 @@ function readUserJSONfromLocalFile(fileObj, callback=initializeUserJSON){
 
 /**
  * ローカルストレージの読込
- *
- * @param 
- * @return なし
- *
+ * 
+ * @param {String} key - JSONをローカルストレージに保存した際のキー名
+ * @param {callbackFunction} callback  - 処理後に実行する関数
+ * @returns なし
 **/
-function readUserJSONfromLocalStorage(key='infinitas', callback=initializeUserJSON){
+function readUserJSONfromLocalStorage(key=PROJECT_ID, callback=initializeUserJSON){
     let st = localStorage;
 
     try {
@@ -259,12 +259,12 @@ function readUserJSONfromLocalStorage(key='infinitas', callback=initializeUserJS
 /**
  * ローカルストレージに保存
  *
- * @param {jQueryObject} key - JSONを保存する際のkey
- * @param {callbackFunction} callback - 処理後に実行する関数
+ * @param {String} key - JSONをローカルストレージに保存する際のキー名
+ * @param {callbackFunction} callback  - 処理後に実行する関数
  * @return なし
  *
 **/
-function outputUserJSONtoLocalStorage(key='infinitas', callback=toastbox.FadeInandTimerFadeOut){
+function outputUserJSONtoLocalStorage(key=PROJECT_ID, callback=toastbox.FadeInandTimerFadeOut){
     let st = localStorage;
 
     try {
@@ -1543,92 +1543,92 @@ let musics = {
 
         jQuery('.infotable .resultdata, .infotable .bitdata').remove();
         jQuery('.infotable').append('<tbody class="resultdata"><tr><th colspan="2" class="section2">検索結果</th>' +
-                                    '<td>' + (items.length).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.total.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.total.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spb">' + c.total.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spn">' + c.total.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="sph">' + c.total.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spa">' + c.total.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.total.DP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpn">' + c.total.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dph">' + c.total.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpa">' + c.total.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + (items.length).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.total.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.total.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb text-right">' + c.total.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn text-right">' + c.total.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph text-right">' + c.total.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa text-right">' + c.total.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.total.DP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpn text-right">' + c.total.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph text-right">' + c.total.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa text-right">' + c.total.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
                                     '</tr></tbody>' +
                                     '<thead class="resultdata"><tr><th colspan="2">BIT解禁&nbsp;:&nbsp;譜面数</th>' +
                                     '<th class="total">曲数 / 譜面数</th>' +
                                     '<th colspan="5" class="sp">譜面数：single</th>' +
                                     '<th colspan="4" class="dp">譜面数：double</th></tr></thead>' +
                                     '<tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">対象譜面</th>' +
-                                    '<td>' + (c.allBitM.SP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.allBitM.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.allBitM.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spb">' + c.allBitM.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spn">' + c.allBitM.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="sph">' + c.allBitM.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spa">' + c.allBitM.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.allBitM.DP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpn">' + c.allBitM.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dph">' + c.allBitM.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpa">' + c.allBitM.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + (c.allBitM.SP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.allBitM.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.allBitM.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb text-right">' + c.allBitM.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn text-right">' + c.allBitM.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph text-right">' + c.allBitM.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa text-right">' + c.allBitM.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.allBitM.DP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpn text-right">' + c.allBitM.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph text-right">' + c.allBitM.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa text-right">' + c.allBitM.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
                                     '</tr><tr><th class="section2">残り譜面</th>' +
-                                    '<td>' + (c.sumBitM.SP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.sumBitM.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.sumBitM.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spb">' + c.sumBitM.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spn">' + c.sumBitM.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="sph">' + c.sumBitM.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spa">' + c.sumBitM.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.sumBitM.DP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpn">' + c.sumBitM.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dph">' + c.sumBitM.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpa">' + c.sumBitM.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + (c.sumBitM.SP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.sumBitM.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.sumBitM.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb text-right">' + c.sumBitM.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn text-right">' + c.sumBitM.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph text-right">' + c.sumBitM.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa text-right">' + c.sumBitM.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.sumBitM.DP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpn text-right">' + c.sumBitM.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph text-right">' + c.sumBitM.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa text-right">' + c.sumBitM.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
                                     '</tr><tr><th class="section2">解禁済譜面</th>' +
-                                    '<td>' + (c.usedBitM.SP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.usedBitM.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.usedBitM.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spb">' + c.usedBitM.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spn">' + c.usedBitM.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="sph">' + c.usedBitM.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="spa">' + c.usedBitM.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td>' + c.usedBitM.DP.ALL().toLocaleString() + '譜面</td>' +
-                                    '<td class="dpn">' + c.usedBitM.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dph">' + c.usedBitM.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                                    '<td class="dpa">' + c.usedBitM.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + (c.usedBitM.SP.Normal).toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + c.usedBitM.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.usedBitM.SP.ALL().toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spb text-right">' + c.usedBitM.SP.Beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spn text-right">' + c.usedBitM.SP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="sph text-right">' + c.usedBitM.SP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="spa text-right">' + c.usedBitM.SP.Another.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="text-right">' + c.usedBitM.DP.ALL().toLocaleString() + '譜面</td>' +
+                                    '<td class="dpn text-right">' + c.usedBitM.DP.Normal.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dph text-right">' + c.usedBitM.DP.Hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                                    '<td class="dpa text-right">' + c.usedBitM.DP.Another.toLocaleString() + '&nbsp;譜面</td>' +
                                     '</tr></tbody>' +
                                     '<thead class="resultdata"><tr><th colspan="2">BIT解禁&nbsp;:&nbsp;BIT数</th>' +
                                     '<th class="total">&nbsp;</th>' +
                                     '<th colspan="5" class="sp">BIT数</th>' +
                                     '<th colspan="4" class="dp">&nbsp;</th></tr></thead>' +
                                     '<tbody class="resultdata"><tr><th rowspan="3">BIT解禁</th><th class="section2">合計BIT</th>' +
-                                    '<td>&nbsp;</td>' +
-                                    '<td>' + c.allBit.ALL().toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spb">' + c.allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spn">' + c.allBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="sph">' + c.allBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spa">' + c.allBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td>&nbsp;</td>' +
-                                    '<td class="dpn">&nbsp;</td>' +
-                                    '<td class="dph">&nbsp;</td>' +
-                                    '<td class="dpa">&nbsp;</td>' +
+                                    '<td class="text-right">&nbsp;</td>' +
+                                    '<td class="text-right">' + c.allBit.ALL().toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spb text-right">' + c.allBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spn text-right">' + c.allBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="sph text-right">' + c.allBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spa text-right">' + c.allBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="text-right">&nbsp;</td>' +
+                                    '<td class="dpn text-right">&nbsp;</td>' +
+                                    '<td class="dph text-right">&nbsp;</td>' +
+                                    '<td class="dpa text-right">&nbsp;</td>' +
                                     '</tr><tr><th class="section2">残りBIT</th>' +
-                                    '<td>&nbsp;</td>' +
-                                    '<td>' + c.sumBit.ALL().toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spb">' + c.sumBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spn">' + c.sumBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="sph">' + c.sumBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spa">' + c.sumBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td>&nbsp;</td>' +
-                                    '<td class="dpn">&nbsp;</td>' +
-                                    '<td class="dph">&nbsp;</td>' +
-                                    '<td class="dpa">&nbsp;</td>' +
+                                    '<td class="text-right">&nbsp;</td>' +
+                                    '<td class="text-right">' + c.sumBit.ALL().toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spb text-right">' + c.sumBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spn text-right">' + c.sumBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="sph text-right">' + c.sumBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spa text-right">' + c.sumBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="text-right">&nbsp;</td>' +
+                                    '<td class="dpn text-right">&nbsp;</td>' +
+                                    '<td class="dph text-right">&nbsp;</td>' +
+                                    '<td class="dpa text-right">&nbsp;</td>' +
                                     '</tr><tr><th class="section2">解禁済BIT</th>' +
-                                    '<td>&nbsp;</td>' +
-                                    '<td>' + c.usedBit.ALL().toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spb">' + c.usedBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spn">' + c.usedBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="sph">' + c.usedBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td class="spa">' + c.usedBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
-                                    '<td>&nbsp;</td>' +
-                                    '<td class="dpn">&nbsp;</td>' +
-                                    '<td class="dph">&nbsp;</td>' +
-                                    '<td class="dpa">&nbsp;</td>' +
+                                    '<td class="text-right">&nbsp;</td>' +
+                                    '<td class="text-right">' + c.usedBit.ALL().toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spb text-right">' + c.usedBit.Beginner.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spn text-right">' + c.usedBit.Normal.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="sph text-right">' + c.usedBit.Hyper.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="spa text-right">' + c.usedBit.Another.toLocaleString() + '&nbsp;BIT</td>' +
+                                    '<td class="text-right">&nbsp;</td>' +
+                                    '<td class="dpn text-right">&nbsp;</td>' +
+                                    '<td class="dph text-right">&nbsp;</td>' +
+                                    '<td class="dpa text-right">&nbsp;</td>' +
                                     '</tr></tbody>');
         jQuery('#search-message').empty();
     },
@@ -1656,7 +1656,7 @@ let s = {
         series: [0],
         score: 'ALL',
         lv: {
-            SPB: { min: 0, max: 12 },
+            SPB: { min: 0, max: 3 },
             SPN: { min: 0, max: 12 },
             SPH: { min: 0, max: 12 },
             SPA: { min: 0, max: 12 },
@@ -1983,16 +1983,16 @@ function handleClientLoad() {
         jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
         jQuery('.infotable').append(
             '<tbody class="musiclistdata"><tr><th colspan="2" class="section2">全データ</th>' +
-                       '<td>' + musics.infoJSON.music_count.toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td>' + musics.infoJSON.chart_single_all.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="spb">' + musics.infoJSON.chart_single_beginner.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="spn">' + musics.infoJSON.chart_single_normal.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="sph">' + musics.infoJSON.chart_single_hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="spa">' + musics.infoJSON.chart_single_another.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td>' + musics.infoJSON.chart_double_all.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="dpn">' + musics.infoJSON.chart_double_normal.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="dph">' + musics.infoJSON.chart_double_hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="dpa">' + musics.infoJSON.chart_double_another.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="text-right">' + musics.infoJSON.music_count.toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="text-right">' + musics.infoJSON.chart_single_all.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="spb text-right">' + musics.infoJSON.chart_single_beginner.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="spn text-right">' + musics.infoJSON.chart_single_normal.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="sph text-right">' + musics.infoJSON.chart_single_hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="spa text-right">' + musics.infoJSON.chart_single_another.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="text-right">' + musics.infoJSON.chart_double_all.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="dpn text-right">' + musics.infoJSON.chart_double_normal.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="dph text-right">' + musics.infoJSON.chart_double_hyper.toLocaleString() + '&nbsp;譜面</td>' +
+                       '<td class="dpa text-right">' + musics.infoJSON.chart_double_another.toLocaleString() + '&nbsp;譜面</td>' +
             '</tr></tbody>');
         jQuery('#filter-button').prop('disabled',false);
     };
