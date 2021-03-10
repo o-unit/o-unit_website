@@ -365,23 +365,23 @@ function initializeUserJSON(JSONString) {
         hasCanplay = (hasID && ('Canplay' in jsonData.musics[item.ID]));
         hasScores =  (hasID && ('EXScores'  in jsonData.musics[item.ID]));
         
+        userJSON.musics[item.ID] = {
+            'title': ( hasID && ('title' in jsonData.musics[item.ID])) ? jsonData.musics[item.ID].title : item.Title,
+            'EXScores':{
+                'Beginner'   : ( hasID && hasScores && ('Beginner'    in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Beginner    : '0',
+                'Normal'     : ( hasID && hasScores && ('Normal'      in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Normal      : '0',
+                'Hyper'      : ( hasID && hasScores && ('Hyper'       in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Hyper       : '0',
+                'Another'    : ( hasID && hasScores && ('Another'     in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Another     : '0',
+                'Leggendaria': ( hasID && hasScores && ('Leggendaria' in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Leggendaria : '0',
+            }
+        };
         if (item.Release.Type != 'Default') {
-            userJSON.musics[item.ID] = {
-                'title': ( hasID && ('title' in jsonData.musics[item.ID])) ? jsonData.musics[item.ID].title : item.Title,
-                'Canplay':{
-                    'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Beginner    : '0',
-                    'Normal'     : ( hasID && hasCanplay && ('Normal'      in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Normal      : '0',
-                    'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Hyper       : '0',
-                    'Another'    : ( hasID && hasCanplay && ('Another'     in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Another     : '0',
-                    'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Leggendaria : '0',
-                },
-                'EXScores':{
-                    'Beginner'   : ( hasID && hasScores && ('Beginner'    in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Beginner    : '0',
-                    'Normal'     : ( hasID && hasScores && ('Normal'      in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Normal      : '0',
-                    'Hyper'      : ( hasID && hasScores && ('Hyper'       in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Hyper       : '0',
-                    'Another'    : ( hasID && hasScores && ('Another'     in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Another     : '0',
-                    'Leggendaria': ( hasID && hasScores && ('Leggendaria' in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Leggendaria : '0',
-                }
+            userJSON.musics[item.ID].Canplay = {
+                'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Beginner    : '0',
+                'Normal'     : ( hasID && hasCanplay && ('Normal'      in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Normal      : '0',
+                'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Hyper       : '0',
+                'Another'    : ( hasID && hasCanplay && ('Another'     in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Another     : '0',
+                'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Leggendaria : '0',
             };
         };
     };
@@ -399,6 +399,11 @@ function initializeUserJSON(JSONString) {
         jQuery(packlist[pid].inputid).prop('checked',(userJSON.packs[pid].purchased === '1'));
         togglePackButton(jQuery('#purchase-Pack' + pid), true);
     };
+
+    // infoを表示
+    jQuery('#userJSON_djname').text(userJSON.info.id);
+    jQuery('#userJSON_created').text(userJSON.info.created);
+    jQuery('#userJSON_updated').text(userJSON.info.updated);
 
     // ダウンロードボタンを有効化
     jQuery('#downloadButton').removeClass('hidden');
@@ -422,7 +427,7 @@ function initializeUserJSON(JSONString) {
 function makeHeaderLine(items) {
     let addHtml = '';
     for(let item of items){
-        addHtml += '<tbody id="' + item[0] + '" class="headertbody"><tr class="headerline ' + item[1] + '"><th colspan="13">' + item[2] +'</th></tr></tbody>';
+        addHtml += '<tbody id="' + item[0] + '" class="headertbody"><tr class="headerline ' + item[1] + '"><th colspan="13"><div class="vername">' + item[2] +'</div></th></tr></tbody>';
     };
 
     jQuery('.musiclist').append(addHtml);
@@ -865,6 +870,8 @@ let update = {
         let dummyNow = new Date();
         dummyNow.setHours(dummyNow.getHours() + 9);
         userJSON.info.updated = dummyNow.toISOString().split('Z')[0] + '+09:00';
+        jQuery('#userJSON_updated').text(userJSON.info.updated);
+
         // 完了処理
         toastbox.FadeInandTimerFadeOut(self.updateArray.length + '件の楽曲解禁状況を更新しました。');
         self.updateArray = [];
@@ -1173,6 +1180,15 @@ let musics = {
 
         // テーブルのデータ作成
         let tabledata = {};
+        let countdata = {};
+        countdata.Tmp = {'Music': 0,
+                         'Scores':           { 'SPB': 0, 'SPN': 0, 'SPH': 0, 'SPA': 0, 'SPL': 0, 'DPB': 0, 'DPN': 0, 'DPH': 0, 'DPA': 0, 'DPL': 0 },
+                         'BITScores':        { 'SPB': 0, 'SPN': 0, 'SPH': 0, 'SPA': 0, 'SPL': 0, 'DPB': 0, 'DPN': 0, 'DPH': 0, 'DPA': 0, 'DPL': 0 },
+                         'BITCanplayScores': { 'SPB': 0, 'SPN': 0, 'SPH': 0, 'SPA': 0, 'SPL': 0, 'DPB': 0, 'DPN': 0, 'DPH': 0, 'DPA': 0, 'DPL': 0 },
+                         'BIT':              { 'B': 0, 'N': 0, 'H': 0, 'A': 0, 'L': 0 },
+                         'BITCanplay':       { 'B': 0, 'N': 0, 'H': 0, 'A': 0, 'L': 0 }
+        };
+
         for (let item of headerLine) {tabledata[item[0]] = '';}
         for(let item of items){
             // 譜面情報の取得
@@ -1186,8 +1202,8 @@ let musics = {
             let DPH = this.getChartInfo( item.Scores.Double.Hyper );
             let DPA = this.getChartInfo( item.Scores.Double.Another );
             let DPL = this.getChartInfo( item.Scores.Double.Leggendaria );
-            let BPMtmp = [SPB.BPM, SPN.BPM, SPH.BPM, SPA.BPM, SPL.BPM, DPB.BPM, DPN.BPM, DPH.BPM, DPA.BPM, DPL.BPM].filter(Boolean);
-    
+            let BPMtmp = [...new Set([SPB.BPM, SPN.BPM, SPH.BPM, SPA.BPM, SPL.BPM, DPB.BPM, DPN.BPM, DPH.BPM, DPA.BPM, DPL.BPM])].filter(Boolean);
+
             // リリース情報の取得・加工
             let rTypeClass = '';
             let rTypeStr = '';
@@ -1265,11 +1281,11 @@ let musics = {
             // 解禁状況の取得・加工
             let canplay = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
             if ('musics' in userJSON) {
-                canplay.Beginner     = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
-                canplay.Normal       = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Normal      == '1');
-                canplay.Hyper        = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
-                canplay.Another      = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Another     == '1');
-                canplay.Leggendaria  = (item.ID in userJSON.musics) && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
+                canplay.Beginner     = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
+                canplay.Normal       = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Normal      == '1');
+                canplay.Hyper        = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
+                canplay.Another      = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Another     == '1');
+                canplay.Leggendaria  = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
             };
 
             // BIT・譜面数計算
@@ -1303,6 +1319,7 @@ let musics = {
                     "SPH": (canplay.Hyper       || (rTypeClass === '' && !isNaN(SPH.Lv)) ? ' canplay' : ''),
                     "SPA": (canplay.Another     || (rTypeClass === '' && !isNaN(SPA.Lv)) ? ' canplay' : ''),
                     "SPL": (canplay.Leggendaria || (rTypeClass === '' && !isNaN(SPL.Lv)) ? ' canplay' : ''),
+                    "DPB": (canplay.Beginner    || (rTypeClass === '' && !isNaN(DPB.Lv)) ? ' canplay' : ''),
                     "DPN": (canplay.Normal      || (rTypeClass === '' && !isNaN(DPN.Lv)) ? ' canplay' : ''),
                     "DPH": (canplay.Hyper       || (rTypeClass === '' && !isNaN(DPH.Lv)) ? ' canplay' : ''),
                     "DPA": (canplay.Another     || (rTypeClass === '' && !isNaN(DPA.Lv)) ? ' canplay' : ''),
@@ -1313,7 +1330,8 @@ let musics = {
                     "SPN": '<div class="notesstyle' + (SPN.HCN ? ' hcn' : SPN.CN ? ' cn' : '') + '"></div>',
                     "SPH": '<div class="notesstyle' + (SPH.HCN ? ' hcn' : SPH.CN ? ' cn' : '') + '"></div>',
                     "SPA": '<div class="notesstyle' + (SPA.HCN ? ' hcn' : SPA.CN ? ' cn' : '') + '"></div>',
-                    "SPL": '<div class="notesstyle' + (SPA.HCN ? ' hcn' : SPA.CN ? ' cn' : '') + '"></div>',
+                    "SPL": '<div class="notesstyle' + (SPL.HCN ? ' hcn' : SPL.CN ? ' cn' : '') + '"></div>',
+                    "DPB": '<div class="notesstyle' + (DPB.HCN ? ' hcn' : DPB.CN ? ' cn' : '') + '"></div>',
                     "DPN": '<div class="notesstyle' + (DPN.HCN ? ' hcn' : DPN.CN ? ' cn' : '') + '"></div>',
                     "DPH": '<div class="notesstyle' + (DPH.HCN ? ' hcn' : DPH.CN ? ' cn' : '') + '"></div>',
                     "DPA": '<div class="notesstyle' + (DPA.HCN ? ' hcn' : DPA.CN ? ' cn' : '') + '"></div>',
@@ -1325,13 +1343,14 @@ let musics = {
                     "SPH": '<div class="notesstyle' + (SPH.HBSS ? ' hbss' : SPH.BSS ? ' bss' : '') + '"></div>',
                     "SPA": '<div class="notesstyle' + (SPA.HBSS ? ' hbss' : SPA.BSS ? ' bss' : '') + '"></div>',
                     "SPL": '<div class="notesstyle' + (SPL.HBSS ? ' hbss' : SPL.BSS ? ' bss' : '') + '"></div>',
+                    "DPB": '<div class="notesstyle' + (DPB.HBSS ? ' hbss' : DPB.BSS ? ' bss' : '') + '"></div>',
                     "DPN": '<div class="notesstyle' + (DPN.HBSS ? ' hbss' : DPN.BSS ? ' bss' : '') + '"></div>',
                     "DPH": '<div class="notesstyle' + (DPH.HBSS ? ' hbss' : DPH.BSS ? ' bss' : '') + '"></div>',
                     "DPA": '<div class="notesstyle' + (DPA.HBSS ? ' hbss' : DPA.BSS ? ' bss' : '') + '"></div>',
                     "DPL": '<div class="notesstyle' + (DPL.HBSS ? ' hbss' : DPL.BSS ? ' bss' : '') + '"></div>'
                 }
             };
-            rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0));
+            rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0) + (rBit.Leggendaria ? rBit.Leggendaria : 0));
             addhtml = '<tr class="music" style="display: none;">' +
                       '<td class="release' + rTypeClass + '">' + rTypeSStr + '</td>' +
                       '<td class="version version' + item.VNo + '">' + item.VShortName + '</td>' +
@@ -1353,10 +1372,11 @@ let musics = {
                       '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
                       'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
                       ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
-                                                     ((rBit.Beginner) ? '&nbsp;B = ' + rBit.Beginner.toLocaleString() + ' / ' : '' ) +
-                                                     ((rBit.Normal)   ? '&nbsp;N = '   + rBit.Normal.toLocaleString() + ' / ' : '' ) +
-                                                     ((rBit.Hyper)    ? '&nbsp;H = '    + rBit.Hyper.toLocaleString() + ' / ' : '' ) +
-                                                     ((rBit.Another)  ? '&nbsp;A = '  + rBit.Another.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Beginner)     ? '&nbsp;B = '     + rBit.Beginner.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Normal)       ? '&nbsp;N = '       + rBit.Normal.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Hyper)        ? '&nbsp;H = '        + rBit.Hyper.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Another)      ? '&nbsp;A = '      + rBit.Another.toLocaleString() + ' / ' : '' ) +
+                                                     ((rBit.Leggendaria)  ? '&nbsp;A = '  + rBit.Leggendaria.toLocaleString() + ' / ' : '' ) +
                                                      '&nbsp;&nbsp;合計 = ' + rBit.ALL.toLocaleString() : "") +
                       ((comment) ? '<br />' + comment : "") +
                       '</td>' +
@@ -1383,32 +1403,114 @@ let musics = {
 
             // データ挿入先ごとにオブジェクトに格納
             switch (jQuery("#search-folder").val()) {
-                case 'VER'      : tabledata["v" + zeroPadding(item.VNo,2) + "-header"] += addhtml; break;
-                case 'RELT'     : tabledata["relt" + item.Release.Type + "-header"] += addhtml; break;
-                case 'RELY'     : tabledata["rely" + r_id_r4Y + "-header"] += addhtml; break;
-                case 'RELYM'    : tabledata["relym" + r_id_r4Y2M + "-header"] += addhtml; break;
-                case 'BITY'     : tabledata["bity" + r_id_b4Y + "-header"] += addhtml; break;
-                case 'BITYM'    : tabledata["bitym" + r_id_b4Y2M + "-header"] += addhtml; break;
-                case 'BPM'      : tabledata["bpm" + getBPMValue(BPM) + "-header"] += addhtml; break;
-                case 'SPNLV'    : tabledata["spn-lv" + (!isNaN(SPN.Lv) ? zeroPadding(SPN.Lv,2) : 'NO') + "-header"] += addhtml; break;
-                case 'SPHLV'    : tabledata["sph-lv" + (!isNaN(SPH.Lv) ? zeroPadding(SPH.Lv,2) : 'NO') + "-header"] += addhtml; break;
-                case 'SPALV'    : tabledata["spa-lv" + (!isNaN(SPA.Lv) ? zeroPadding(SPA.Lv,2) : 'NO') + "-header"] += addhtml; break;
-                case 'DPNLV'    : tabledata["dpn-lv" + (!isNaN(DPN.Lv) ? zeroPadding(DPN.Lv,2) : 'NO') + "-header"] += addhtml; break;
-                case 'DPHLV'    : tabledata["dph-lv" + (!isNaN(DPH.Lv) ? zeroPadding(DPH.Lv,2) : 'NO') + "-header"] += addhtml; break;
-                case 'DPALV'    : tabledata["dpa-lv" + (!isNaN(DPA.Lv) ? zeroPadding(DPA.Lv,2) : 'NO') + "-header"] += addhtml; break;
-                case 'SPNNOTES' : tabledata["spn-notes" + (!isNaN(SPN.Lv) ? getNotesValue(SPN.Notes) : 'NO') + "-header"] += addhtml; break;
-                case 'SPHNOTES' : tabledata["sph-notes" + (!isNaN(SPH.Lv) ? getNotesValue(SPH.Notes) : 'NO') + "-header"] += addhtml; break;
-                case 'SPANOTES' : tabledata["spa-notes" + (!isNaN(SPA.Lv) ? getNotesValue(SPA.Notes) : 'NO') + "-header"] += addhtml; break;
-                case 'DPNNOTES' : tabledata["dpn-notes" + (!isNaN(DPN.Lv) ? getNotesValue(DPN.Notes) : 'NO') + "-header"] += addhtml; break;
-                case 'DPHNOTES' : tabledata["dph-notes" + (!isNaN(DPH.Lv) ? getNotesValue(DPH.Notes) : 'NO') + "-header"] += addhtml; break;
-                case 'DPANOTES' : tabledata["dpa-notes" + (!isNaN(DPA.Lv) ? getNotesValue(DPA.Notes) : 'NO') + "-header"] += addhtml; break;
+                case 'VER'      : className = "v" + zeroPadding(item.VNo,2) + "-header"; break;
+                case 'RELT'     : className = "relt" + item.Release.Type + "-header"; break;
+                case 'RELY'     : className = "rely" + r_id_r4Y + "-header"; break;
+                case 'RELYM'    : className = "relym" + r_id_r4Y2M + "-header"; break;
+                case 'BITY'     : className = "bity" + r_id_b4Y + "-header"; break;
+                case 'BITYM'    : className = "bitym" + r_id_b4Y2M + "-header"; break;
+                case 'BPM'      : className = "bpm" + getBPMValue(BPM) + "-header"; break;
+                case 'SPBLV'    : className = "spb-lv" + (!isNaN(SPB.Lv) ? zeroPadding(SPB.Lv,2) : 'NO') + "-header"; break;
+                case 'SPNLV'    : className = "spn-lv" + (!isNaN(SPN.Lv) ? zeroPadding(SPN.Lv,2) : 'NO') + "-header"; break;
+                case 'SPHLV'    : className = "sph-lv" + (!isNaN(SPH.Lv) ? zeroPadding(SPH.Lv,2) : 'NO') + "-header"; break;
+                case 'SPALV'    : className = "spa-lv" + (!isNaN(SPA.Lv) ? zeroPadding(SPA.Lv,2) : 'NO') + "-header"; break;
+                case 'SPLLV'    : className = "spl-lv" + (!isNaN(SPL.Lv) ? zeroPadding(SPL.Lv,2) : 'NO') + "-header"; break;
+                case 'DPBLV'    : className = "dpb-lv" + (!isNaN(DPB.Lv) ? zeroPadding(DPB.Lv,2) : 'NO') + "-header"; break;
+                case 'DPNLV'    : className = "dpn-lv" + (!isNaN(DPN.Lv) ? zeroPadding(DPN.Lv,2) : 'NO') + "-header"; break;
+                case 'DPHLV'    : className = "dph-lv" + (!isNaN(DPH.Lv) ? zeroPadding(DPH.Lv,2) : 'NO') + "-header"; break;
+                case 'DPALV'    : className = "dpa-lv" + (!isNaN(DPA.Lv) ? zeroPadding(DPA.Lv,2) : 'NO') + "-header"; break;
+                case 'DPLLV'    : className = "dpl-lv" + (!isNaN(DPL.Lv) ? zeroPadding(DPL.Lv,2) : 'NO') + "-header"; break;
+                case 'SPNNOTES' : className = "spn-notes" + (!isNaN(SPN.Lv) ? getNotesValue(SPN.Notes) : 'NO') + "-header"; break;
+                case 'SPHNOTES' : className = "sph-notes" + (!isNaN(SPH.Lv) ? getNotesValue(SPH.Notes) : 'NO') + "-header"; break;
+                case 'SPANOTES' : className = "spa-notes" + (!isNaN(SPA.Lv) ? getNotesValue(SPA.Notes) : 'NO') + "-header"; break;
+                case 'DPNNOTES' : className = "dpn-notes" + (!isNaN(DPN.Lv) ? getNotesValue(DPN.Notes) : 'NO') + "-header"; break;
+                case 'DPHNOTES' : className = "dph-notes" + (!isNaN(DPH.Lv) ? getNotesValue(DPH.Notes) : 'NO') + "-header"; break;
+                case 'DPANOTES' : className = "dpa-notes" + (!isNaN(DPA.Lv) ? getNotesValue(DPA.Notes) : 'NO') + "-header"; break;
+            };
+            tabledata[className] += addhtml;
+            if (!(className in countdata)) {
+                countdata[className] = { ...countdata.Tmp,
+                   'Scores':           { ...countdata.Tmp.Scores },
+                   'BITScores':        { ...countdata.Tmp.BITScores },
+                   'BITCanplayScores': { ...countdata.Tmp.BITCanplayScores },
+                   'BIT':              { ...countdata.Tmp.BIT },
+                   'BITCanplay':       { ...countdata.Tmp.BITCanplay },
+                };
+                
+            };
+            countdata[className].Music += 1;
+            if (!isNaN(SPB.Lv)) { countdata[className].Scores.SPB += 1; };
+            if (!isNaN(SPN.Lv)) { countdata[className].Scores.SPN += 1; };
+            if (!isNaN(SPH.Lv)) { countdata[className].Scores.SPH += 1; };
+            if (!isNaN(SPA.Lv)) { countdata[className].Scores.SPA += 1; };
+            if (!isNaN(SPL.Lv)) { countdata[className].Scores.SPL += 1; };
+            if (!isNaN(DPB.Lv)) { countdata[className].Scores.DPB += 1; };
+            if (!isNaN(DPN.Lv)) { countdata[className].Scores.DPN += 1; };
+            if (!isNaN(DPH.Lv)) { countdata[className].Scores.DPH += 1; };
+            if (!isNaN(DPA.Lv)) { countdata[className].Scores.DPA += 1; };
+            if (!isNaN(DPL.Lv)) { countdata[className].Scores.DPL += 1; };
+
+            if (rBit4Y2M2D !== 'BIT未解禁' && isReleased && isBitCalc) {
+                if (!isNaN(SPB.Lv)) { countdata[className].BITScores.SPB += 1; };
+                if (!isNaN(SPN.Lv)) { countdata[className].BITScores.SPN += 1; };
+                if (!isNaN(SPH.Lv)) { countdata[className].BITScores.SPH += 1; };
+                if (!isNaN(SPA.Lv)) { countdata[className].BITScores.SPA += 1; };
+                if (!isNaN(SPL.Lv)) { countdata[className].BITScores.SPL += 1; };
+                if (!isNaN(DPB.Lv)) { countdata[className].BITScores.DPB += 1; };
+                if (!isNaN(DPN.Lv)) { countdata[className].BITScores.DPN += 1; };
+                if (!isNaN(DPH.Lv)) { countdata[className].BITScores.DPH += 1; };
+                if (!isNaN(DPA.Lv)) { countdata[className].BITScores.DPA += 1; };
+                if (!isNaN(DPL.Lv)) { countdata[className].BITScores.DPL += 1; };
+
+                if (!isNaN(SPB.Lv) && canplay.Beginner   ) {countdata[className].BITCanplayScores.SPB++; };
+                if (!isNaN(SPN.Lv) && canplay.Normal     ) {countdata[className].BITCanplayScores.SPN++; };
+                if (!isNaN(SPH.Lv) && canplay.Hyper      ) {countdata[className].BITCanplayScores.SPH++; };
+                if (!isNaN(SPA.Lv) && canplay.Another    ) {countdata[className].BITCanplayScores.SPA++; };
+                if (!isNaN(SPL.Lv) && canplay.Leggendaria) {countdata[className].BITCanplayScores.SPL++; };
+                if (!isNaN(DPB.Lv) && canplay.Beginner   ) {countdata[className].BITCanplayScores.DPB++; };
+                if (!isNaN(DPN.Lv) && canplay.Normal     ) {countdata[className].BITCanplayScores.DPN++; };
+                if (!isNaN(DPH.Lv) && canplay.Hyper      ) {countdata[className].BITCanplayScores.DPH++; };
+                if (!isNaN(DPA.Lv) && canplay.Another    ) {countdata[className].BITCanplayScores.DPA++; };
+                if (!isNaN(DPL.Lv) && canplay.Leggendaria) {countdata[className].BITCanplayScores.DPL++; };
+
+                if ( ( !isNaN(SPB.Lv) || !isNaN(DPB.Lv) )) {countdata[className].BIT.B += Number(rBit.Beginner); };
+                if ( ( !isNaN(SPN.Lv) || !isNaN(DPN.Lv) )) {countdata[className].BIT.N += Number(rBit.Normal); };
+                if ( ( !isNaN(SPH.Lv) || !isNaN(DPH.Lv) )) {countdata[className].BIT.H += Number(rBit.Hyper); };
+                if ( ( !isNaN(SPA.Lv) || !isNaN(DPA.Lv) )) {countdata[className].BIT.A += Number(rBit.Another); };
+                if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) )) {countdata[className].BIT.L += Number(rBit.Leggendaria); };
+
+                if ( ( !isNaN(SPB.Lv) || !isNaN(DPB.Lv) ) && canplay.Beginner   ) {countdata[className].BITCanplay.B += Number(rBit.Beginner); };
+                if ( ( !isNaN(SPN.Lv) || !isNaN(DPN.Lv) ) && canplay.Normal     ) {countdata[className].BITCanplay.N += Number(rBit.Normal); };
+                if ( ( !isNaN(SPH.Lv) || !isNaN(DPH.Lv) ) && canplay.Hyper      ) {countdata[className].BITCanplay.H += Number(rBit.Hyper); };
+                if ( ( !isNaN(SPA.Lv) || !isNaN(DPA.Lv) ) && canplay.Another    ) {countdata[className].BITCanplay.A += Number(rBit.Another); };
+                if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) ) && canplay.Leggendaria) {countdata[className].BITCanplay.L += Number(rBit.Leggendaria); };
             };
         };
     
         // データ挿入
-        for(let classname in tabledata){
-            if (tabledata[classname] !== '') {
-                jQuery('#' + classname).append(tabledata[classname]);
+        for(let className in tabledata){
+            // 楽曲データを追加した場合は検索結果追記と表示処理
+            if (tabledata[className] !== '') {
+                jQuery('#' + className).append(tabledata[className]);
+                jQuery('#' + className).find('span').remove();
+                let tmp = countdata[className];
+                let addScoresText = [
+                    (tmp.BITScores.SPB > 0 ? '<span class="unlockvalue_b"> B：' + tmp.BITCanplayScores.SPB + ' / ' + tmp.BITScores.SPB + ' </span>' : '<span class="unlockvalue_b"> </span>'),
+                    (tmp.BITScores.SPN > 0 ? '<span class="unlockvalue"> N：'   + tmp.BITCanplayScores.SPN + ' / ' + tmp.BITScores.SPN + ' </span>' : '<span class="unlockvalue"> </span>'),
+                    (tmp.BITScores.SPH > 0 ? '<span class="unlockvalue"> H：'   + tmp.BITCanplayScores.SPH + ' / ' + tmp.BITScores.SPH + ' </span>' : '<span class="unlockvalue"> </span>'),
+                    (tmp.BITScores.SPA > 0 ? '<span class="unlockvalue"> A：'   + tmp.BITCanplayScores.SPA + ' / ' + tmp.BITScores.SPA + ' </span>' : '<span class="unlockvalue"> </span>'),
+                    (tmp.BITScores.SPL > 0 ? '<span class="unlockvalue"> L：'   + tmp.BITCanplayScores.SPL + ' / ' + tmp.BITScores.SPL + ' </span>' : '<span class="unlockvalue"> </span>'),
+                ];
+                let addTextOutput = (tmp.BITScores.SPB > 0 || tmp.BITScores.SPN > 0 || tmp.BITScores.SPH > 0 || tmp.BITScores.SPA > 0 || tmp.BITScores.SPL > 0);
+                let addText = '<span class="result">&nbsp;' + tmp.Music + ' 曲</span>' +
+                          (addTextOutput ? '<span class="unlocklabel"> BIT解禁</span>' + addScoresText.join('') : '');
+                jQuery('#' + className).find('.headerline th').append(addText);
+                if (jQuery('#searchopen').prop('checked') ) {
+                    jQuery('#' + className).children('.music_other').hide();
+                    jQuery('#' + className).children('.music').show();
+                    jQuery('#' + className).addClass('opened');
+                };
+                jQuery('#' + className).show();
             };
         };
 
@@ -1422,16 +1524,6 @@ let musics = {
             // 曲数が0のバージョンヘッダーを非表示
             if (jQuery(this).find(".music").length <= 0) {
                 jQuery(this).hide();
-            // 曲数が0でなければヘッダー毎に検索件数を表示
-            } else {
-                jQuery(this).find('span').remove();
-                jQuery(this).find('.headerline th').append('<span>&nbsp;&nbsp;(&nbsp;検索結果：' + jQuery(this).children('.music').length + '件&nbsp;)</span>');
-                if (jQuery('#searchopen').prop('checked') ) {
-                    jQuery(this).children('.music_other').hide();
-                    jQuery(this).children('.music').show();
-                    jQuery(this).addClass('opened');
-                };
-                jQuery(this).show();
             };
         });
 
@@ -2076,18 +2168,25 @@ function handleClientLoad() {
     pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
     makeHeaderLine(headerLine);
 
+    // チェックボックスをラジオボタンの様に使用する
     let csobj = jQuery('#musicsearch').find('input[data-checkgroup]');
     csobj.on('click',function() {
-		var group = $(this).attr('data-checkgroup');
-		csobj.filter( function() { return $(this).attr('data-checkgroup') == group; } ).not(this).prop('checked', false);
+		var group = jQuery(this).attr('data-checkgroup');
+		csobj.filter( function() { return jQuery(this).attr('data-checkgroup') == group; } ).not(this).prop('checked', false);
+        if (jQuery(this).prop('checked')) {
+            jQuery('.formtab-bottom').show();
+        } else {
+            jQuery('.formtab-bottom').hide();
+        }
     });
 
     // 検索ボタン押下時
     jQuery('#filter-button').click(function() {
+        let musicJSON = musics.JSON;
+        let filteredJSON = [];
+        let sortedJSON = [];
+
         try {
-            let musicJSON = musics.JSON;
-            let filteredJSON = [];
-            let sortedJSON = [];
 
             // 検索終了まで検索ボタンを無効化
             jQuery(this).attr('disabled', true);
@@ -2134,14 +2233,26 @@ function handleClientLoad() {
                 musicJSON[i].BPM = (tmpBPM.length > 1) ? '-' : tmpBPM[0];
             };
 
-            filteredJSON = musics.filter(musicJSON);
-            sortedJSON = musics.sort(filteredJSON);
-            musics.write(sortedJSON);
-
-            jQuery(this).attr('disabled', false);
         } catch(e) {
-            jQuery('#debug').append(e.toString());
+            jQuery('#debug').text('検索準備 / ' + e.toString());
         };
+        try {
+            filteredJSON = musics.filter(musicJSON);
+        } catch(e) {
+            jQuery('#debug').text('filteredJSON / ' + e.toString());
+        };
+        try {
+            sortedJSON = musics.sort(filteredJSON);
+        } catch(e) {
+            jQuery('#debug').text('sortedJSON / ' + e.toString());
+        };
+        try {
+            musics.write(sortedJSON);
+        } catch(e) {
+            jQuery('#debug').text('musics.write / ' + e.toString());
+        };
+
+        jQuery(this).attr('disabled', false);
     });
 
     // 検索条件のリセットボタン押下時
