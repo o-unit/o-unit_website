@@ -194,7 +194,12 @@
 .tab_item:hover {
     opacity: 0.75;
 }
-  
+
+.formtab-bottom.tab_item {
+    border-bottom: 0px;
+    border-top: 3px solid #5ab4bd;
+    display: none;
+}
 /*ラジオボタンを全て消す*/
 input[name="formtab"] {
     display: none;
@@ -208,6 +213,7 @@ input[name="formtab"] {
     overflow: auto;
     border: 3px solid #5ab4bd;
     border-top: 0px;
+    border-bottom: 0px;
 }
 
 /*選択されているタブのコンテンツのみを表示*/
@@ -230,6 +236,20 @@ input:checked + .tab_item {
     color: #fff;
 }
 
+/*選択されているタブのスタイルを変える(bottom用)*/
+input[id="formtab-1"]:checked  ~ .formtab-bottom[for="formtab-1"],
+input[id="formtab-2"]:checked  ~ .formtab-bottom[for="formtab-2"],
+input[id="formtab-3"]:checked  ~ .formtab-bottom[for="formtab-3"],
+input[id="formtab-4"]:checked  ~ .formtab-bottom[for="formtab-4"],
+input[id="formtab-5"]:checked  ~ .formtab-bottom[for="formtab-5"],
+input[id="formtab-6"]:checked  ~ .formtab-bottom[for="formtab-6"],
+input[id="formtab-7"]:checked  ~ .formtab-bottom[for="formtab-7"],
+input[id="formtab-8"]:checked  ~ .formtab-bottom[for="formtab-8"],
+input[id="formtab-9"]:checked  ~ .formtab-bottom[for="formtab-9"],
+input[id="formtab-10"]:checked ~ .formtab-bottom[for="formtab-10"] {
+    background-color: #5ab4bd;
+    color: #fff;
+}
 #musicsearch {
     font-size: 0.9rem;
 }
@@ -556,6 +576,32 @@ table.musiclist .headerline th {
 	border-width: 0px 2px 0px 2px;
 	border-style: solid;
 	border-color: #9b9b9d;
+}
+table.musiclist .headerline th .vername {
+    display: inline-block;
+    width: 14rem;
+}
+table.musiclist .headerline th .result {
+    display: inline-block;
+    width: 5rem;
+    font-weight: normal;
+}
+table.musiclist .headerline th .unlocklabel {
+    display: inline-block;
+    width: 4rem;
+    font-weight: normal;
+}
+table.musiclist .headerline th .unlockvalue_b {
+    display: inline-block;
+    text-align: right;
+    width: 5rem;
+    font-weight: normal;
+}
+table.musiclist .headerline th .unlockvalue {
+    display: inline-block;
+    text-align: right;
+    width: 6rem;
+    font-weight: normal;
 }
 table.musiclist .music_other {
 	border-top: 2px dotted #9b9b9b;
