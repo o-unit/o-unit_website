@@ -97,7 +97,7 @@ Add buttons to initiate auth sequence and sign out
         <div class="clearfix">
             <div class="fieldname">解禁状況</div>
             <div class="selectbutton inblock">
-                <select id="unlocked" name="unlocked">
+                <select id="unlocked" name="unlocked" disabled>
                     <option value="ALL" selected>全て</option>
                     <option value="yes">全譜面解禁済</option>
                     <option value="partiallyyes">1譜面以上解禁済</option>

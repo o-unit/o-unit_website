@@ -413,6 +413,9 @@ function initializeUserJSON(JSONString) {
 
     jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
 
+    // 検索条件：解禁状況を有効化
+    jQuery("#unlocked").prop('disabled',false);
+
     // googleログイン済で、FileIDが入力済の状態であればFileIDをcookieに保存
     if (jQuery('#gdid').val() != ''){ Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31, sameSite: 'strict'}); };
 };
