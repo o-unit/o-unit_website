@@ -276,11 +276,37 @@ Add buttons to initiate auth sequence and sign out
             <div>
             データ保存設定の利用にあたり、以下について同意されたものとみなします。<br />
             <ul>
-                <li>手動入力の場合、</li>
-                <li>google Driveに保存する場合、「ファイルID」を知りうる第三者がファイルを閲覧できること。</li>
-                <li>google Driveに保存する場合、「ファイルID」を記憶しておくためにcookieを利用すること。</li>
+                <li>google Driveに保存する場合<br />
+                    <ul>
+                        <li class="warn">2021/03/10時点で開発中のため、googleログイン時に警告画面が表示される可能性があります！</li>
+                        <li>「ファイルID」を記憶しておくためにcookieを利用すること。</li>
+                        <li>「ファイルID」を知りうる第三者がファイルを閲覧できること。</li>
+                        <li>google Driveで権限設定を誤っていた場合に、「ファイルID」を知りうる第三者にファイルを改ざんされる恐れがあること。</li>
+                        <li>google Driveで編集を行った場合の動作は保証しません。</li>
+                    </ul>
+                </li>
+                <li>ファイルとして保存する場合<br />
+                    <ul>
+                        <li>ファイルを手動で編集した際の動作は保証しません。</li>
+                    </ul>
+                </li>
             </ul>
+            以上のことに同意していただいた上でのデータ保存設定をご利用ください。<br />
+            利用方法は作成中です…(´・ω・`)<br />
             </div>
+        </div>
+        <hr class="clearfix" />
+        <div class="clearfix">
+            <div class="fieldname"></div><div class="inblock"><a id="newtext" class="btn btn--info">データを新規作成</a></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname">DJ NAME</div><div id="userJSON_djname" class="inblock"></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname">作成日時</div><div id="userJSON_created" class="inblock"></div>
+        </div>
+        <div class="clearfix">
+            <div class="fieldname">更新日時</div><div id="userJSON_updated" class="inblock"></div>
         </div>
         <hr class="clearfix" />
         <div class="clearfix" id="json-message-outer" class="hidden">
@@ -289,10 +315,13 @@ Add buttons to initiate auth sequence and sign out
         <div class="clearfix">
             <div class="fieldname">ファイル</div>
             <div class="inblock">
-                <a id="newtext" class="btn btn--info">データを新規作成</a>
-                <input id="localfile" name="localfile" type="file" class="hidden" /><label for="localfile" class="btn btn--info"> ファイル選択 </label>
-                <a id="downloadButton" class="btn btn--info hidden">JSON ダウンロード</a>
-                <div id="localfilename"></div>
+                <div class="clearfix">
+                    <input id="localfile" name="localfile" type="file" class="hidden" /><label for="localfile" class="btn btn--info"> ファイル選択 </label>
+                    <a id="downloadButton" class="btn btn--info hidden">JSON ダウンロード</a>
+                </div>
+                <div class="clearfix">
+                    <div id="localfilename"></div>
+                </div>
             </div>
         </div>
         <hr class="clearfix" />
@@ -525,7 +554,14 @@ Add buttons to initiate auth sequence and sign out
     <div id="formtab-8_content" class="tab_content">
         <div id="scorefilterbox"></div>
     </div>
-
+    <label for="formtab-1" class="tab_item formtab-bottom">条件：譜面</label>
+    <label for="formtab-2" class="tab_item formtab-bottom">条件：その他</label>
+    <label for="formtab-3" class="tab_item formtab-bottom">表示設定</label>
+    <label for="formtab-4" class="tab_item formtab-bottom">データ設定</label>
+    <label for="formtab-5" class="tab_item formtab-bottom">楽曲数・BIT</label>
+    <label for="formtab-6" class="tab_item formtab-bottom">？？？</label>
+    <label for="formtab-7" class="tab_item formtab-bottom">(管理用1)</label>
+    <label for="formtab-8" class="tab_item formtab-bottom">？？？</label>
 </div>
 
 <form id="searchbuttonform" enctype="application/x-www-form-urlencoded" onsubmit="return false;">
