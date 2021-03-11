@@ -1405,88 +1405,86 @@ let musics = {
                       '</tr>' : '' );
 
             // データ挿入先ごとにオブジェクトに格納
+            className = [];
             switch (jQuery("#search-folder").val()) {
-                case 'VER'      : className = "v" + zeroPadding(item.VNo,2) + "-header"; break;
-                case 'RELT'     : className = "relt" + item.Release.Type + "-header"; break;
-                case 'RELY'     : className = "rely" + r_id_r4Y + "-header"; break;
-                case 'RELYM'    : className = "relym" + r_id_r4Y2M + "-header"; break;
-                case 'BITY'     : className = "bity" + r_id_b4Y + "-header"; break;
-                case 'BITYM'    : className = "bitym" + r_id_b4Y2M + "-header"; break;
-                case 'BPM'      : className = "bpm" + getBPMValue(BPM) + "-header"; break;
-                case 'SPBLV'    : className = "spb-lv" + (!isNaN(SPB.Lv) ? zeroPadding(SPB.Lv,2) : 'NO') + "-header"; break;
-                case 'SPNLV'    : className = "spn-lv" + (!isNaN(SPN.Lv) ? zeroPadding(SPN.Lv,2) : 'NO') + "-header"; break;
-                case 'SPHLV'    : className = "sph-lv" + (!isNaN(SPH.Lv) ? zeroPadding(SPH.Lv,2) : 'NO') + "-header"; break;
-                case 'SPALV'    : className = "spa-lv" + (!isNaN(SPA.Lv) ? zeroPadding(SPA.Lv,2) : 'NO') + "-header"; break;
-                case 'SPLLV'    : className = "spl-lv" + (!isNaN(SPL.Lv) ? zeroPadding(SPL.Lv,2) : 'NO') + "-header"; break;
-                case 'DPBLV'    : className = "dpb-lv" + (!isNaN(DPB.Lv) ? zeroPadding(DPB.Lv,2) : 'NO') + "-header"; break;
-                case 'DPNLV'    : className = "dpn-lv" + (!isNaN(DPN.Lv) ? zeroPadding(DPN.Lv,2) : 'NO') + "-header"; break;
-                case 'DPHLV'    : className = "dph-lv" + (!isNaN(DPH.Lv) ? zeroPadding(DPH.Lv,2) : 'NO') + "-header"; break;
-                case 'DPALV'    : className = "dpa-lv" + (!isNaN(DPA.Lv) ? zeroPadding(DPA.Lv,2) : 'NO') + "-header"; break;
-                case 'DPLLV'    : className = "dpl-lv" + (!isNaN(DPL.Lv) ? zeroPadding(DPL.Lv,2) : 'NO') + "-header"; break;
-                case 'SPNNOTES' : className = "spn-notes" + (!isNaN(SPN.Lv) ? getNotesValue(SPN.Notes) : 'NO') + "-header"; break;
-                case 'SPHNOTES' : className = "sph-notes" + (!isNaN(SPH.Lv) ? getNotesValue(SPH.Notes) : 'NO') + "-header"; break;
-                case 'SPANOTES' : className = "spa-notes" + (!isNaN(SPA.Lv) ? getNotesValue(SPA.Notes) : 'NO') + "-header"; break;
-                case 'DPNNOTES' : className = "dpn-notes" + (!isNaN(DPN.Lv) ? getNotesValue(DPN.Notes) : 'NO') + "-header"; break;
-                case 'DPHNOTES' : className = "dph-notes" + (!isNaN(DPH.Lv) ? getNotesValue(DPH.Notes) : 'NO') + "-header"; break;
-                case 'DPANOTES' : className = "dpa-notes" + (!isNaN(DPA.Lv) ? getNotesValue(DPA.Notes) : 'NO') + "-header"; break;
+                case 'VER'      : className.push("v" + zeroPadding(item.VNo,2) + "-header"); break;
+                case 'RELT'     : className.push("relt" + item.Release.Type + "-header"); break;
+                case 'RELY'     : className.push("rely" + r_id_r4Y + "-header"); break;
+                case 'RELYM'    : className.push("relym" + r_id_r4Y2M + "-header"); break;
+                case 'BITY'     : className.push("bity" + r_id_b4Y + "-header"); break;
+                case 'BITYM'    : className.push("bitym" + r_id_b4Y2M + "-header"); break;
+                case 'BPM'      : className.push("bpm" + getBPMValue(BPM) + "-header"); break;
+                case 'SPLV'     : if (!isNaN(SPB.Lv)) {className.push("sp-lv" + zeroPadding(SPB.Lv,2) + "-header");};
+                                  if (!isNaN(SPN.Lv)) {className.push("sp-lv" + zeroPadding(SPN.Lv,2) + "-header");};
+                                  if (!isNaN(SPH.Lv)) {className.push("sp-lv" + zeroPadding(SPH.Lv,2) + "-header");};
+                                  if (!isNaN(SPA.Lv)) {className.push("sp-lv" + zeroPadding(SPA.Lv,2) + "-header");};
+                                  if (!isNaN(SPL.Lv)) {className.push("sp-lv" + zeroPadding(SPL.Lv,2) + "-header");}; break;
+                case 'SPBLV'    : className.push("spb-lv" + (!isNaN(SPB.Lv) ? zeroPadding(SPB.Lv,2) : 'NO') + "-header"); break;
+                case 'SPNLV'    : className.push("spn-lv" + (!isNaN(SPN.Lv) ? zeroPadding(SPN.Lv,2) : 'NO') + "-header"); break;
+                case 'SPHLV'    : className.push("sph-lv" + (!isNaN(SPH.Lv) ? zeroPadding(SPH.Lv,2) : 'NO') + "-header"); break;
+                case 'SPALV'    : className.push("spa-lv" + (!isNaN(SPA.Lv) ? zeroPadding(SPA.Lv,2) : 'NO') + "-header"); break;
+                case 'SPLLV'    : className.push("spl-lv" + (!isNaN(SPL.Lv) ? zeroPadding(SPL.Lv,2) : 'NO') + "-header"); break;
+                case 'DPLV'     : if (!isNaN(DPB.Lv)) {className.push("dp-lv" + zeroPadding(DPB.Lv,2) + "-header");};
+                                  if (!isNaN(DPN.Lv)) {className.push("dp-lv" + zeroPadding(DPN.Lv,2) + "-header");};
+                                  if (!isNaN(DPH.Lv)) {className.push("dp-lv" + zeroPadding(DPH.Lv,2) + "-header");};
+                                  if (!isNaN(DPA.Lv)) {className.push("dp-lv" + zeroPadding(DPA.Lv,2) + "-header");};
+                                  if (!isNaN(DPL.Lv)) {className.push("dp-lv" + zeroPadding(DPL.Lv,2) + "-header");}; break;
+                case 'DPBLV'    : className.push("dpb-lv" + (!isNaN(DPB.Lv) ? zeroPadding(DPB.Lv,2) : 'NO') + "-header"); break;
+                case 'DPNLV'    : className.push("dpn-lv" + (!isNaN(DPN.Lv) ? zeroPadding(DPN.Lv,2) : 'NO') + "-header"); break;
+                case 'DPHLV'    : className.push("dph-lv" + (!isNaN(DPH.Lv) ? zeroPadding(DPH.Lv,2) : 'NO') + "-header"); break;
+                case 'DPALV'    : className.push("dpa-lv" + (!isNaN(DPA.Lv) ? zeroPadding(DPA.Lv,2) : 'NO') + "-header"); break;
+                case 'DPLLV'    : className.push("dpl-lv" + (!isNaN(DPL.Lv) ? zeroPadding(DPL.Lv,2) : 'NO') + "-header"); break;
+                case 'SPNNOTES' : className.push("spn-notes" + (!isNaN(SPN.Lv) ? getNotesValue(SPN.Notes) : 'NO') + "-header"); break;
+                case 'SPHNOTES' : className.push("sph-notes" + (!isNaN(SPH.Lv) ? getNotesValue(SPH.Notes) : 'NO') + "-header"); break;
+                case 'SPANOTES' : className.push("spa-notes" + (!isNaN(SPA.Lv) ? getNotesValue(SPA.Notes) : 'NO') + "-header"); break;
+                case 'DPNNOTES' : className.push("dpn-notes" + (!isNaN(DPN.Lv) ? getNotesValue(DPN.Notes) : 'NO') + "-header"); break;
+                case 'DPHNOTES' : className.push("dph-notes" + (!isNaN(DPH.Lv) ? getNotesValue(DPH.Notes) : 'NO') + "-header"); break;
+                case 'DPANOTES' : className.push("dpa-notes" + (!isNaN(DPA.Lv) ? getNotesValue(DPA.Notes) : 'NO') + "-header"); break;
             };
-            tabledata[className] += addhtml;
-            if (!(className in countdata)) {
-                countdata[className] = { ...countdata.Tmp,
-                   'Scores':           { ...countdata.Tmp.Scores },
-                   'BITScores':        { ...countdata.Tmp.BITScores },
-                   'BITCanplayScores': { ...countdata.Tmp.BITCanplayScores },
-                   'BIT':              { ...countdata.Tmp.BIT },
-                   'BITCanplay':       { ...countdata.Tmp.BITCanplay },
+
+            for (let header of className) {
+                tabledata[header] += addhtml;
+                if (!(header in countdata)) {
+                    countdata[header] = { ...countdata.Tmp,
+                    'Scores':           { ...countdata.Tmp.Scores },
+                    'BITScores':        { ...countdata.Tmp.BITScores },
+                    'BITCanplayScores': { ...countdata.Tmp.BITCanplayScores },
+                    'BIT':              { ...countdata.Tmp.BIT },
+                    'BITCanplay':       { ...countdata.Tmp.BITCanplay },
+                    };
+                    
                 };
-                
-            };
-            countdata[className].Music += 1;
-            if (!isNaN(SPB.Lv)) { countdata[className].Scores.SPB += 1; };
-            if (!isNaN(SPN.Lv)) { countdata[className].Scores.SPN += 1; };
-            if (!isNaN(SPH.Lv)) { countdata[className].Scores.SPH += 1; };
-            if (!isNaN(SPA.Lv)) { countdata[className].Scores.SPA += 1; };
-            if (!isNaN(SPL.Lv)) { countdata[className].Scores.SPL += 1; };
-            if (!isNaN(DPB.Lv)) { countdata[className].Scores.DPB += 1; };
-            if (!isNaN(DPN.Lv)) { countdata[className].Scores.DPN += 1; };
-            if (!isNaN(DPH.Lv)) { countdata[className].Scores.DPH += 1; };
-            if (!isNaN(DPA.Lv)) { countdata[className].Scores.DPA += 1; };
-            if (!isNaN(DPL.Lv)) { countdata[className].Scores.DPL += 1; };
+                countdata[header].Music += 1;
+                if (!isNaN(SPB.Lv)) { countdata[header].Scores.SPB += 1; };
+                if (!isNaN(SPN.Lv)) { countdata[header].Scores.SPN += 1; };
+                if (!isNaN(SPH.Lv)) { countdata[header].Scores.SPH += 1; };
+                if (!isNaN(SPA.Lv)) { countdata[header].Scores.SPA += 1; };
+                if (!isNaN(SPL.Lv)) { countdata[header].Scores.SPL += 1; };
+                if (!isNaN(DPB.Lv)) { countdata[header].Scores.DPB += 1; };
+                if (!isNaN(DPN.Lv)) { countdata[header].Scores.DPN += 1; };
+                if (!isNaN(DPH.Lv)) { countdata[header].Scores.DPH += 1; };
+                if (!isNaN(DPA.Lv)) { countdata[header].Scores.DPA += 1; };
+                if (!isNaN(DPL.Lv)) { countdata[header].Scores.DPL += 1; };
 
-            if (rBit4Y2M2D !== 'BIT未解禁' && isReleased && isBitCalc) {
-                if (!isNaN(SPB.Lv)) { countdata[className].BITScores.SPB += 1; };
-                if (!isNaN(SPN.Lv)) { countdata[className].BITScores.SPN += 1; };
-                if (!isNaN(SPH.Lv)) { countdata[className].BITScores.SPH += 1; };
-                if (!isNaN(SPA.Lv)) { countdata[className].BITScores.SPA += 1; };
-                if (!isNaN(SPL.Lv)) { countdata[className].BITScores.SPL += 1; };
-                if (!isNaN(DPB.Lv)) { countdata[className].BITScores.DPB += 1; };
-                if (!isNaN(DPN.Lv)) { countdata[className].BITScores.DPN += 1; };
-                if (!isNaN(DPH.Lv)) { countdata[className].BITScores.DPH += 1; };
-                if (!isNaN(DPA.Lv)) { countdata[className].BITScores.DPA += 1; };
-                if (!isNaN(DPL.Lv)) { countdata[className].BITScores.DPL += 1; };
+                if (rBit4Y2M2D !== 'BIT未解禁' && isReleased && isBitCalc) {
+                    if (!isNaN(SPB.Lv)) { countdata[header].BITScores.SPB += 1; if (canplay.Beginner   ) {countdata[header].BITCanplayScores.SPB++; }; };
+                    if (!isNaN(SPN.Lv)) { countdata[header].BITScores.SPN += 1; if (canplay.Normal     ) {countdata[header].BITCanplayScores.SPN++; }; };
+                    if (!isNaN(SPH.Lv)) { countdata[header].BITScores.SPH += 1; if (canplay.Hyper      ) {countdata[header].BITCanplayScores.SPH++; }; };
+                    if (!isNaN(SPA.Lv)) { countdata[header].BITScores.SPA += 1; if (canplay.Another    ) {countdata[header].BITCanplayScores.SPA++; }; };
+                    if (!isNaN(SPL.Lv)) { countdata[header].BITScores.SPL += 1; if (canplay.Leggendaria) {countdata[header].BITCanplayScores.SPL++; }; };
+                    if (!isNaN(DPB.Lv)) { countdata[header].BITScores.DPB += 1; if (canplay.Beginner   ) {countdata[header].BITCanplayScores.DPB++; }; };
+                    if (!isNaN(DPN.Lv)) { countdata[header].BITScores.DPN += 1; if (canplay.Normal     ) {countdata[header].BITCanplayScores.DPN++; }; };
+                    if (!isNaN(DPH.Lv)) { countdata[header].BITScores.DPH += 1; if (canplay.Hyper      ) {countdata[header].BITCanplayScores.DPH++; }; };
+                    if (!isNaN(DPA.Lv)) { countdata[header].BITScores.DPA += 1; if (canplay.Another    ) {countdata[header].BITCanplayScores.DPA++; }; };
+                    if (!isNaN(DPL.Lv)) { countdata[header].BITScores.DPL += 1; if (canplay.Leggendaria) {countdata[header].BITCanplayScores.DPL++; }; };
 
-                if (!isNaN(SPB.Lv) && canplay.Beginner   ) {countdata[className].BITCanplayScores.SPB++; };
-                if (!isNaN(SPN.Lv) && canplay.Normal     ) {countdata[className].BITCanplayScores.SPN++; };
-                if (!isNaN(SPH.Lv) && canplay.Hyper      ) {countdata[className].BITCanplayScores.SPH++; };
-                if (!isNaN(SPA.Lv) && canplay.Another    ) {countdata[className].BITCanplayScores.SPA++; };
-                if (!isNaN(SPL.Lv) && canplay.Leggendaria) {countdata[className].BITCanplayScores.SPL++; };
-                if (!isNaN(DPB.Lv) && canplay.Beginner   ) {countdata[className].BITCanplayScores.DPB++; };
-                if (!isNaN(DPN.Lv) && canplay.Normal     ) {countdata[className].BITCanplayScores.DPN++; };
-                if (!isNaN(DPH.Lv) && canplay.Hyper      ) {countdata[className].BITCanplayScores.DPH++; };
-                if (!isNaN(DPA.Lv) && canplay.Another    ) {countdata[className].BITCanplayScores.DPA++; };
-                if (!isNaN(DPL.Lv) && canplay.Leggendaria) {countdata[className].BITCanplayScores.DPL++; };
+                    if ( ( !isNaN(SPB.Lv) || !isNaN(DPB.Lv) )) {countdata[header].BIT.B += Number(rBit.Beginner);    if (canplay.Beginner   ) {countdata[header].BITCanplay.B += Number(rBit.Beginner); };    };
+                    if ( ( !isNaN(SPN.Lv) || !isNaN(DPN.Lv) )) {countdata[header].BIT.N += Number(rBit.Normal);      if (canplay.Normal     ) {countdata[header].BITCanplay.N += Number(rBit.Normal); };      };
+                    if ( ( !isNaN(SPH.Lv) || !isNaN(DPH.Lv) )) {countdata[header].BIT.H += Number(rBit.Hyper);       if (canplay.Hyper      ) {countdata[header].BITCanplay.H += Number(rBit.Hyper); };       };
+                    if ( ( !isNaN(SPA.Lv) || !isNaN(DPA.Lv) )) {countdata[header].BIT.A += Number(rBit.Another);     if (canplay.Another    ) {countdata[header].BITCanplay.A += Number(rBit.Another); };     };
+                    if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) )) {countdata[header].BIT.L += Number(rBit.Leggendaria); if (canplay.Leggendaria) {countdata[header].BITCanplay.L += Number(rBit.Leggendaria); }; };
 
-                if ( ( !isNaN(SPB.Lv) || !isNaN(DPB.Lv) )) {countdata[className].BIT.B += Number(rBit.Beginner); };
-                if ( ( !isNaN(SPN.Lv) || !isNaN(DPN.Lv) )) {countdata[className].BIT.N += Number(rBit.Normal); };
-                if ( ( !isNaN(SPH.Lv) || !isNaN(DPH.Lv) )) {countdata[className].BIT.H += Number(rBit.Hyper); };
-                if ( ( !isNaN(SPA.Lv) || !isNaN(DPA.Lv) )) {countdata[className].BIT.A += Number(rBit.Another); };
-                if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) )) {countdata[className].BIT.L += Number(rBit.Leggendaria); };
-
-                if ( ( !isNaN(SPB.Lv) || !isNaN(DPB.Lv) ) && canplay.Beginner   ) {countdata[className].BITCanplay.B += Number(rBit.Beginner); };
-                if ( ( !isNaN(SPN.Lv) || !isNaN(DPN.Lv) ) && canplay.Normal     ) {countdata[className].BITCanplay.N += Number(rBit.Normal); };
-                if ( ( !isNaN(SPH.Lv) || !isNaN(DPH.Lv) ) && canplay.Hyper      ) {countdata[className].BITCanplay.H += Number(rBit.Hyper); };
-                if ( ( !isNaN(SPA.Lv) || !isNaN(DPA.Lv) ) && canplay.Another    ) {countdata[className].BITCanplay.A += Number(rBit.Another); };
-                if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) ) && canplay.Leggendaria) {countdata[className].BITCanplay.L += Number(rBit.Leggendaria); };
+                };
             };
         };
     
@@ -2154,9 +2152,11 @@ function handleClientLoad() {
     let LvArr = ['01','02','03','04','05','06','07','08','09','10','11','12','NO'];
     let bitEndDate = new Date();
     bitEndDate.setFullYear(bitEndDate.getFullYear() + 2);
+    pushheaderLine('sp-lv','par-level','Single&nbsp;LEVEL&nbsp;',  LvArr);
     pushheaderLine('spn-lv','par-level','Single&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
     pushheaderLine('sph-lv','par-level','Single&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
     pushheaderLine('spa-lv','par-level','Single&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
+    pushheaderLine('dp-lv','par-level','Double&nbsp;LEVEL&nbsp;',  LvArr);
     pushheaderLine('dpn-lv','par-level','Double&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
     pushheaderLine('dph-lv','par-level','Double&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
     pushheaderLine('dpa-lv','par-level','Double&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);

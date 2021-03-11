@@ -161,9 +161,11 @@ Add buttons to initiate auth sequence and sign out
             <div class="inblock selectbutton">
                 <select id="search-folder" name="search-folder">
                     <option value="VER" selected>Version</option>
+                    <option value="SPLV">SP-レベル</option>
                     <option value="SPNLV">SP-N-レベル</option>
                     <option value="SPHLV">SP-H-レベル</option>
                     <option value="SPALV">SP-A-レベル</option>
+                    <option value="DPLV">SP-レベル</option>
                     <option value="DPNLV">DP-N-レベル</option>
                     <option value="DPHLV">DP-H-レベル</option>
                     <option value="DPALV">DP-A-レベル</option>
