@@ -28,14 +28,22 @@ Add buttons to initiate auth sequence and sign out
 <div id="toastbox"></div>
 
 <div id="musicsearch" class="table-outer">
-    <input id="formtab-1" name="formtab" class="formtabinput" type="checkbox" value="1" data-checkgroup="formtab" /><label for="formtab-1" class="tab_item">条件：譜面</label>
-    <input id="formtab-2" name="formtab" class="formtabinput" type="checkbox" value="2" data-checkgroup="formtab" /><label for="formtab-2" class="tab_item">条件：その他</label>
-    <input id="formtab-3" name="formtab" class="formtabinput" type="checkbox" value="3" data-checkgroup="formtab" /><label for="formtab-3" class="tab_item">表示設定</label>
-    <input id="formtab-4" name="formtab" class="formtabinput" type="checkbox" value="4" data-checkgroup="formtab" /><label for="formtab-4" class="tab_item">データ設定</label>
-    <input id="formtab-5" name="formtab" class="formtabinput" type="checkbox" value="5" data-checkgroup="formtab" /><label for="formtab-5" class="tab_item">楽曲数・BIT</label>
-    <input id="formtab-6" name="formtab" class="formtabinput" type="checkbox" value="6" data-checkgroup="formtab" /><label for="formtab-6" class="tab_item">？？？</label>
-    <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" /><label for="formtab-7" class="tab_item">(管理用1)</label>
-    <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" /><label for="formtab-8" class="tab_item">？？？</label>
+    <input id="formtab-1" name="formtab" class="formtabinput" type="checkbox" value="1" data-checkgroup="formtab" />
+    <input id="formtab-2" name="formtab" class="formtabinput" type="checkbox" value="2" data-checkgroup="formtab" />
+    <input id="formtab-3" name="formtab" class="formtabinput" type="checkbox" value="3" data-checkgroup="formtab" />
+    <input id="formtab-4" name="formtab" class="formtabinput" type="checkbox" value="4" data-checkgroup="formtab" />
+    <input id="formtab-5" name="formtab" class="formtabinput" type="checkbox" value="5" data-checkgroup="formtab" />
+    <input id="formtab-6" name="formtab" class="formtabinput" type="checkbox" value="6" data-checkgroup="formtab" />
+    <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" />
+    <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" />
+    <label for="formtab-1" class="tab_item">条件：譜面</label>
+    <label for="formtab-2" class="tab_item">条件：その他</label>
+    <label for="formtab-3" class="tab_item">表示設定</label>
+    <label for="formtab-4" class="tab_item">データ設定</label>
+    <label for="formtab-5" class="tab_item">楽曲数・BIT</label>
+    <label for="formtab-6" class="tab_item">？？？</label>
+    <label for="formtab-7" class="tab_item">(管理用1)</label>
+    <label for="formtab-8" class="tab_item">？？？</label>
     <div id="formtab-1_content" class="tab_content">
         <div id="scorefilterbox"></div>
     </div>
@@ -125,7 +133,7 @@ Add buttons to initiate auth sequence and sign out
             <div class="fieldname">BPM</div>
             <div class="notes-menu"><input id="opt_bpm_min" name="opt_bpm_min" type="text" placeholder="0" class="input-60" /></div>
             <div class="inblock pad-lr5">～</div>
-            <div class="notes-menu"><input id="opt_bpm_max" name="opt_bpm_max" type="text" placeholder="999" class="input-60" /></div>
+            <div class="notes-menu"><input id="opt_bpm_max" name="opt_bpm_max" type="text" placeholder="9999" class="input-60" /></div>
             <div class="inblock pad-lr5">&nbsp;</div>
             <div class="vname bpm_opt">
                 <input id="opt_bpm_changing" name="opt_bpm_changing" type="number" class="opt hidden" value="0" />
@@ -153,18 +161,18 @@ Add buttons to initiate auth sequence and sign out
             <div class="inblock selectbutton">
                 <select id="search-folder" name="search-folder">
                     <option value="VER" selected>Version</option>
-                    <option value="SPNLV">SP-NORMAL-レベル</option>
-                    <option value="SPHLV">SP-HYPER-レベル</option>
-                    <option value="SPALV">SP-ANOTHER-レベル</option>
-                    <option value="DPNLV">DP-NORMAL-レベル</option>
-                    <option value="DPHLV">DP-HYPER-レベル</option>
-                    <option value="DPALV">DP-ANOTHER-レベル</option>
-                    <option value="SPNNOTES">SP-NORMAL-ノート数</option>
-                    <option value="SPHNOTES">SP-HYPER-ノート数</option>
-                    <option value="SPANOTES">SP-ANOTHER-ノート数</option>
-                    <option value="DPNNOTES">DP-NORMAL-ノート数</option>
-                    <option value="DPHNOTES">DP-HYPER-ノート数</option>
-                    <option value="DPANOTES">DP-ANOTHER-ノート数</option>
+                    <option value="SPNLV">SP-N-レベル</option>
+                    <option value="SPHLV">SP-H-レベル</option>
+                    <option value="SPALV">SP-A-レベル</option>
+                    <option value="DPNLV">DP-N-レベル</option>
+                    <option value="DPHLV">DP-H-レベル</option>
+                    <option value="DPALV">DP-A-レベル</option>
+                    <option value="SPNNOTES">SP-N-ノート数</option>
+                    <option value="SPHNOTES">SP-H-ノート数</option>
+                    <option value="SPANOTES">SP-A-ノート数</option>
+                    <option value="DPNNOTES">DP-N-ノート数</option>
+                    <option value="DPHNOTES">DP-H-ノート数</option>
+                    <option value="DPANOTES">DP-A-ノート数</option>
                     <option value="BPM">BPM</option>
                     <option value="RELT">配信条件</option>
                     <option value="RELY">リリース年</option>
@@ -187,18 +195,18 @@ Add buttons to initiate auth sequence and sign out
                     <option value="VERSION" selected>バージョン</option>
                     <option value="RELEASE">リリース日</option>
                     <option value="BITDATE">BIT解禁日</option>
-                    <option value="SPNLV">SP-NORMAL-レベル</option>
-                    <option value="SPHLV">SP-HYPER-レベル</option>
-                    <option value="SPALV">SP-ANOTHER-レベル</option>
-                    <option value="DPNLV">DP-NORMAL-レベル</option>
-                    <option value="DPHLV">DP-HYPER-レベル</option>
-                    <option value="DPALV">DP-ANOTHER-レベル</option>
-                    <option value="SPNNOTES">SP-NORMAL-ノート数</option>
-                    <option value="SPHNOTES">SP-HYPER-ノート数</option>
-                    <option value="SPANOTES">SP-ANOTHER-ノート数</option>
-                    <option value="DPNNOTES">DP-NORMAL-ノート数</option>
-                    <option value="DPHNOTES">DP-HYPER-ノート数</option>
-                    <option value="DPANOTES">DP-ANOTHER-ノート数</option>
+                    <option value="SPNLV">SP-N-レベル</option>
+                    <option value="SPHLV">SP-H-レベル</option>
+                    <option value="SPALV">SP-A-レベル</option>
+                    <option value="DPNLV">DP-N-レベル</option>
+                    <option value="DPHLV">DP-H-レベル</option>
+                    <option value="DPALV">DP-A-レベル</option>
+                    <option value="SPNNOTES">SP-N-ノート数</option>
+                    <option value="SPHNOTES">SP-H-ノート数</option>
+                    <option value="SPANOTES">SP-A-ノート数</option>
+                    <option value="DPNNOTES">DP-N-ノート数</option>
+                    <option value="DPHNOTES">DP-H-ノート数</option>
+                    <option value="DPANOTES">DP-A-ノート数</option>
                 </select>
                 <div></div>
                 <select id="search-sort-order1" name="search-sort-order1" class="search-sort-order">
@@ -220,18 +228,18 @@ Add buttons to initiate auth sequence and sign out
                     <option value="VERSION">バージョン</option>
                     <option value="RELEASE">リリース日</option>
                     <option value="BITDATE">BIT解禁日</option>
-                    <option value="SPNLV">SP-NORMAL-レベル</option>
-                    <option value="SPHLV">SP-HYPER-レベル</option>
-                    <option value="SPALV" selected>SP-ANOTHER-レベル</option>
-                    <option value="DPNLV">DP-NORMAL-レベル</option>
-                    <option value="DPHLV">DP-HYPER-レベル</option>
-                    <option value="DPALV">DP-ANOTHER-レベル</option>
-                    <option value="SPNNOTES">SP-NORMAL-ノート数</option>
-                    <option value="SPHNOTES">SP-HYPER-ノート数</option>
-                    <option value="SPANOTES">SP-ANOTHER-ノート数</option>
-                    <option value="DPNNOTES">DP-NORMAL-ノート数</option>
-                    <option value="DPHNOTES">DP-HYPER-ノート数</option>
-                    <option value="DPANOTES">DP-ANOTHER-ノート数</option>
+                    <option value="SPNLV">SP-N-レベル</option>
+                    <option value="SPHLV">SP-H-レベル</option>
+                    <option value="SPALV" selected>SP-A-レベル</option>
+                    <option value="DPNLV">DP-N-レベル</option>
+                    <option value="DPHLV">DP-H-レベル</option>
+                    <option value="DPALV">DP-A-レベル</option>
+                    <option value="SPNNOTES">SP-N-ノート数</option>
+                    <option value="SPHNOTES">SP-H-ノート数</option>
+                    <option value="SPANOTES">SP-A-ノート数</option>
+                    <option value="DPNNOTES">DP-N-ノート数</option>
+                    <option value="DPHNOTES">DP-H-ノート数</option>
+                    <option value="DPANOTES">DP-A-ノート数</option>
                 </select>
                 <div></div>
                 <select id="search-sort-order2" name="search-sort-order2" class="search-sort-order">
@@ -253,18 +261,18 @@ Add buttons to initiate auth sequence and sign out
                     <option value="VERSION">バージョン</option>
                     <option value="RELEASE">リリース日</option>
                     <option value="BITDATE">BIT解禁日</option>
-                    <option value="SPNLV">SP-NORMAL-レベル</option>
-                    <option value="SPHLV" selected>SP-HYPER-レベル</option>
-                    <option value="SPALV">SP-ANOTHER-レベル</option>
-                    <option value="DPNLV">DP-NORMAL-レベル</option>
-                    <option value="DPHLV">DP-HYPER-レベル</option>
-                    <option value="DPALV">DP-ANOTHER-レベル</option>
-                    <option value="SPNNOTES">SP-NORMAL-ノート数</option>
-                    <option value="SPHNOTES">SP-HYPER-ノート数</option>
-                    <option value="SPANOTES">SP-ANOTHER-ノート数</option>
-                    <option value="DPNNOTES">DP-NORMAL-ノート数</option>
-                    <option value="DPHNOTES">DP-HYPER-ノート数</option>
-                    <option value="DPANOTES">DP-ANOTHER-ノート数</option>
+                    <option value="SPNLV">SP-N-レベル</option>
+                    <option value="SPHLV" selected>SP-H-レベル</option>
+                    <option value="SPALV">SP-A-レベル</option>
+                    <option value="DPNLV">DP-N-レベル</option>
+                    <option value="DPHLV">DP-H-レベル</option>
+                    <option value="DPALV">DP-A-レベル</option>
+                    <option value="SPNNOTES">SP-N-ノート数</option>
+                    <option value="SPHNOTES">SP-H-ノート数</option>
+                    <option value="SPANOTES">SP-A-ノート数</option>
+                    <option value="DPNNOTES">DP-N-ノート数</option>
+                    <option value="DPHNOTES">DP-H-ノート数</option>
+                    <option value="DPANOTES">DP-A-ノート数</option>
                 </select>
                 <div></div>
                 <select id="search-sort-order3" name="search-sort-order3" class="search-sort-order">

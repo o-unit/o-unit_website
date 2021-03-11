@@ -232,27 +232,22 @@ input[name="formtab"] {
 #formtab-10:checked ~ #formtab-10_content {
     display: block;
 }
-  
-/*選択されているタブのスタイルを変える*/
-input:checked + .tab_item {
+
+/*選択されているタブのスタイルを変える(bottom用)*/
+input[id="formtab-1"]:checked  ~ [for="formtab-1"],
+input[id="formtab-2"]:checked  ~ [for="formtab-2"],
+input[id="formtab-3"]:checked  ~ [for="formtab-3"],
+input[id="formtab-4"]:checked  ~ [for="formtab-4"],
+input[id="formtab-5"]:checked  ~ [for="formtab-5"],
+input[id="formtab-6"]:checked  ~ [for="formtab-6"],
+input[id="formtab-7"]:checked  ~ [for="formtab-7"],
+input[id="formtab-8"]:checked  ~ [for="formtab-8"],
+input[id="formtab-9"]:checked  ~ [for="formtab-9"],
+input[id="formtab-10"]:checked ~ [for="formtab-10"] {
     background-color: #5ab4bd;
     color: #fff;
 }
 
-/*選択されているタブのスタイルを変える(bottom用)*/
-input[id="formtab-1"]:checked  ~ .formtab-bottom[for="formtab-1"],
-input[id="formtab-2"]:checked  ~ .formtab-bottom[for="formtab-2"],
-input[id="formtab-3"]:checked  ~ .formtab-bottom[for="formtab-3"],
-input[id="formtab-4"]:checked  ~ .formtab-bottom[for="formtab-4"],
-input[id="formtab-5"]:checked  ~ .formtab-bottom[for="formtab-5"],
-input[id="formtab-6"]:checked  ~ .formtab-bottom[for="formtab-6"],
-input[id="formtab-7"]:checked  ~ .formtab-bottom[for="formtab-7"],
-input[id="formtab-8"]:checked  ~ .formtab-bottom[for="formtab-8"],
-input[id="formtab-9"]:checked  ~ .formtab-bottom[for="formtab-9"],
-input[id="formtab-10"]:checked ~ .formtab-bottom[for="formtab-10"] {
-    background-color: #5ab4bd;
-    color: #fff;
-}
 #musicsearch {
     font-size: 0.9rem;
 }
