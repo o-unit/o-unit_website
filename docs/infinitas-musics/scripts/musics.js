@@ -1835,7 +1835,6 @@ function initClient() {
         jQuery('#googleSignin').click(function() { gapi.auth2.getAuthInstance().signIn(); });
         jQuery('#googleSignout').click(function() { gapi.auth2.getAuthInstance().signOut(); });
         jQuery('#gdfileget').click(function() { getGoogleDriveFile( jQuery('#gdid').val() ); });
-
         if ( jQuery('#gdid').val() != '') { getGoogleDriveFile( jQuery('#gdid').val() ); };
     }, function(error) {
         //appendPre(JSON.stringify(error, null, 2));
@@ -2038,15 +2037,6 @@ function handleClientLoad() {
             '</tr></tbody>');
         jQuery('#filter-button').prop('disabled',false);
     };
-
-    // 検索条件・表示設定を閉じておく
-    jQuery('fieldset legend input').each(function() {
-        let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)');
-        jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
-    });
-
-    // ログイン後に使用する項目をいったん非表示
-    //jQuery('.sg2').addClass('hidden');
 
     // 検索条件のシリーズ項目作成
     makeCheckbox('#seriesbox',[ ['series',   1, true, '1st style',   ['series-CS']],
