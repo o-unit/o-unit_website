@@ -18,12 +18,9 @@ Add buttons to initiate auth sequence and sign out
 
 <link rel="stylesheet" href="./musics.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script type="text/javascript" src="./scripts/musics.js"></script>
-<script type="text/javascript" src="./musiclist.js"></script>
-<script type="text/javascript" src="https://apis.google.com/js/api.js" async defer
-    onload="this.onload=function(){};handleClientLoad()"
-    onreadystatechange="if (this.readyState === 'complete') this.onload()">
-</script>
+<script type="text/javascript" src="./musiclist.js" defer></script>
+<script type="text/javascript" src="./scripts/musics.js" defer onload="this.onload=handleClientLoad();" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<!-- <script type="text/javascript" src="https://apis.google.com/js/api.js" defer onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 
 <div id="toastbox"></div>
 
@@ -165,7 +162,7 @@ Add buttons to initiate auth sequence and sign out
                     <option value="SPNLV">SP-N-レベル</option>
                     <option value="SPHLV">SP-H-レベル</option>
                     <option value="SPALV">SP-A-レベル</option>
-                    <option value="DPLV">SP-レベル</option>
+                    <option value="DPLV">DP-レベル</option>
                     <option value="DPNLV">DP-N-レベル</option>
                     <option value="DPHLV">DP-H-レベル</option>
                     <option value="DPALV">DP-A-レベル</option>
@@ -343,9 +340,11 @@ Add buttons to initiate auth sequence and sign out
             <div class="fieldname">GoogleDrive</div>
             <div class="inblock">
                 <div class="clearfix">
-                    <a id="googleSignin" class="btn btn--info">ログイン</a>
-                    <a id="gdfileget" class="btn btn--info">ファイル読込</a>
-                    <a id="googleSignout" class="btn btn--info">ログアウト</a>
+                    <a id="googleapiEnable" class="btn btn--info">API有効化</a>
+                    <a id="googleSignin" class="btn btn--info hidden">ログイン</a>
+                    <a id="gdfileget" class="btn btn--info hidden">ファイル読込</a>
+                    <a id="googleSignout" class="btn btn--info hidden">ログアウト</a>
+                    <a id="googleapiDisable" class="btn btn--info hidden">API無効化</a>
                 </div>
                 <input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" disabled />
             </div>
