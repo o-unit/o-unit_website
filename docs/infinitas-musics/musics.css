@@ -733,6 +733,11 @@ table.musiclist .bpm {
     width: 72px;
     min-width: 72px;
     max-width: 72px;
+    text-align: center;
+}
+table.musiclist .sp,
+table.musiclist .dp {
+    text-align: center;
 }
 table.musiclist .level {
     width: 48px;
