@@ -183,35 +183,6 @@ function pushheaderLine(prefix, className, label, values, isLabelWithVal = true)
  * @return なし
  *
 **/
-function readUserJSONfromGoogleDrive(fid, callback=initializeUserJSON){
-    try {
-        let retval = false;
-        let req = gapi.client.drive.files.get({
-            fileId: fid,
-            alt: 'media'
-        });
-        req.then(function(obj){
-            retval = obj.body;
-        },function(error) {
-            jQuery('#debug').empty();
-            jQuery('#debug').append('<p>' + JSON.stringify(error, null, 2) + '</p>');
-            JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！(function(error)) / ' + JSON.stringify(error, null, 2) + '</span>');
-        });
-        return retval;
-    } catch (e) {
-        // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！(catch)</span>');
-        return false;
-    };
-}
-
-/**
- * ローカルファイルの読込
- *
- * @param 
- * @return なし
- *
-**/
 function readUserJSONfromLocalFile(fileObj, callback=initializeUserJSON){
     let r = new FileReader();
 
@@ -285,7 +256,7 @@ function outputUserJSONtoLocalStorage(key=PROJECT_ID, callback=toastbox.FadeInan
  * @return なし
  *
 **/
-function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
+function readUserJSON(readType='jsonarea') {
     let jsonData = {};
 
     if (readType == "new") {
@@ -307,7 +278,7 @@ function readUserJSON(readType='jsonarea', obj=jQuery('#userjsonarea')) {
         switch (readType) {
             case 'localstorage' : readUserJSONfromLocalStorage(); break;
             case 'file'         : readUserJSONfromLocalFile(jQuery('#localfile')[0].files[0]);    break;
-            case 'googleDrive'  : readUserJSONfromGoogleDrive();  break;
+            case 'googleDrive'  : getGoogleDriveFile(jQuery('#gdid').val());  break;
         };
     };
 };
@@ -362,26 +333,38 @@ function initializeUserJSON(JSONString) {
     userJSON.musics = {};
     for (item of musics.JSON) {
         hasID =      (item.ID in jsonData.musics);
-        hasCanplay = (hasID && ('Canplay' in jsonData.musics[item.ID]));
-        hasScores =  (hasID && ('EXScores'  in jsonData.musics[item.ID]));
+        tmpData =    jsonData.musics[item.ID];
+        hasCanplay = (hasID && ('Canplay' in tmpData));
+        hasScores =  (hasID && ('EXScores'  in tmpData));
+        hasSP =      (hasScores && ('SP'  in tmpData.EXScores));
+        hasDP =      (hasScores && ('DP'  in tmpData.EXScores));
         
         userJSON.musics[item.ID] = {
-            'title': ( hasID && ('title' in jsonData.musics[item.ID])) ? jsonData.musics[item.ID].title : item.Title,
+            'title': ( hasID && ('title' in tmpData)) ? tmpData.title : item.Title,
             'EXScores':{
-                'Beginner'   : ( hasID && hasScores && ('Beginner'    in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Beginner    : '0',
-                'Normal'     : ( hasID && hasScores && ('Normal'      in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Normal      : '0',
-                'Hyper'      : ( hasID && hasScores && ('Hyper'       in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Hyper       : '0',
-                'Another'    : ( hasID && hasScores && ('Another'     in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Another     : '0',
-                'Leggendaria': ( hasID && hasScores && ('Leggendaria' in jsonData.musics[item.ID].EXScores)) ? jsonData.musics[item.ID].EXScores.Leggendaria : '0',
+                'SP': {
+                    'Beginner'   : ( hasID && hasSP && ('Beginner'    in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Beginner    : '0',
+                    'Normal'     : ( hasID && hasSP && ('Normal'      in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Normal      : '0',
+                    'Hyper'      : ( hasID && hasSP && ('Hyper'       in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Hyper       : '0',
+                    'Another'    : ( hasID && hasSP && ('Another'     in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Another     : '0',
+                    'Leggendaria': ( hasID && hasSP && ('Leggendaria' in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Leggendaria : '0'
+                },
+                'DP': {
+                    'Beginner'   : ( hasID && hasDP && ('Beginner'    in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Beginner    : '0',
+                    'Normal'     : ( hasID && hasDP && ('Normal'      in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Normal      : '0',
+                    'Hyper'      : ( hasID && hasDP && ('Hyper'       in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Hyper       : '0',
+                    'Another'    : ( hasID && hasDP && ('Another'     in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Another     : '0',
+                    'Leggendaria': ( hasID && hasDP && ('Leggendaria' in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Leggendaria : '0'
+                },
             }
         };
         if (item.Release.Type != 'Default') {
             userJSON.musics[item.ID].Canplay = {
-                'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Beginner    : '0',
-                'Normal'     : ( hasID && hasCanplay && ('Normal'      in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Normal      : '0',
-                'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Hyper       : '0',
-                'Another'    : ( hasID && hasCanplay && ('Another'     in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Another     : '0',
-                'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in jsonData.musics[item.ID].Canplay)) ? jsonData.musics[item.ID].Canplay.Leggendaria : '0',
+                'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in tmpData.Canplay)) ? tmpData.Canplay.Beginner    : '0',
+                'Normal'     : ( hasID && hasCanplay && ('Normal'      in tmpData.Canplay)) ? tmpData.Canplay.Normal      : '0',
+                'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in tmpData.Canplay)) ? tmpData.Canplay.Hyper       : '0',
+                'Another'    : ( hasID && hasCanplay && ('Another'     in tmpData.Canplay)) ? tmpData.Canplay.Another     : '0',
+                'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in tmpData.Canplay)) ? tmpData.Canplay.Leggendaria : '0',
             };
         };
     };
@@ -876,13 +859,14 @@ let update = {
         toastbox.FadeInandTimerFadeOut(self.updateArray.length + '件の楽曲解禁状況を更新しました。');
         self.updateArray = [];
 
-        blob = new Blob([JSON.stringify(userJSON, undefined, 2)], {type: 'application\/json'});
+
+        let blob = new Blob([(jQuery('#gdid').val() != '' ? JSON.stringify(userJSON) : JSON.stringify(userJSON, undefined, 2))], {type: 'application\/json'});
         url = URL.createObjectURL(blob);
     
         jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
     
         if (jQuery('#gdid').val() != '') { updateFileContent(jQuery('#gdid').val(), blob, function(response) {
-            console.log(response);
+            toastbox.FadeInandTimerFadeOut('楽曲解禁状況をgoogleDriveに保存しました。');
           }); };
     },
     cancel: function() {
@@ -1223,6 +1207,7 @@ let musics = {
             let m = ("Type" in item.Release) ? item.Release.Type.match(/([a-zA-Z]*)([0-9]*)/) : ['','',''];
             let isReleased = true;
             let isBitCalc = true;
+            let isPack = false;
             switch ( m[1] ) {
                 case 'BIT':
                     isReleased = ( ("BitDate" in item.Release) && rBit4Y2M2D < now4Y2M2D ) ? true : false;
@@ -1233,17 +1218,20 @@ let musics = {
                 case 'Pack':
                     rTypeClass = ' pack pack' + m[2];
                     rTypeStr   = '楽曲パックVol.' + m[2];
-                    rTypeSStr  ='PK#' + m[2];
+                    rTypeSStr  = 'PK#' + m[2];
+                    isPack = true;
                     break;
                 case 'PackSS':
                     rTypeClass = ' packSS packSS' + m[2];
                     rTypeStr   = 'スタートアップセレクションVol.' + m[2];
-                    rTypeSStr  ='SS#' + m[2];
+                    rTypeSStr  = 'SS#' + m[2];
+                    isPack = true;
                     break;
                 case 'PackPM':
                     rTypeClass = ' packPM packPM' + m[2];
                     rTypeStr   = 'pop\'n music セレクションVol.' + m[2];
-                    rTypeSStr  ='PM#' + m[2];
+                    rTypeSStr  = 'PM#' + m[2];
+                    isPack = true;
                     break;
                 case 'Championship':
                     rTypeClass = ' championship championship' + m[2];
@@ -1278,14 +1266,20 @@ let musics = {
                     break;
             };
 
-            // 解禁状況の取得・加工
+            // 解禁状況・EXScoreの取得・加工
             let canplay = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
+            let exscore = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
             if ('musics' in userJSON) {
-                canplay.Beginner     = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
-                canplay.Normal       = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Normal      == '1');
-                canplay.Hyper        = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
-                canplay.Another      = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Another     == '1');
-                canplay.Leggendaria  = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
+                canplay.Beginner       = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
+                canplay.Normal         = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Normal      == '1');
+                canplay.Hyper          = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
+                canplay.Another        = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Another     == '1');
+                canplay.Leggendaria    = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
+                exscore.SP.Beginner    = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Beginner    == '1');
+                exscore.SP.Normal      = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Normal      == '1');
+                exscore.SP.Hyper       = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Hyper       == '1');
+                exscore.SP.Another     = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Another     == '1');
+                exscore.SP.Leggendaria = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Leggendaria == '1');
             };
 
             // BIT・譜面数計算
@@ -1306,24 +1300,24 @@ let musics = {
     
             // 挿入データの作成
             let unlockCheckbox = {
-                "B": ((!isNaN(SPB.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-b" name="check-playable" class="check-playable" value="' + item.ID + '_b" ' + (canplay.Beginner    ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-b"></label>' : '&nbsp;'),
-                "N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (canplay.Normal      ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
-                "H": ((!isNaN(SPH.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-h" name="check-playable" class="check-playable" value="' + item.ID + '_h" ' + (canplay.Hyper       ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-h"></label>' : '&nbsp;'),
-                "A": ((!isNaN(SPA.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-a" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Another     ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-a"></label>' : '&nbsp;'),
-                "L": ((!isNaN(SPL.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-l" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Leggendaria ? 'checked ': '') + ((rTypeSStr.search(/PK#|SS#|PM#/) == 0) ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-l"></label>' : '&nbsp;')
+                "B": ((!isNaN(SPB.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-b" name="check-playable" class="check-playable" value="' + item.ID + '_b" ' + (canplay.Beginner    ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-b"></label>' : '&nbsp;'),
+                "N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (canplay.Normal      ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
+                "H": ((!isNaN(SPH.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-h" name="check-playable" class="check-playable" value="' + item.ID + '_h" ' + (canplay.Hyper       ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-h"></label>' : '&nbsp;'),
+                "A": ((!isNaN(SPA.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-a" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (canplay.Another     ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-a"></label>' : '&nbsp;'),
+                "L": ((!isNaN(SPL.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-l" name="check-playable" class="check-playable" value="' + item.ID + '_l" ' + (canplay.Leggendaria ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-l"></label>' : '&nbsp;')
             };
             let scoreClass = {
                 "canplay": {
-                    "SPB": (canplay.Beginner    || (rTypeClass === '' && !isNaN(SPB.Lv)) ? ' canplay' : ''),
-                    "SPN": (canplay.Normal      || (rTypeClass === '' && !isNaN(SPN.Lv)) ? ' canplay' : ''),
-                    "SPH": (canplay.Hyper       || (rTypeClass === '' && !isNaN(SPH.Lv)) ? ' canplay' : ''),
-                    "SPA": (canplay.Another     || (rTypeClass === '' && !isNaN(SPA.Lv)) ? ' canplay' : ''),
-                    "SPL": (canplay.Leggendaria || (rTypeClass === '' && !isNaN(SPL.Lv)) ? ' canplay' : ''),
-                    "DPB": (canplay.Beginner    || (rTypeClass === '' && !isNaN(DPB.Lv)) ? ' canplay' : ''),
-                    "DPN": (canplay.Normal      || (rTypeClass === '' && !isNaN(DPN.Lv)) ? ' canplay' : ''),
-                    "DPH": (canplay.Hyper       || (rTypeClass === '' && !isNaN(DPH.Lv)) ? ' canplay' : ''),
-                    "DPA": (canplay.Another     || (rTypeClass === '' && !isNaN(DPA.Lv)) ? ' canplay' : ''),
-                    "DPL": (canplay.Leggendaria || (rTypeClass === '' && !isNaN(DPL.Lv)) ? ' canplay' : '')
+                    "SPB": ((canplay.Beginner    || rTypeClass === '') && !isNaN(SPB.Lv) ? ' canplay' : ''),
+                    "SPN": ((canplay.Normal      || rTypeClass === '') && !isNaN(SPN.Lv) ? ' canplay' : ''),
+                    "SPH": ((canplay.Hyper       || rTypeClass === '') && !isNaN(SPH.Lv) ? ' canplay' : ''),
+                    "SPA": ((canplay.Another     || rTypeClass === '') && !isNaN(SPA.Lv) ? ' canplay' : ''),
+                    "SPL": ((canplay.Leggendaria || rTypeClass === '') && !isNaN(SPL.Lv) ? ' canplay' : ''),
+                    "DPB": ((canplay.Beginner    || rTypeClass === '') && !isNaN(DPB.Lv) ? ' canplay' : ''),
+                    "DPN": ((canplay.Normal      || rTypeClass === '') && !isNaN(DPN.Lv) ? ' canplay' : ''),
+                    "DPH": ((canplay.Hyper       || rTypeClass === '') && !isNaN(DPH.Lv) ? ' canplay' : ''),
+                    "DPA": ((canplay.Another     || rTypeClass === '') && !isNaN(DPA.Lv) ? ' canplay' : ''),
+                    "DPL": ((canplay.Leggendaria || rTypeClass === '') && !isNaN(DPL.Lv) ? ' canplay' : '')
                 },
                 "cn": {
                     "SPB": '<div class="notesstyle' + (SPB.HCN ? ' hcn' : SPB.CN ? ' cn' : '') + '"></div>',
@@ -1381,25 +1375,37 @@ let musics = {
                       ((comment) ? '<br />' + comment : "") +
                       '</td>' +
                       '<td class="notes">Notes</td>' +
-                      '<td class="notes spb">' + SPB.Notes + '</td>' +
-                      '<td class="notes spn">' + SPN.Notes + '</td>' +
-                      '<td class="notes sph">' + SPH.Notes + '</td>' +
-                      '<td class="notes spa">' + SPA.Notes + '</td>' +
-                      '<td class="notes dpn">' + DPN.Notes + '</td>' +
-                      '<td class="notes dph">' + DPH.Notes + '</td>' +
-                      '<td class="notes dpa">' + DPA.Notes + '</td>' +
+                      '<td class="notes spb m' + item.ID + '">' + SPB.Notes + '</td>' +
+                      '<td class="notes spn m' + item.ID + '">' + SPN.Notes + '</td>' +
+                      '<td class="notes sph m' + item.ID + '">' + SPH.Notes + '</td>' +
+                      '<td class="notes spa m' + item.ID + '">' + SPA.Notes + '</td>' +
+                      '<td class="notes dpn m' + item.ID + '">' + DPN.Notes + '</td>' +
+                      '<td class="notes dph m' + item.ID + '">' + DPH.Notes + '</td>' +
+                      '<td class="notes dpa m' + item.ID + '">' + DPA.Notes + '</td>' +
                       '</tr>' +
                       (('musics' in userJSON) ? 
                       '<tr class="music_other" style="display: none;">' +
                       '<td class="playable">解禁</td>' +
-                      '<td class="playable spb">' + unlockCheckbox.B + '</td>' +
-                      '<td class="playable spn">' + unlockCheckbox.N + '</td>' +
-                      '<td class="playable sph">' + unlockCheckbox.H + '</td>' +
-                      '<td class="playable spa">' + unlockCheckbox.A + '</td>' +
-                      '<td class="playable dpn">&nbsp;</td>' +
-                      '<td class="playable dph">&nbsp;</td>' +
-                      '<td class="playable dpa">&nbsp;</td>' +
+                      '<td class="playable spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
+                      '<td class="playable spn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
+                      '<td class="playable sph m' + item.ID + '">' + unlockCheckbox.H + '</td>' +
+                      '<td class="playable spa m' + item.ID + '">' + unlockCheckbox.A + '</td>' +
+                      '<td class="playable dpn m' + item.ID + '">&nbsp;</td>' +
+                      '<td class="playable dph m' + item.ID + '">&nbsp;</td>' +
+                      '<td class="playable dpa m' + item.ID + '">&nbsp;</td>' +
+                      '</tr>' : '' ) +
+                      (('musics' in userJSON) ? 
+                      '<tr class="music_other" style="display: none;">' +
+                      '<td class="exscore">EXScore</td>' +
+                      '<td class="exscore spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
+                      '<td class="exscore spn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
+                      '<td class="exscore sph m' + item.ID + '">' + unlockCheckbox.H + '</td>' +
+                      '<td class="exscore spa m' + item.ID + '">' + unlockCheckbox.A + '</td>' +
+                      '<td class="exscore dpn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
+                      '<td class="exscore dph m' + item.ID + '">' + unlockCheckbox.H + '</td>' +
+                      '<td class="exscore dpa m' + item.ID + '">' + unlockCheckbox.A + '</td>' +
                       '</tr>' : '' );
+
 
             // データ挿入先ごとにオブジェクトに格納
             className = [];
@@ -1548,9 +1554,9 @@ let musics = {
             };
 
             if (jQuery(this).prop('checked')) {
-                for (dif of tmpdif) { jQuery('.m' + tmpVal[0] + '.' + dif).addClass('canplay'); };
+                for (dif of tmpdif) { jQuery('.level.m' + tmpVal[0] + '.' + dif).addClass('canplay'); };
             } else {
-                for (dif of tmpdif) { jQuery('.m' + tmpVal[0] + '.' + dif).removeClass('canplay'); };
+                for (dif of tmpdif) { jQuery('.level.m' + tmpVal[0] + '.' + dif).removeClass('canplay'); };
             };
 
     });
@@ -1855,8 +1861,8 @@ function initClient() {
         // ボタン押下時の処理追加
         jQuery('#googleSignin').click(function() { gapi.auth2.getAuthInstance().signIn(); });
         jQuery('#googleSignout').click(function() { gapi.auth2.getAuthInstance().signOut(); });
-        jQuery('#gdfileget').click(function() { getGoogleDriveFile( jQuery('#gdid').val() ); });
-        if ( jQuery('#gdid').val() != '') { getGoogleDriveFile( jQuery('#gdid').val() ); };
+        jQuery('#gdfileget').click(function() { readUserJSON('googleDrive'); });
+        if ( jQuery('#gdid').val() != '') { readUserJSON('googleDrive'); };
     }, function(error) {
         //appendPre(JSON.stringify(error, null, 2));
     });
@@ -1887,43 +1893,6 @@ function updateSigninStatus(isSignedIn) {
         jQuery('#googleapiEnable').addClass('hidden');
         jQuery('#googleapiDisable').removeClass('hidden');
     }
-};
-
-/**
- * Print files.
- */
-function listFiles() {
-    let getListParams = {
-        'q': 'mimeType=\'application/vnd.google-apps.folder\' or name=\'user.json\'',
-        'pageSize': 50,
-        //'fields': "nextPageToken, files(id, name, parents, webContentLink)"
-        'fields': "*"
-    };
-    gapi.client.drive.files.list(getListParams).then(function(response) {
-        appendPre('Files:');
-        let files = response.result.files;
-        if (files && files.length > 0) {
-            for (let i = 0; i < files.length; i++) {
-                let file = files[i];
-                let webContentLink = '';
-                webContent = '';
-                extStr = '.json';
-                if ( file.name.lastIndexOf(extStr)+extStr.length===file.name.length) {
-                    webContentLink = file.webContentLink;
-                    gapi.client.drive.files.get({
-                        fileId: file.id,
-                        alt: 'media'
-                    }).then(function(objFile){
-                        let data = "<br />\n" + JSON.stringify(objFile.result);
-                        console.log(data);
-                    });
-                };
-                appendPre(file.name + ' (' + file.id + ') ' + webContentLink);
-            };
-        } else {
-            appendPre('No files found.');
-        };
-    });
 };
 
 /**
@@ -1970,6 +1939,19 @@ function updateFileContent(fileId, contentBlob, callback) {
  * webページロード完了後の処理
  */
 function handleClientLoad() {
+    // LocalStorageの初期化
+    if (Cookies.get('infinitas_LocalStorageEnable') == 1) {
+        readUserJSON('localstorage');
+        
+        // ボタンの表示設定
+        jQuery('#localStorageEnable').addClass('hidden');
+        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').removeClass('hidden');
+    } else {
+        // ボタンの表示設定
+        jQuery('#localStorageEnable').removeClass('hidden');
+        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').addClass('hidden');
+    };
+
     // googleAPIクライアントの初期化
     if (Cookies.get('infinitas_gapiEnable') == 1) {
         gapiScriptLoad();
@@ -2196,6 +2178,36 @@ function handleClientLoad() {
         // メッセージ表示したほうがわかりやすい
     });
 
+    // LocalStorage有効化ボタン押下時
+    jQuery('#localStorageEnable').on('click', function() {
+        Cookies.set('infinitas_LocalStorageEnable', 1, {path: '', expires: 31, sameSite: 'strict'});
+        jQuery('#localStorageEnable').addClass('hidden');
+        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').removeClass('hidden');
+    });
+
+    // LocalStorage読込ボタン押下時
+    jQuery('#localStorageRead').on('click', function() {
+        if ('info' in userJSON) {
+            if (!confirm('読込済みのデータがありますが、新規作成しますか？')) { return false; };
+        };
+        readUserJSON('localstorage');
+    });
+
+    // LocalStorage保存ボタン押下時
+    jQuery('#localStorageSave').on('click', function() {
+        outputUserJSONtoLocalStorage();
+        toastbox.FadeInandTimerFadeOut('LocalStorageに保存しました。');
+    });
+
+    // LocalStorage無効化ボタン押下時
+    jQuery('#localStorageDisable').on('click', function() {
+        Cookies.remove('infinitas_LocalStorageEnable', {path: ''});
+
+        jQuery('#localStorageEnable').removeClass('hidden');
+        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').addClass('hidden');
+            toastbox.FadeInandTimerFadeOut('先に「データを新規作成」してください。');
+    });
+
     // ライバル情報ボタン押下
     jQuery('#setrivalid').change(function() {
         jQuery("label[for='setrivalid']").text( ( jQuery(this).prop('checked') ? 'ライバル情報を非表示にする' : 'ライバル情報を表示する' ) );
@@ -2207,8 +2219,7 @@ function handleClientLoad() {
             togglePackButton(this);
         } else {
             jQuery(this).prop('checked', false);
-            toastbox.fadeIn('先に「データを新規作成」してください。');
-            toastbox.timerFadeOut(5000);
+            toastbox.FadeInandTimerFadeOut('先に「データを新規作成」してください。');
         };
     });
 

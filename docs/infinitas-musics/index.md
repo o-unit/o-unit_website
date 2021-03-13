@@ -337,6 +337,18 @@ Add buttons to initiate auth sequence and sign out
         </div>
         <hr class="clearfix" />
         <div class="clearfix">
+            <div class="fieldname">LocalStorage</div>
+            <div class="inblock">
+                <div class="clearfix">
+                    <a id="localStorageEnable" class="btn btn--info">LocalStorage有効化</a>
+                    <a id="localStorageRead" class="btn btn--info hidden">読込</a>
+                    <a id="localStorageSave" class="btn btn--info hidden">保存</a>
+                    <a id="localStorageDisable" class="btn btn--info hidden">LocalStorage無効化</a>
+                </div>
+            </div>
+        </div>
+        <hr class="clearfix" />
+        <div class="clearfix">
             <div class="fieldname">GoogleDrive</div>
             <div class="inblock">
                 <div class="clearfix">
