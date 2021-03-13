@@ -415,9 +415,6 @@ function initializeUserJSON(JSONString) {
 
     // 検索条件：解禁状況を有効化
     jQuery("#unlocked").prop('disabled',false);
-
-    // googleログイン済で、FileIDが入力済の状態であればFileIDをcookieに保存
-    if (jQuery('#gdid').val() != ''){ Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31, sameSite: 'strict'}); };
 };
 
  /**
@@ -1795,6 +1792,29 @@ let s = {
     }};
 
 /**
+ * google API scriptを読み込んで、gapi.load('client:auth2')を実行
+ * 
+ * @param {*} callback - gapi.load('client:auth2')実行後のコールバック関数
+ */
+function gapiScriptLoad (callback = initClient) {
+    // google API の読込
+    let gapiElement = document.createElement("script");
+    gapiElement.src = "https://apis.google.com/js/api.js";
+    gapiElement.type = "text/javascript";
+    if(gapiElement.addEventListener){
+        gapiElement.onload = function () { gapi.load('client:auth2', callback); };
+    }else{
+        gapiElement.onreadystatechange = function () {
+            if ("loaded" == gapiElement.readyState || "complete" == gapiElement.readyState){
+                gapiElement.onreadystatechange = null;
+                gapi.load('client:auth2', callback);
+            };
+        };
+    }
+    document.body.appendChild(gapiElement);
+};
+
+/**
  *  APIクライアント初期化および初期化後のサインイン処理
  *  listeners.
  */
@@ -1815,6 +1835,7 @@ function initClient() {
         jQuery('#googleSignin').click(function() { gapi.auth2.getAuthInstance().signIn(); });
         jQuery('#googleSignout').click(function() { gapi.auth2.getAuthInstance().signOut(); });
         jQuery('#gdfileget').click(function() { getGoogleDriveFile( jQuery('#gdid').val() ); });
+
         if ( jQuery('#gdid').val() != '') { getGoogleDriveFile( jQuery('#gdid').val() ); };
     }, function(error) {
         //appendPre(JSON.stringify(error, null, 2));
@@ -1831,11 +1852,20 @@ function updateSigninStatus(isSignedIn) {
         jQuery('#gdid').attr('disabled', false);
         jQuery('#googleSignin').addClass('hidden');
         jQuery('#googleSignout').removeClass('hidden');
+        jQuery('#gdfileget').removeClass('hidden');
         jQuery('#gdid').val( Cookies.get('infinitas_gdid') );
+        jQuery('#gdid').removeClass('hidden');
+        jQuery('#googleapiEnable').addClass('hidden');
+        jQuery('#googleapiDisable').addClass('hidden');
     } else {
         jQuery('#gdid').attr('disabled', true);
         jQuery('#googleSignin').removeClass('hidden');
         jQuery('#googleSignout').addClass('hidden');
+        jQuery('#gdfileget').addClass('hidden');
+        jQuery('#gdid').val('');
+        jQuery('#gdid').addClass('hidden');
+        jQuery('#googleapiEnable').addClass('hidden');
+        jQuery('#googleapiDisable').removeClass('hidden');
     }
 };
 
@@ -1888,6 +1918,9 @@ function getGoogleDriveFile(fid) {
     }).then(function(obj){
         toastbox.FadeInandTimerFadeOut('google Driveから読込完了！');
         initializeUserJSON(obj.body);
+        // FileIDをcookieに保存
+        Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31, sameSite: 'strict'});
+
     },function(error) {
         toastbox.FadeInandTimerFadeOut('エラーが発生しました！');
         jQuery('#debug').empty();
@@ -1918,7 +1951,18 @@ function updateFileContent(fileId, contentBlob, callback) {
  */
 function handleClientLoad() {
     // googleAPIクライアントの初期化
-    gapi.load('client:auth2', initClient);
+    if (Cookies.get('infinitas_gapiEnable') == 1) {
+        gapiScriptLoad();
+        
+        // ボタンの表示設定
+        jQuery('#googleapiEnable').addClass('hidden');
+        jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').removeClass('hidden');
+    } else {
+        // ボタンの表示設定
+        jQuery('#googleapiEnable').removeClass('hidden');
+        jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').addClass('hidden');
+    };
+
     // musiclist
     musics.JSON = musiclist.musics;
     musics.infoJSON = musiclist.info;
@@ -1997,7 +2041,7 @@ function handleClientLoad() {
 
     // 検索条件・表示設定を閉じておく
     jQuery('fieldset legend input').each(function() {
-        let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)')
+        let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)');
         jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
     });
 
@@ -2116,7 +2160,7 @@ function handleClientLoad() {
     // ファイル選択ボタン押下時
     jQuery('#localfile').on('change', function() {
         if ('info' in userJSON) {
-            if (!confirm('読込済みのデータがありますが、読込みますか？')) { return false; };
+            if (!confirm('読込済みのデータがありますが、違うデータを読込みますか？')) { return false; };
         };
         readUserJSON('file');
     });
@@ -2128,6 +2172,19 @@ function handleClientLoad() {
         };
         readUserJSON('new');
     });
+
+    // API有効化ボタン押下時
+    jQuery('#googleapiEnable').on('click', function() {
+        gapiScriptLoad();
+        Cookies.set('infinitas_gapiEnable', 1, {path: '', expires: 31, sameSite: 'strict'});
+    });
+
+    // API無効化ボタン押下時
+    jQuery('#googleapiDisable').on('click', function() {
+        Cookies.remove('infinitas_gapiEnable', {path: ''});
+        // メッセージ表示したほうがわかりやすい
+    });
+
     // ライバル情報ボタン押下
     jQuery('#setrivalid').change(function() {
         jQuery("label[for='setrivalid']").text( ( jQuery(this).prop('checked') ? 'ライバル情報を非表示にする' : 'ライバル情報を表示する' ) );
