@@ -195,12 +195,12 @@ function readUserJSONfromGoogleDrive(fid, callback=initializeUserJSON){
         },function(error) {
             jQuery('#debug').empty();
             jQuery('#debug').append('<p>' + JSON.stringify(error, null, 2) + '</p>');
-            JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！ / ' + JSON.stringify(error, null, 2) + '</span>');
+            JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！(function(error)) / ' + JSON.stringify(error, null, 2) + '</span>');
         });
         return retval;
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！</span>');
+        JSONmsgObj.html('<span class="warn">google Driveでエラーが発生しました！(catch)</span>');
         return false;
     };
 }
@@ -228,7 +228,7 @@ function readUserJSONfromLocalFile(fileObj, callback=initializeUserJSON){
         r.readAsText(fileObj);
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">readUserJSONfromLocalFile / 指定したファイルが読み込めませんでした！</span>');
+        JSONmsgObj.html('<span class="warn">readUserJSONfromLocalFile / ' + e.lineNumber + ' / 指定したファイルが読み込めませんでした！</span>');
         return false;
     };
 };
@@ -251,7 +251,7 @@ function readUserJSONfromLocalStorage(key=PROJECT_ID, callback=initializeUserJSO
         callback(result);
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">ローカルストレージが読み込めませんでした！</span>');
+        JSONmsgObj.html('<span class="warn">' + e.lineNumber + ' / ローカルストレージが読み込めませんでした！</span>');
         return false;
     };
 };
@@ -272,7 +272,7 @@ function outputUserJSONtoLocalStorage(key=PROJECT_ID, callback=toastbox.FadeInan
         callback('ローカルストレージに保存しました。<br />');
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">ローカルストレージに書き込めませんでした！</span>');
+        JSONmsgObj.html('<span class="warn">' + e.lineNumber+ ' / ローカルストレージに書き込めませんでした！</span>');
         return false;
     };
 };
@@ -325,7 +325,7 @@ function checkUserJSON(jsonData) {
     try {
         parsedJSON = JSON.parse(jsonData);
     } catch (e) {
-        JSONmsgObj.html('<span class="warn">JSON.parseが出来ませんでした！</span>');
+        JSONmsgObj.html('<span class="warn">' + e.lineNumber+ ' / JSON.parseが出来ませんでした！</span>');
         return false;
     }
 
@@ -351,7 +351,7 @@ function initializeUserJSON(JSONString) {
         jsonData = JSON.parse(JSONString);
     } catch (e) {
         // エラー時はメッセージ表示
-        JSONmsgObj.html('<span class="warn">発生関数 : initializeUserJSON / エラー / JSON.parseが失敗しました。</span>');
+        JSONmsgObj.html('<span class="warn">発生関数 : initializeUserJSON / ' + e.lineNumber+ ' / JSON.parseが失敗しました。</span>');
         return;
     };
 
@@ -1358,13 +1358,13 @@ let musics = {
                       '<td class="artist">' + item.Artist + '</td>' +
                       '<td class="title">' + item.Title + '</td>' +
                       '<td class="bpm">' + BPM + '</td>' +
-                      '<td class="sp level spb' + scoreClass.canplay.SPB + '">' + scoreClass.cn.SPB + scoreClass.bss.SPB + SPB.Lv + '</td>' +
-                      '<td class="sp level spn' + scoreClass.canplay.SPN + '">' + scoreClass.cn.SPN + scoreClass.bss.SPN + SPN.Lv + '</td>' +
-                      '<td class="sp level sph' + scoreClass.canplay.SPH + '">' + scoreClass.cn.SPH + scoreClass.bss.SPH + SPH.Lv + '</td>' +
-                      '<td class="sp level spa' + scoreClass.canplay.SPA + '">' + scoreClass.cn.SPA + scoreClass.bss.SPA + SPA.Lv + '</td>' +
-                      '<td class="dp level dpn' + scoreClass.canplay.DPN + '">' + scoreClass.cn.DPN + scoreClass.bss.DPN + DPN.Lv + '</td>' +
-                      '<td class="dp level dph' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
-                      '<td class="dp level dpa' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
+                      '<td class="sp level spb m' + item.ID + ' ' + scoreClass.canplay.SPB + '">' + scoreClass.cn.SPB + scoreClass.bss.SPB + SPB.Lv + '</td>' +
+                      '<td class="sp level spn m' + item.ID + ' ' + scoreClass.canplay.SPN + '">' + scoreClass.cn.SPN + scoreClass.bss.SPN + SPN.Lv + '</td>' +
+                      '<td class="sp level sph m' + item.ID + ' ' + scoreClass.canplay.SPH + '">' + scoreClass.cn.SPH + scoreClass.bss.SPH + SPH.Lv + '</td>' +
+                      '<td class="sp level spa m' + item.ID + ' ' + scoreClass.canplay.SPA + '">' + scoreClass.cn.SPA + scoreClass.bss.SPA + SPA.Lv + '</td>' +
+                      '<td class="dp level dpn m' + item.ID + ' ' + scoreClass.canplay.DPN + '">' + scoreClass.cn.DPN + scoreClass.bss.DPN + DPN.Lv + '</td>' +
+                      '<td class="dp level dph m' + item.ID + ' ' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
+                      '<td class="dp level dpa m' + item.ID + ' ' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
                       '</tr>' +
                       '<tr class="music_other" style="display: none;">' +
                       '<td class="" rowspan="' + (('musics' in userJSON) ? '2' : '1')+ '"></td>' +
@@ -1511,7 +1511,7 @@ let musics = {
                         jQuery('#' + className).children('.music_other').hide();
                     }
                     jQuery('#' + className).children('.music').show();
-                    jQuery('#' + className).addClass('opened');
+                    jQuery('#' + className + ' .headerline').addClass('opened');
                 };
             };
         };
@@ -1532,7 +1532,28 @@ let musics = {
         // 解禁状況更新処理用
         jQuery('.playable input[type=checkbox]').change(function() {
             update.start(jQuery(this).val(),jQuery(this).prop('checked'));
-        });
+            let tmpVal = jQuery(this).val().split('_');
+            let tmpdif = [];
+            switch (tmpVal[1]) {
+                case '0': tmpdif = ['spb','dpb']; break;
+                case '1': tmpdif = ['spn','dpn']; break;
+                case '2': tmpdif = ['sph','dph']; break;
+                case '3': tmpdif = ['spa','dpa']; break;
+                case '4': tmpdif = ['spl','dpl']; break;
+                case 'b': tmpdif = ['spb','dpb']; break;
+                case 'n': tmpdif = ['spn','dpn']; break;
+                case 'h': tmpdif = ['sph','dph']; break;
+                case 'a': tmpdif = ['spa','dpa']; break;
+                case 'l': tmpdif = ['spl','dpl']; break;
+            };
+
+            if (jQuery(this).prop('checked')) {
+                for (dif of tmpdif) { jQuery('.m' + tmpVal[0] + '.' + dif).addClass('canplay'); };
+            } else {
+                for (dif of tmpdif) { jQuery('.m' + tmpVal[0] + '.' + dif).removeClass('canplay'); };
+            };
+
+    });
 
         jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
 
@@ -2288,22 +2309,22 @@ function handleClientLoad() {
             };
 
         } catch(e) {
-            jQuery('#debug').text('検索準備 / ' + e.toString());
+            jQuery('#debug').text('検索準備 / ' + e.lineNumber+ ' / ' + e.toString());
         };
         try {
             filteredJSON = musics.filter(musicJSON);
         } catch(e) {
-            jQuery('#debug').text('filteredJSON / ' + e.toString());
+            jQuery('#debug').text('filteredJSON / ' + e.lineNumber+ ' / ' + e.toString());
         };
         try {
             sortedJSON = musics.sort(filteredJSON);
         } catch(e) {
-            jQuery('#debug').text('sortedJSON / ' + e.toString());
+            jQuery('#debug').text('sortedJSON / ' + e.lineNumber+ ' / ' + e.toString());
         };
         try {
             musics.write(sortedJSON);
         } catch(e) {
-            jQuery('#debug').text('musics.write / ' + e.toString());
+            jQuery('#debug').text('musics.write / ' + e.lineNumber+ ' / ' + e.toString());
         };
 
         jQuery(this).attr('disabled', false);
@@ -2338,12 +2359,6 @@ function handleClientLoad() {
             };
         };
         jQuery(this).toggleClass('opened');
-    });
-
-    // 検索条件のグループをクリックで開閉
-    jQuery('fieldset legend input').change(function() {
-        let target = jQuery(this).parent().parent().children('div:not(.hidden),hr:not(.hidden)');
-        jQuery(this).prop("checked") ? target.fadeIn('fast') : target.fadeOut('fast');
     });
 
     // 新曲追加用フォームの入力時
