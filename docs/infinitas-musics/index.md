@@ -19,7 +19,7 @@ Add buttons to initiate auth sequence and sign out
 <link rel="stylesheet" href="./musics.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script type="text/javascript" src="./musiclist.js" defer></script>
-<script type="text/javascript" src="./scripts/musics.js" defer onload="this.onload=handleClientLoad();" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+<script type="text/javascript" src="./scripts/musics.js" defer></script>
 <!-- <script type="text/javascript" src="https://apis.google.com/js/api.js" defer onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script> -->
 
 <div id="toastbox"></div>
