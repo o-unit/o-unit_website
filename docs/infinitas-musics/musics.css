@@ -779,10 +779,10 @@ table.musiclist input.check-playable:checked + label::after {
     content: "";
     display: block;
     position: absolute;
-    top: -1rem;
-    left: 45%;
+    top: -0.8rem;
+    left: 1rem;
     width: 0.325rem;
-    height: 1.2rem;
+    height: 1rem;
     transform: rotate(36deg);
     border-bottom: 3px solid #3b9cba;
     border-right: 3px solid #3b9cba;
@@ -805,6 +805,16 @@ table.musiclist .playable {
     padding: 0px;
     text-align: center;
     color: #000000;
+}
+table.musiclist .exscore {
+    padding: 0px;
+    text-align: center;
+    color: #000000;
+}
+table.musiclist input.exscore {
+    vertical-align: middle;
+    margin: 0px;
+    background-color: transparent;
 }
 table.musiclist .hcn {
     background-color: #9900ff;
