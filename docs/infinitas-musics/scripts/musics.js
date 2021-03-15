@@ -256,7 +256,7 @@ function outputUserJSONtoLocalStorage(key=PROJECT_ID, callback=toastbox.FadeInan
  * @return なし
  *
 **/
-function readUserJSON(readType='jsonarea') {
+function readUserJSON(readType='new') {
     let jsonData = {};
 
     if (readType == "new") {
@@ -603,7 +603,7 @@ function toggleBPMOptButton(obj, noToggle = false) {
 /**
  * パック情報ボタントグル
  */
-function togglePackButton(obj,noToggle = false) {
+function togglePackButton(obj, noToggle = false) {
     let jqobj = jQuery(obj);
     let objid = jqobj.attr('id');
 
@@ -666,6 +666,25 @@ function getNotesValue(inputNotes) {
         if (tmp[0] <= Number(inputNotes) && Number(inputNotes) <= tmp[1]) { return val; };
     };
     return NotesArray[NotesArray.length - 1];
+};
+
+/**
+ * 
+ * @param {Integer} maxScore - 楽曲の理論値
+ * @param {Integer} EXScore - EXScore
+ * @returns {String} - DJLevel
+ */
+function getDJLevel(maxScore = 0, EXScore = 0) {
+    if (isNaN(maxScore) || isNaN(EXScore) || maxScore == 0 || EXScore == 0) { return ''};
+
+    let DJLevel = ['MAX','AAA','AA','A','B','C','D','E','F'];
+    let borderFloat = [ maxScore, maxScore / 9 * 8, maxScore / 9 * 7, maxScore / 9 * 6, maxScore / 9 * 5, maxScore / 9 * 4, maxScore / 9 * 3, maxScore / 9 * 2, 0 ];
+
+    for ( let i = 0; i < 9; i++ ) {
+        if (EXScore >= Math.ceil(borderFloat[i])) { return DJLevel[i]; };
+    };
+
+    return '';
 };
 
 /**
@@ -828,6 +847,26 @@ let update = {
             if (tmpVal[0] == 'pack') {
                 if (!(tmpVal[1] in userJSON.packs)) { userJSON.packs[tmpVal[1]] = {'packname': packlist[tmpVal[1]].name, 'purchased': '0'}};
                 userJSON.packs[tmpVal[1]].purchased = item.isAdd ? '1' : '0';
+            } else if (tmpVal[0] == 'exs') {
+                if (!(tmpVal[1] in userJSON.musics)) {
+                    userJSON.musics[tmpVal[1]] = {};
+                    userJSON.musics[tmpVal[1]].EXScores = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
+                };
+                let side = '';
+                let dif = '';
+                switch (tmpVal[2]) {
+                    case 'spb': side = 'SP'; dif = 'Beginner'; break;
+                    case 'spn': side = 'SP'; dif = 'Normal'; break;
+                    case 'sph': side = 'SP'; dif = 'Hyper'; break;
+                    case 'spa': side = 'SP'; dif = 'Another'; break;
+                    case 'spl': side = 'SP'; dif = 'Leggendaria'; break;
+                    case 'dpb': side = 'DP'; dif = 'Beginner'; break;
+                    case 'dpn': side = 'DP'; dif = 'Normal'; break;
+                    case 'dph': side = 'DP'; dif = 'Hyper'; break;
+                    case 'dpa': side = 'DP'; dif = 'Another'; break;
+                    case 'dpl': side = 'DP'; dif = 'Leggendaria'; break;
+                };
+                userJSON.musics[tmpVal[1]].EXScores[side][dif] = item.isAdd;
             } else {
                 switch (tmpVal[1]) {
                     case '0':
@@ -844,7 +883,7 @@ let update = {
                     case 'l': tmpVal[1] = 'Leggendaria'; break;
                 };
 
-                if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]].Canplay = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
+                if (!(tmpVal[0] in userJSON.musics)) { userJSON.musics[tmpVal[0]] = {}; userJSON.musics[tmpVal[0]].Canplay = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'}};
                 userJSON.musics[tmpVal[0]].Canplay[tmpVal[1]] = item.isAdd ? '1' : '0';
             };
         };
@@ -865,9 +904,13 @@ let update = {
     
         jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
     
-        if (jQuery('#gdid').val() != '') { updateFileContent(jQuery('#gdid').val(), blob, function(response) {
-            toastbox.FadeInandTimerFadeOut('楽曲解禁状況をgoogleDriveに保存しました。');
-          }); };
+        if (Cookies.get('infinitas_LocalStorageEnable') == 1) {
+            outputUserJSONtoLocalStorage();
+        }else if (jQuery('#gdid').val() != '') { 
+            updateFileContent(jQuery('#gdid').val(), blob, function(response) {
+                toastbox.FadeInandTimerFadeOut('楽曲解禁状況をgoogleDriveに保存しました。');
+            });
+        };
     },
     cancel: function() {
         let self = this;
@@ -936,7 +979,7 @@ let musics = {
             // BIT配信開始月でフィルタ
             if ( s.params.bit.min !== new Date('2000-01-01').getTime() && s.params.bit.min && s.params.bit.max ) {
                 if ( (!item.Release.BitDate) ||
-                     ( item.Release.BitDate > now) ||
+                     //( item.Release.BitDate > now) ||
                      ( s.params.bit.min > new Date(item.Release.BitDate).getTime() ) ||
                      ( new Date(item.Release.BitDate).getTime() > s.params.bit.max )
                    ) { return false; };
@@ -1269,17 +1312,27 @@ let musics = {
             // 解禁状況・EXScoreの取得・加工
             let canplay = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
             let exscore = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
-            if ('musics' in userJSON) {
-                canplay.Beginner       = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
-                canplay.Normal         = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Normal      == '1');
-                canplay.Hyper          = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
-                canplay.Another        = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Another     == '1');
-                canplay.Leggendaria    = (item.ID in userJSON.musics) && ('Canplay' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
-                exscore.SP.Beginner    = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Beginner    == '1');
-                exscore.SP.Normal      = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Normal      == '1');
-                exscore.SP.Hyper       = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Hyper       == '1');
-                exscore.SP.Another     = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Another     == '1');
-                exscore.SP.Leggendaria = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) && (userJSON.musics[item.ID].EXScores.SP.Leggendaria == '1');
+            let hasUserJSON = ('musics' in userJSON);
+            let hasMusic = (item.ID in userJSON.musics);
+            let hasCanplay = ('Canplay' in userJSON.musics[item.ID]);
+            let hasEXScoreSP = (('EXScores' in userJSON.musics[item.ID]) && ('SP' in userJSON.musics[item.ID].EXScores));
+            let hasEXScoreDP = (('EXScores' in userJSON.musics[item.ID]) && ('DP' in userJSON.musics[item.ID].EXScores));
+            if (hasUserJSON) {
+                canplay.Beginner       = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
+                canplay.Normal         = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Normal      == '1');
+                canplay.Hyper          = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
+                canplay.Another        = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Another     == '1');
+                canplay.Leggendaria    = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
+                exscore.SP.Beginner    = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Beginner    : 0;
+                exscore.SP.Normal      = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Normal      : 0;
+                exscore.SP.Hyper       = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Hyper       : 0;
+                exscore.SP.Another     = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Another     : 0;
+                exscore.SP.Leggendaria = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Leggendaria : 0;
+                exscore.DP.Beginner    = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Beginner    : 0;
+                exscore.DP.Normal      = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Normal      : 0;
+                exscore.DP.Hyper       = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Hyper       : 0;
+                exscore.DP.Another     = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Another     : 0;
+                exscore.DP.Leggendaria = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Leggendaria : 0;
             };
 
             // BIT・譜面数計算
@@ -1342,10 +1395,35 @@ let musics = {
                     "DPH": '<div class="notesstyle' + (DPH.HBSS ? ' hbss' : DPH.BSS ? ' bss' : '') + '"></div>',
                     "DPA": '<div class="notesstyle' + (DPA.HBSS ? ' hbss' : DPA.BSS ? ' bss' : '') + '"></div>',
                     "DPL": '<div class="notesstyle' + (DPL.HBSS ? ' hbss' : DPL.BSS ? ' bss' : '') + '"></div>'
-                }
+                },
+                "exscore": {
+                    "SPB": (!isNaN(SPB.Lv) ? '<input id="exs_' + item.ID + '_spb" name="exs_' + item.ID + '_spb" type="text" class="exscore" value="' + exscore.SP.Beginner    + '">' : ''),
+                    "SPN": (!isNaN(SPN.Lv) ? '<input id="exs_' + item.ID + '_spn" name="exs_' + item.ID + '_spn" type="text" class="exscore" value="' + exscore.SP.Normal      + '">' : ''),
+                    "SPH": (!isNaN(SPH.Lv) ? '<input id="exs_' + item.ID + '_sph" name="exs_' + item.ID + '_sph" type="text" class="exscore" value="' + exscore.SP.Hyper       + '">' : ''),
+                    "SPA": (!isNaN(SPA.Lv) ? '<input id="exs_' + item.ID + '_spa" name="exs_' + item.ID + '_spa" type="text" class="exscore" value="' + exscore.SP.Another     + '">' : ''),
+                    "SPL": (!isNaN(SPL.Lv) ? '<input id="exs_' + item.ID + '_spl" name="exs_' + item.ID + '_spl" type="text" class="exscore" value="' + exscore.SP.Leggendaria + '">' : ''),
+                    "DPB": (!isNaN(DPB.Lv) ? '<input id="exs_' + item.ID + '_dpb" name="exs_' + item.ID + '_dpb" type="text" class="exscore" value="' + exscore.DP.Beginner    + '">' : ''),
+                    "DPN": (!isNaN(DPN.Lv) ? '<input id="exs_' + item.ID + '_dpn" name="exs_' + item.ID + '_dpn" type="text" class="exscore" value="' + exscore.DP.Normal      + '">' : ''),
+                    "DPH": (!isNaN(DPH.Lv) ? '<input id="exs_' + item.ID + '_dph" name="exs_' + item.ID + '_dph" type="text" class="exscore" value="' + exscore.DP.Hyper       + '">' : ''),
+                    "DPA": (!isNaN(DPA.Lv) ? '<input id="exs_' + item.ID + '_dpa" name="exs_' + item.ID + '_dpa" type="text" class="exscore" value="' + exscore.DP.Another     + '">' : ''),
+                    "DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + exscore.DP.Leggendaria + '">' : '')
+                },
+                "djlevel": {
+                    "SPB": ( !isNaN(SPB.Lv) && exscore.SP.Beginner    > 0 ) ? '<label for="exs_' + item.ID + '_spb">' + getDJLevel(SPB.Notes * 2, exscore.SP.Beginner   ) + '</label>' : '',
+                    "SPN": ( !isNaN(SPN.Lv) && exscore.SP.Normal      > 0 ) ? '<label for="exs_' + item.ID + '_spn">' + getDJLevel(SPN.Notes * 2, exscore.SP.Normal     ) + '</label>' : '',
+                    "SPH": ( !isNaN(SPH.Lv) && exscore.SP.Hyper       > 0 ) ? '<label for="exs_' + item.ID + '_sph">' + getDJLevel(SPH.Notes * 2, exscore.SP.Hyper      ) + '</label>' : '',
+                    "SPA": ( !isNaN(SPA.Lv) && exscore.SP.Another     > 0 ) ? '<label for="exs_' + item.ID + '_spa">' + getDJLevel(SPA.Notes * 2, exscore.SP.Another    ) + '</label>' : '',
+                    "SPL": ( !isNaN(SPL.Lv) && exscore.SP.Leggendaria > 0 ) ? '<label for="exs_' + item.ID + '_spl">' + getDJLevel(SPL.Notes * 2, exscore.SP.Leggendaria) + '</label>' : '',
+                    "DPB": ( !isNaN(DPB.Lv) && exscore.DP.Beginner    > 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + getDJLevel(DPB.Notes * 2, exscore.DP.Beginner   ) + '</label>' : '',
+                    "DPN": ( !isNaN(DPN.Lv) && exscore.DP.Normal      > 0 ) ? '<label for="exs_' + item.ID + '_dpn">' + getDJLevel(DPN.Notes * 2, exscore.DP.Normal     ) + '</label>' : '',
+                    "DPH": ( !isNaN(DPH.Lv) && exscore.DP.Hyper       > 0 ) ? '<label for="exs_' + item.ID + '_dph">' + getDJLevel(DPH.Notes * 2, exscore.DP.Hyper      ) + '</label>' : '',
+                    "DPA": ( !isNaN(DPA.Lv) && exscore.DP.Another     > 0 ) ? '<label for="exs_' + item.ID + '_dpa">' + getDJLevel(DPA.Notes * 2, exscore.DP.Another    ) + '</label>' : '',
+                    "DPL": ( !isNaN(DPL.Lv) && exscore.DP.Leggendaria > 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + getDJLevel(DPL.Notes * 2, exscore.DP.Leggendaria) + '</label>' : ''
+                },
             };
+
             rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0) + (rBit.Leggendaria ? rBit.Leggendaria : 0));
-            addhtml = '<tr class="music" style="display: none;">' +
+            addhtml = '<tr class="music m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
                       '<td class="release' + rTypeClass + '">' + rTypeSStr + '</td>' +
                       '<td class="version version' + item.VNo + '">' + item.VShortName + '</td>' +
                       '<td class="genre">' + item.Genre + '</td>' +
@@ -1360,9 +1438,9 @@ let musics = {
                       '<td class="dp level dph m' + item.ID + ' ' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
                       '<td class="dp level dpa m' + item.ID + ' ' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
                       '</tr>' +
-                      '<tr class="music_other" style="display: none;">' +
-                      '<td class="" rowspan="' + (('musics' in userJSON) ? '2' : '1')+ '"></td>' +
-                      '<td class="other" colspan="4" rowspan="' + (('musics' in userJSON) ? '2' : '1')+ '">' +
+                      '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+                      '<td class="" rowspan="' + (hasMusic ? '3' : '1')+ '"></td>' +
+                      '<td class="other" colspan="4" rowspan="' + (hasMusic ? '3' : '1')+ '">' +
                       '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
                       'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
                       ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
@@ -1375,16 +1453,16 @@ let musics = {
                       ((comment) ? '<br />' + comment : "") +
                       '</td>' +
                       '<td class="notes">Notes</td>' +
-                      '<td class="notes spb m' + item.ID + '">' + SPB.Notes + '</td>' +
-                      '<td class="notes spn m' + item.ID + '">' + SPN.Notes + '</td>' +
-                      '<td class="notes sph m' + item.ID + '">' + SPH.Notes + '</td>' +
-                      '<td class="notes spa m' + item.ID + '">' + SPA.Notes + '</td>' +
-                      '<td class="notes dpn m' + item.ID + '">' + DPN.Notes + '</td>' +
-                      '<td class="notes dph m' + item.ID + '">' + DPH.Notes + '</td>' +
-                      '<td class="notes dpa m' + item.ID + '">' + DPA.Notes + '</td>' +
+                      '<td class="notes spb m' + item.ID + '">' + (!isNaN(SPB.Lv) ? SPB.Notes : '') + '</td>' +
+                      '<td class="notes spn m' + item.ID + '">' + (!isNaN(SPN.Lv) ? SPN.Notes : '') + '</td>' +
+                      '<td class="notes sph m' + item.ID + '">' + (!isNaN(SPH.Lv) ? SPH.Notes : '') + '</td>' +
+                      '<td class="notes spa m' + item.ID + '">' + (!isNaN(SPA.Lv) ? SPA.Notes : '') + '</td>' +
+                      '<td class="notes dpn m' + item.ID + '">' + (!isNaN(DPN.Lv) ? DPN.Notes : '') + '</td>' +
+                      '<td class="notes dph m' + item.ID + '">' + (!isNaN(DPH.Lv) ? DPH.Notes : '') + '</td>' +
+                      '<td class="notes dpa m' + item.ID + '">' + (!isNaN(DPA.Lv) ? DPA.Notes : '') + '</td>' +
                       '</tr>' +
-                      (('musics' in userJSON) ? 
-                      '<tr class="music_other" style="display: none;">' +
+                      (hasMusic ? 
+                      '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
                       '<td class="playable">解禁</td>' +
                       '<td class="playable spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
                       '<td class="playable spn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
@@ -1394,16 +1472,16 @@ let musics = {
                       '<td class="playable dph m' + item.ID + '">&nbsp;</td>' +
                       '<td class="playable dpa m' + item.ID + '">&nbsp;</td>' +
                       '</tr>' : '' ) +
-                      (('musics' in userJSON) ? 
-                      '<tr class="music_other" style="display: none;">' +
+                      (hasMusic ? 
+                      '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
                       '<td class="exscore">EXScore</td>' +
-                      '<td class="exscore spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
-                      '<td class="exscore spn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
-                      '<td class="exscore sph m' + item.ID + '">' + unlockCheckbox.H + '</td>' +
-                      '<td class="exscore spa m' + item.ID + '">' + unlockCheckbox.A + '</td>' +
-                      '<td class="exscore dpn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
-                      '<td class="exscore dph m' + item.ID + '">' + unlockCheckbox.H + '</td>' +
-                      '<td class="exscore dpa m' + item.ID + '">' + unlockCheckbox.A + '</td>' +
+                      '<td class="exscore spb m' + item.ID + '">' + scoreClass.djlevel.SPB + scoreClass.exscore.SPB + '</td>' +
+                      '<td class="exscore spn m' + item.ID + '">' + scoreClass.djlevel.SPN + scoreClass.exscore.SPN + '</td>' +
+                      '<td class="exscore sph m' + item.ID + '">' + scoreClass.djlevel.SPH + scoreClass.exscore.SPH + '</td>' +
+                      '<td class="exscore spa m' + item.ID + '">' + scoreClass.djlevel.SPA + scoreClass.exscore.SPA + '</td>' +
+                      '<td class="exscore dpn m' + item.ID + '">' + scoreClass.djlevel.DPN + scoreClass.exscore.DPN + '</td>' +
+                      '<td class="exscore dph m' + item.ID + '">' + scoreClass.djlevel.DPH + scoreClass.exscore.DPH + '</td>' +
+                      '<td class="exscore dpa m' + item.ID + '">' + scoreClass.djlevel.DPA + scoreClass.exscore.DPA + '</td>' +
                       '</tr>' : '' );
 
 
@@ -1524,8 +1602,8 @@ let musics = {
 
         // music_other開閉用にonclick設定
         jQuery('.musiclist tbody').find('.genre, .title, .artist, .bpm').click(function() {
-            jQuery(this).parent().next('.music_other').toggle();
-            jQuery(this).parent().next('.music_other').next('.music_other').toggle();
+            let mid = jQuery(this).parent().attr('data-mid');
+            jQuery(this).parent().parent().find('.' + mid + '.music_other').toggle();
         });
     
         jQuery(".musiclist tbody").each(function() {
@@ -1558,8 +1636,14 @@ let musics = {
             } else {
                 for (dif of tmpdif) { jQuery('.level.m' + tmpVal[0] + '.' + dif).removeClass('canplay'); };
             };
+        });
 
-    });
+        // EXScore更新処理用
+        jQuery('td.exscore input.exscore').change(function() {
+            update.start(jQuery(this).prop('id'),jQuery(this).val());
+            let tmpID = jQuery(this).prop('id').split('_');
+            jQuery('label[for=' + jQuery(this).prop('id') + ']').text(getDJLevel(Number(jQuery('.m' + tmpID[1] + '.' + tmpID[2] + '.notes').text()) * 2, jQuery(this).val()));
+        });
 
         jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
 
@@ -1862,7 +1946,9 @@ function initClient() {
         jQuery('#googleSignin').click(function() { gapi.auth2.getAuthInstance().signIn(); });
         jQuery('#googleSignout').click(function() { gapi.auth2.getAuthInstance().signOut(); });
         jQuery('#gdfileget').click(function() { readUserJSON('googleDrive'); });
-        if ( jQuery('#gdid').val() != '') { readUserJSON('googleDrive'); };
+
+        // API有効化時に自動読込
+        if ( jQuery('#gdid').val() != '' && Cookies.get('infinitas_LocalStorageEnable') != 1) { readUserJSON('googleDrive'); };
     }, function(error) {
         //appendPre(JSON.stringify(error, null, 2));
     });
@@ -1936,35 +2022,32 @@ function updateFileContent(fileId, contentBlob, callback) {
 }
 
 /**
+ * 楽曲一覧を読み込んで、callbackを実行
+ * 
+ * @param {*} callback - コールバック関数
+ */
+ function musiclistLoad(callback = handleClientLoad) {
+    // google API の読込
+    let musiclistElement = document.createElement("script");
+    musiclistElement.src = "./musiclist.js";
+    musiclistElement.type = "text/javascript";
+    if(musiclistElement.addEventListener){
+        musiclistElement.onload = function () { callback(); };
+    }else{
+        musiclistElement.onreadystatechange = function () {
+            if ("loaded" == musiclistElement.readyState || "complete" == musiclistiElement.readyState){
+                musiclistElement.onreadystatechange = null;
+                callback();
+            };
+        };
+    }
+    document.body.appendChild(musiclistElement);
+};
+
+/**
  * webページロード完了後の処理
  */
 function handleClientLoad() {
-    // LocalStorageの初期化
-    if (Cookies.get('infinitas_LocalStorageEnable') == 1) {
-        readUserJSON('localstorage');
-        
-        // ボタンの表示設定
-        jQuery('#localStorageEnable').addClass('hidden');
-        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').removeClass('hidden');
-    } else {
-        // ボタンの表示設定
-        jQuery('#localStorageEnable').removeClass('hidden');
-        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').addClass('hidden');
-    };
-
-    // googleAPIクライアントの初期化
-    if (Cookies.get('infinitas_gapiEnable') == 1) {
-        gapiScriptLoad();
-        
-        // ボタンの表示設定
-        jQuery('#googleapiEnable').addClass('hidden');
-        jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').removeClass('hidden');
-    } else {
-        // ボタンの表示設定
-        jQuery('#googleapiEnable').removeClass('hidden');
-        jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').addClass('hidden');
-    };
-
     // musiclist
     musics.JSON = musiclist.musics;
     musics.infoJSON = musiclist.info;
@@ -1972,15 +2055,15 @@ function handleClientLoad() {
     musics.infoJSON.chart_count_all = 0;
     musics.infoJSON.chart_single_all = 0;
     musics.infoJSON.chart_single_beginner = 0;
-    musics.infoJSON.chart_single_normal = 0;      
-    musics.infoJSON.chart_single_hyper = 0;       
-    musics.infoJSON.chart_single_another = 0;     
-    musics.infoJSON.chart_single_leggendaria = 0; 
+    musics.infoJSON.chart_single_normal = 0;
+    musics.infoJSON.chart_single_hyper = 0;
+    musics.infoJSON.chart_single_another = 0;
+    musics.infoJSON.chart_single_leggendaria = 0;
     musics.infoJSON.chart_double_all = 0;
-    musics.infoJSON.chart_double_beginner = 0;    
-    musics.infoJSON.chart_double_normal = 0;      
-    musics.infoJSON.chart_double_hyper = 0;       
-    musics.infoJSON.chart_double_another = 0;     
+    musics.infoJSON.chart_double_beginner = 0;
+    musics.infoJSON.chart_double_normal = 0;
+    musics.infoJSON.chart_double_hyper = 0;
+    musics.infoJSON.chart_double_another = 0;
     musics.infoJSON.chart_double_leggendaria = 0;
  
     delete musiclist;
@@ -2027,16 +2110,16 @@ function handleClientLoad() {
         jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
         jQuery('.infotable').append(
             '<tbody class="musiclistdata"><tr><th colspan="2" class="section2">全データ</th>' +
-                       '<td class="text-right">' + musics.infoJSON.music_count.toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="text-right">' + musics.infoJSON.chart_single_all.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="spb text-right">' + musics.infoJSON.chart_single_beginner.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="spn text-right">' + musics.infoJSON.chart_single_normal.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="sph text-right">' + musics.infoJSON.chart_single_hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="spa text-right">' + musics.infoJSON.chart_single_another.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="text-right">' + musics.infoJSON.chart_double_all.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="dpn text-right">' + musics.infoJSON.chart_double_normal.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="dph text-right">' + musics.infoJSON.chart_double_hyper.toLocaleString() + '&nbsp;譜面</td>' +
-                       '<td class="dpa text-right">' + musics.infoJSON.chart_double_another.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="text-right">' + musics.infoJSON.music_count.toLocaleString() + '&nbsp;曲&nbsp;/&nbsp;' + musics.infoJSON.chart_count_all.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="text-right">' + musics.infoJSON.chart_single_all.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="spb text-right">' + musics.infoJSON.chart_single_beginner.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="spn text-right">' + musics.infoJSON.chart_single_normal.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="sph text-right">' + musics.infoJSON.chart_single_hyper.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="spa text-right">' + musics.infoJSON.chart_single_another.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="text-right">' + musics.infoJSON.chart_double_all.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="dpn text-right">' + musics.infoJSON.chart_double_normal.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="dph text-right">' + musics.infoJSON.chart_double_hyper.toLocaleString() + '&nbsp;譜面</td>' +
+            '<td class="dpa text-right">' + musics.infoJSON.chart_double_another.toLocaleString() + '&nbsp;譜面</td>' +
             '</tr></tbody>');
         jQuery('#filter-button').prop('disabled',false);
     };
@@ -2133,8 +2216,10 @@ function handleClientLoad() {
     makeCheckbox('#purchasebox',purchaseButtonList);
     
     // 日付のセレクトボックスを作成
-    makeSelectMonth('#bitdate-min', LaunchDate, now, true);
-    makeSelectMonth('#bitdate-max', LaunchDate, now, false);
+    let lastDate = new Date();
+    lastDate.setFullYear(lastDate.getFullYear() + 1);
+    makeSelectMonth('#bitdate-min', LaunchDate, lastDate, true);
+    makeSelectMonth('#bitdate-max', LaunchDate, lastDate, false);
     makeSelectMonth('#releasedate-min', LaunchDate, now, true);
     makeSelectMonth('#releasedate-max', LaunchDate, now, false);
     jQuery('#bitdate-min option:first-child').attr('selected','');
@@ -2257,7 +2342,7 @@ function handleClientLoad() {
     // チェックボックスをラジオボタンの様に使用する
     let csobj = jQuery('#musicsearch').find('input[data-checkgroup]');
     csobj.on('click',function() {
-		var group = jQuery(this).attr('data-checkgroup');
+		let group = jQuery(this).attr('data-checkgroup');
 		csobj.filter( function() { return jQuery(this).attr('data-checkgroup') == group; } ).not(this).prop('checked', false);
         if (jQuery(this).prop('checked')) {
             jQuery('.formtab-bottom').show();
@@ -2377,6 +2462,33 @@ function handleClientLoad() {
         newMusic.makeJSON();
     });
 
+    // LocalStorageの初期化
+    if (Cookies.get('infinitas_LocalStorageEnable') == 1) {
+        readUserJSON('localstorage');
+        
+        // ボタンの表示設定
+        jQuery('#localStorageEnable').addClass('hidden');
+        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').removeClass('hidden');
+    } else {
+        // ボタンの表示設定
+        jQuery('#localStorageEnable').removeClass('hidden');
+        jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').addClass('hidden');
+    };
+
+    // googleAPIクライアントの初期化
+    if (Cookies.get('infinitas_gapiEnable') == 1) {
+        gapiScriptLoad();
+        
+        // ボタンの表示設定
+        jQuery('#googleapiEnable').addClass('hidden');
+        jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').removeClass('hidden');
+    } else {
+        // ボタンの表示設定
+        jQuery('#googleapiEnable').removeClass('hidden');
+        jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').addClass('hidden');
+    };
+
+
     // 譜面検索条件ボタン・購入済みパックボタンのクリックイベントを実行しておく(再読み込み対策)
     jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
     jQuery('.purchase input').each(function() { togglePackButton(this, true); });
@@ -2384,3 +2496,4 @@ function handleClientLoad() {
 
 };
 
+jQuery(function() { musiclistLoad(); });
