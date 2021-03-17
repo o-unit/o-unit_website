@@ -281,6 +281,18 @@ Add buttons to initiate auth sequence and sign out
                 <div></div>
             </div>
         </div>
+        <div class="clearfix">
+            <div class="settings-check">&nbsp;</div>
+            <div class="fieldname">DJLevel</div>
+            <div class="inblock selectbutton">
+                <select id="showdjlevel" name="showdjlevel">
+                    <option value="0" selected>通常表示</option>
+                    <option value="1">+-表示</option>
+                    <option value="2">表示しない</option>
+                </select>
+                <div></div>
+            </div>
+        </div>
     </div>
     <div id="formtab-4_content" class="tab_content">
         <div class="clearfix">
