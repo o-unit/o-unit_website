@@ -768,7 +768,7 @@ table.musiclist input.check-playable + label:before {
     display: block;
     position: absolute;
     top: -0.5rem;
-    left: 35%;
+    left: 40%;
     width: 0.825rem;
     height: 0.825rem;
     border: 1px solid #666;
@@ -780,7 +780,7 @@ table.musiclist input.check-playable:checked + label::after {
     display: block;
     position: absolute;
     top: -0.8rem;
-    left: 1rem;
+    left: 45%;
     width: 0.325rem;
     height: 1rem;
     transform: rotate(36deg);
@@ -789,7 +789,7 @@ table.musiclist input.check-playable:checked + label::after {
 }
 table.musiclist .notes {
     width: 48px;
-    padding: 0px;
+    padding: 0.4rem 0px;
     text-align: center;
     color: #000000;
 }
@@ -802,7 +802,12 @@ table.musiclist .notesstyle {
     visibility: hidden;
 }
 table.musiclist .playable {
-    padding: 0px;
+    padding: 0.4rem 0px;
+    text-align: center;
+    color: #000000;
+}
+table.musiclist .cleartype {
+    padding: 0.4rem 0px;
     text-align: center;
     color: #000000;
 }
@@ -811,10 +816,35 @@ table.musiclist .exscore {
     text-align: center;
     color: #000000;
 }
+table.musiclist .exscore label {
+    font-size: 0.85rem;
+}
 table.musiclist input.exscore {
     vertical-align: middle;
     margin: 0px;
     background-color: transparent;
+    font-size: 1.1rem;
+}
+table.musiclist .misscount {
+    padding: 0.2rem 0px;
+    text-align: center;
+    color: #000000;
+}
+table.musiclist input.misscount {
+    vertical-align: middle;
+    margin: 0px;
+    background-color: transparent;
+    font-size: 1.1rem;
+}
+table.musiclist .selectbutton select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+table.musiclist .selectbutton select::-ms-expand {
+    display: none;
 }
 table.musiclist .hcn {
     background-color: #9900ff;
