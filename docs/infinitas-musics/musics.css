@@ -740,9 +740,9 @@ table.musiclist .dp {
     text-align: center;
 }
 table.musiclist .level {
-    width: 48px;
-    min-width: 36px;
-    max-width: 48px;
+    width: 3.3rem;
+    min-width: 2.6rem;
+    max-width: 3.5rem;
     padding: 0px;
     text-align: center;
     vertical-align: top;
@@ -807,7 +807,7 @@ table.musiclist .playable {
     color: #000000;
 }
 table.musiclist .cleartype {
-    padding: 0.4rem 0px;
+    padding: 0px;
     text-align: center;
     color: #000000;
 }
@@ -826,7 +826,7 @@ table.musiclist input.exscore {
     font-size: 1.1rem;
 }
 table.musiclist .misscount {
-    padding: 0.2rem 0px;
+    padding: 0px;
     text-align: center;
     color: #000000;
 }
@@ -842,6 +842,8 @@ table.musiclist .selectbutton select {
     appearance: none;
     cursor: pointer;
     overflow: hidden;
+    margin: 0px;
+    font-size: smaller;
 }
 table.musiclist .selectbutton select::-ms-expand {
     display: none;
