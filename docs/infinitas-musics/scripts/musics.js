@@ -103,8 +103,10 @@ let NotesArray = [      '-99',  '100-199',  '200-299',  '300-399',  '400-499',  
 
 let DifficultNameArray = ['Beginner', 'Normal', 'Hyper', 'Another', 'Leggendaria'];
 
+let ClearTypeArray = ['FC', 'EX-H', 'HARD', 'CLEAR', 'EASY', 'A-EASY', 'FAILED', 'NOPLAY'];
+let ShortClearTypeArray = ['FC', 'EXH', 'HARD', 'CLR', 'EASY', 'A-E', 'FAIL', 'NO'];
+
 let userJSON = {};
-let confirmWindow = true;
 
 let PROJECT_ID = 'infinitas-musiclist';
 
@@ -335,36 +337,80 @@ function initializeUserJSON(JSONString) {
         hasID =      (item.ID in jsonData.musics);
         tmpData =    jsonData.musics[item.ID];
         hasCanplay = (hasID && ('Canplay' in tmpData));
-        hasScores =  (hasID && ('EXScores'  in tmpData));
-        hasSP =      (hasScores && ('SP'  in tmpData.EXScores));
-        hasDP =      (hasScores && ('DP'  in tmpData.EXScores));
+        hasEXSP =    (hasID && ('EXScores'  in tmpData) && ('SP' in tmpData.EXScores));
+        hasEXDP =    (hasID && ('EXScores'  in tmpData) && ('DP' in tmpData.EXScores));
+        hasMISSSP =  (hasID && ('MissCount' in tmpData) && ('SP' in tmpData.MissCount));
+        hasMISSDP =  (hasID && ('MissCount' in tmpData) && ('DP' in tmpData.MissCount));
+        hasLAMPSP =  (hasID && ('ClearType' in tmpData) && ('SP' in tmpData.ClearType));
+        hasLAMPDP =  (hasID && ('ClearType' in tmpData) && ('DP' in tmpData.ClearType));
         
         userJSON.musics[item.ID] = {
             'title': ( hasID && ('title' in tmpData)) ? tmpData.title : item.Title,
-            'EXScores':{
-                'SP': {
-                    'Beginner'   : ( hasID && hasSP && ('Beginner'    in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Beginner    : '0',
-                    'Normal'     : ( hasID && hasSP && ('Normal'      in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Normal      : '0',
-                    'Hyper'      : ( hasID && hasSP && ('Hyper'       in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Hyper       : '0',
-                    'Another'    : ( hasID && hasSP && ('Another'     in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Another     : '0',
-                    'Leggendaria': ( hasID && hasSP && ('Leggendaria' in tmpData.EXScores.SP)) ? tmpData.EXScores.SP.Leggendaria : '0'
-                },
-                'DP': {
-                    'Beginner'   : ( hasID && hasDP && ('Beginner'    in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Beginner    : '0',
-                    'Normal'     : ( hasID && hasDP && ('Normal'      in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Normal      : '0',
-                    'Hyper'      : ( hasID && hasDP && ('Hyper'       in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Hyper       : '0',
-                    'Another'    : ( hasID && hasDP && ('Another'     in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Another     : '0',
-                    'Leggendaria': ( hasID && hasDP && ('Leggendaria' in tmpData.EXScores.DP)) ? tmpData.EXScores.DP.Leggendaria : '0'
-                },
-            }
+            'EXScores' : { 'SP': {}, 'DP': {} },
+            'MissCount' : { 'SP': {}, 'DP': {} },
+            'ClearType' : { 'SP': {}, 'DP': {} }
         };
-        if (item.Release.Type != 'Default') {
+        if (hasID && hasEXSP) {
+            tmpSP = tmpData.EXScores.SP;
+            userJSON.musics[item.ID].EXScores.SP = {
+                'Beginner'   : ('Beginner'    in tmpSP) && !isNaN(tmpSP.Beginner   ) ? tmpSP.Beginner    : '0',
+                'Normal'     : ('Normal'      in tmpSP) && !isNaN(tmpSP.Normal     ) ? tmpSP.Normal      : '0',
+                'Hyper'      : ('Hyper'       in tmpSP) && !isNaN(tmpSP.Hyper      ) ? tmpSP.Hyper       : '0',
+                'Another'    : ('Another'     in tmpSP) && !isNaN(tmpSP.Another    ) ? tmpSP.Another     : '0',
+                'Leggendaria': ('Leggendaria' in tmpSP) && !isNaN(tmpSP.Leggendaria) ? tmpSP.Leggendaria : '0'};
+        };
+        if (hasID && hasEXDP) {
+            tmpDP = tmpData.EXScores.DP;
+            userJSON.musics[item.ID].EXScores.DP = {
+                'Beginner'   : ('Beginner'    in tmpDP) && !isNaN(tmpDP.Beginner   ) ? tmpDP.Beginner    : '0',
+                'Normal'     : ('Normal'      in tmpDP) && !isNaN(tmpDP.Normal     ) ? tmpDP.Normal      : '0',
+                'Hyper'      : ('Hyper'       in tmpDP) && !isNaN(tmpDP.Hyper      ) ? tmpDP.Hyper       : '0',
+                'Another'    : ('Another'     in tmpDP) && !isNaN(tmpDP.Another    ) ? tmpDP.Another     : '0',
+                'Leggendaria': ('Leggendaria' in tmpDP) && !isNaN(tmpDP.Leggendaria) ? tmpDP.Leggendaria : '0'};
+        };
+        if (hasID && hasMISSSP) {
+            tmpSP = tmpData.MissCount.SP;
+            userJSON.musics[item.ID].MissCount.SP = {
+                'Beginner'   : ('Beginner'    in tmpSP) && !isNaN(tmpSP.Beginner   ) ? tmpSP.Beginner    : '0',
+                'Normal'     : ('Normal'      in tmpSP) && !isNaN(tmpSP.Normal     ) ? tmpSP.Normal      : '0',
+                'Hyper'      : ('Hyper'       in tmpSP) && !isNaN(tmpSP.Hyper      ) ? tmpSP.Hyper       : '0',
+                'Another'    : ('Another'     in tmpSP) && !isNaN(tmpSP.Another    ) ? tmpSP.Another     : '0',
+                'Leggendaria': ('Leggendaria' in tmpSP) && !isNaN(tmpSP.Leggendaria) ? tmpSP.Leggendaria : '0'};
+        };
+        if (hasID && hasMISSDP) {
+            tmpDP = tmpData.MissCount.DP;
+            userJSON.musics[item.ID].MissCount.DP = {
+                'Beginner'   : ('Beginner'    in tmpDP) && !isNaN(tmpDP.Beginner   ) ? tmpDP.Beginner    : '0',
+                'Normal'     : ('Normal'      in tmpDP) && !isNaN(tmpDP.Normal     ) ? tmpDP.Normal      : '0',
+                'Hyper'      : ('Hyper'       in tmpDP) && !isNaN(tmpDP.Hyper      ) ? tmpDP.Hyper       : '0',
+                'Another'    : ('Another'     in tmpDP) && !isNaN(tmpDP.Another    ) ? tmpDP.Another     : '0',
+                'Leggendaria': ('Leggendaria' in tmpDP) && !isNaN(tmpDP.Leggendaria) ? tmpDP.Leggendaria : '0'};
+        };
+        if (hasID && hasLAMPSP) {
+            tmpSP = tmpData.ClearType.SP;
+            userJSON.musics[item.ID].ClearType.SP = {
+                'Beginner'   : ('Beginner'    in tmpSP) && ClearTypeArray.includes(tmpSP.Beginner   ) ? tmpSP.Beginner    : ClearTypeArray[ClearTypeArray.length - 1],
+                'Normal'     : ('Normal'      in tmpSP) && ClearTypeArray.includes(tmpSP.Normal     ) ? tmpSP.Normal      : ClearTypeArray[ClearTypeArray.length - 1],
+                'Hyper'      : ('Hyper'       in tmpSP) && ClearTypeArray.includes(tmpSP.Hyper      ) ? tmpSP.Hyper       : ClearTypeArray[ClearTypeArray.length - 1],
+                'Another'    : ('Another'     in tmpSP) && ClearTypeArray.includes(tmpSP.Another    ) ? tmpSP.Another     : ClearTypeArray[ClearTypeArray.length - 1],
+                'Leggendaria': ('Leggendaria' in tmpSP) && ClearTypeArray.includes(tmpSP.Leggendaria) ? tmpSP.Leggendaria : ClearTypeArray[ClearTypeArray.length - 1]};
+        };
+        if (hasID && hasLAMPDP) {
+            tmpDP = tmpData.ClearType.DP;
+            userJSON.musics[item.ID].ClearType.DP = {
+                'Beginner'   : ('Beginner'    in tmpDP) && ClearTypeArray.includes(tmpDP.Beginner   ) ? tmpDP.Beginner    : ClearTypeArray[ClearTypeArray.length - 1],
+                'Normal'     : ('Normal'      in tmpDP) && ClearTypeArray.includes(tmpDP.Normal     ) ? tmpDP.Normal      : ClearTypeArray[ClearTypeArray.length - 1],
+                'Hyper'      : ('Hyper'       in tmpDP) && ClearTypeArray.includes(tmpDP.Hyper      ) ? tmpDP.Hyper       : ClearTypeArray[ClearTypeArray.length - 1],
+                'Another'    : ('Another'     in tmpDP) && ClearTypeArray.includes(tmpDP.Another    ) ? tmpDP.Another     : ClearTypeArray[ClearTypeArray.length - 1],
+                'Leggendaria': ('Leggendaria' in tmpDP) && ClearTypeArray.includes(tmpDP.Leggendaria) ? tmpDP.Leggendaria : ClearTypeArray[ClearTypeArray.length - 1]};
+        };
+        if (item.Release.Type != 'Default' && hasID && hasCanplay) {
             userJSON.musics[item.ID].Canplay = {
-                'Beginner'   : ( hasID && hasCanplay && ('Beginner'    in tmpData.Canplay)) ? tmpData.Canplay.Beginner    : '0',
-                'Normal'     : ( hasID && hasCanplay && ('Normal'      in tmpData.Canplay)) ? tmpData.Canplay.Normal      : '0',
-                'Hyper'      : ( hasID && hasCanplay && ('Hyper'       in tmpData.Canplay)) ? tmpData.Canplay.Hyper       : '0',
-                'Another'    : ( hasID && hasCanplay && ('Another'     in tmpData.Canplay)) ? tmpData.Canplay.Another     : '0',
-                'Leggendaria': ( hasID && hasCanplay && ('Leggendaria' in tmpData.Canplay)) ? tmpData.Canplay.Leggendaria : '0',
+                'Beginner'   : ('Beginner'    in tmpData.Canplay) ? tmpData.Canplay.Beginner    : '0',
+                'Normal'     : ('Normal'      in tmpData.Canplay) ? tmpData.Canplay.Normal      : '0',
+                'Hyper'      : ('Hyper'       in tmpData.Canplay) ? tmpData.Canplay.Hyper       : '0',
+                'Another'    : ('Another'     in tmpData.Canplay) ? tmpData.Canplay.Another     : '0',
+                'Leggendaria': ('Leggendaria' in tmpData.Canplay) ? tmpData.Canplay.Leggendaria : '0',
             };
         };
     };
@@ -578,6 +624,17 @@ function makeScorefilter(target,items){
     };
 };
 
+function makeSelectTag(name, prefix, suffix, list, value) {
+    if (name == '' || prefix == '' || suffix == '' || !Array.isArray(list) || value == '') {return '';};
+
+    let optStr = '';
+    for (let item of list) {
+        optStr += '<option value="' + item + '"' + (item == value ? ' selected' : '') + '>' + item + '</option>';
+    };
+    let fullName = prefix + '_' + name + '_' + suffix;
+    return '<select id="' + fullName + '" name="' + fullName + '">' + optStr + '</select>';
+};
+
 function toggleScoreOptButton(obj, noToggle = false) {
     let jqobj = jQuery(obj);
     let objid = jqobj.attr('id');
@@ -672,19 +729,24 @@ function getNotesValue(inputNotes) {
  * 
  * @param {Integer} maxScore - 楽曲の理論値
  * @param {Integer} EXScore - EXScore
- * @returns {String} - DJLevel
+ * @returns {[String, String]} - DJLevel, +-表記
  */
 function getDJLevel(maxScore = 0, EXScore = 0) {
-    if (isNaN(maxScore) || isNaN(EXScore) || maxScore == 0 || EXScore == 0) { return ''};
+    if (isNaN(maxScore) || isNaN(EXScore) || maxScore == 0 || EXScore == 0 || maxScore < EXScore ) { return ['','']; };
 
     let DJLevel = ['MAX','AAA','AA','A','B','C','D','E','F'];
     let borderFloat = [ maxScore, maxScore / 9 * 8, maxScore / 9 * 7, maxScore / 9 * 6, maxScore / 9 * 5, maxScore / 9 * 4, maxScore / 9 * 3, maxScore / 9 * 2, 0 ];
 
     for ( let i = 0; i < 9; i++ ) {
-        if (EXScore >= Math.ceil(borderFloat[i])) { return DJLevel[i]; };
+        if (EXScore >= Math.ceil(borderFloat[i])) {
+            if (i == 0) { return [DJLevel[i], DJLevel[i]]; };
+            minusNum = Math.ceil(borderFloat[(i - 1)]) - EXScore;
+            plusNum = EXScore - Math.ceil(borderFloat[i]);
+            return [DJLevel[i], (minusNum < plusNum) ? DJLevel[(i - 1)] + '-' + minusNum : DJLevel[i] + '+' + plusNum];
+        };
     };
 
-    return '';
+    return ['',''];
 };
 
 /**
@@ -848,6 +910,7 @@ let update = {
                 if (!(tmpVal[1] in userJSON.packs)) { userJSON.packs[tmpVal[1]] = {'packname': packlist[tmpVal[1]].name, 'purchased': '0'}};
                 userJSON.packs[tmpVal[1]].purchased = item.isAdd ? '1' : '0';
             } else if (tmpVal[0] == 'exs') {
+                if ( isNaN(item.isAdd) ) { continue; };
                 if (!(tmpVal[1] in userJSON.musics)) {
                     userJSON.musics[tmpVal[1]] = {};
                     userJSON.musics[tmpVal[1]].EXScores = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
@@ -867,6 +930,49 @@ let update = {
                     case 'dpl': side = 'DP'; dif = 'Leggendaria'; break;
                 };
                 userJSON.musics[tmpVal[1]].EXScores[side][dif] = item.isAdd;
+            } else if (tmpVal[0] == 'mc') {
+                if ( isNaN(item.isAdd) ) { continue; };
+                if (!(tmpVal[1] in userJSON.musics)) {
+                    userJSON.musics[tmpVal[1]] = {};
+                    userJSON.musics[tmpVal[1]].MissCount = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
+                };
+                let side = '';
+                let dif = '';
+                switch (tmpVal[2]) {
+                    case 'spb': side = 'SP'; dif = 'Beginner'; break;
+                    case 'spn': side = 'SP'; dif = 'Normal'; break;
+                    case 'sph': side = 'SP'; dif = 'Hyper'; break;
+                    case 'spa': side = 'SP'; dif = 'Another'; break;
+                    case 'spl': side = 'SP'; dif = 'Leggendaria'; break;
+                    case 'dpb': side = 'DP'; dif = 'Beginner'; break;
+                    case 'dpn': side = 'DP'; dif = 'Normal'; break;
+                    case 'dph': side = 'DP'; dif = 'Hyper'; break;
+                    case 'dpa': side = 'DP'; dif = 'Another'; break;
+                    case 'dpl': side = 'DP'; dif = 'Leggendaria'; break;
+                };
+                userJSON.musics[tmpVal[1]].MissCount[side][dif] = item.isAdd;
+            } else if (tmpVal[0] == 'ct') {
+                if (!(tmpVal[1] in userJSON.musics)) {
+                    let ctTmp          = ClearTypeArray[ClearTypeArray.length - 1];
+                    userJSON.musics[tmpVal[1]] = {};
+                    userJSON.musics[tmpVal[1]].ClearType = {'SP': {"Beginner":ctTmp,"Normal":ctTmp,"Hyper":ctTmp,"Another":ctTmp,"Leggendaria":ctTmp},
+                                                            'DP': {"Beginner":ctTmp,"Normal":ctTmp,"Hyper":ctTmp,"Another":ctTmp,"Leggendaria":ctTmp}};
+                };
+                let side = '';
+                let dif = '';
+                switch (tmpVal[2]) {
+                    case 'spb': side = 'SP'; dif = 'Beginner'; break;
+                    case 'spn': side = 'SP'; dif = 'Normal'; break;
+                    case 'sph': side = 'SP'; dif = 'Hyper'; break;
+                    case 'spa': side = 'SP'; dif = 'Another'; break;
+                    case 'spl': side = 'SP'; dif = 'Leggendaria'; break;
+                    case 'dpb': side = 'DP'; dif = 'Beginner'; break;
+                    case 'dpn': side = 'DP'; dif = 'Normal'; break;
+                    case 'dph': side = 'DP'; dif = 'Hyper'; break;
+                    case 'dpa': side = 'DP'; dif = 'Another'; break;
+                    case 'dpl': side = 'DP'; dif = 'Leggendaria'; break;
+                };
+                userJSON.musics[tmpVal[1]].ClearType[side][dif] = item.isAdd;
             } else {
                 switch (tmpVal[1]) {
                     case '0':
@@ -1310,29 +1416,73 @@ let musics = {
             };
 
             // 解禁状況・EXScoreの取得・加工
-            let canplay = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
-            let exscore = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
-            let hasUserJSON = ('musics' in userJSON);
-            let hasMusic = (item.ID in userJSON.musics);
-            let hasCanplay = ('Canplay' in userJSON.musics[item.ID]);
-            let hasEXScoreSP = (('EXScores' in userJSON.musics[item.ID]) && ('SP' in userJSON.musics[item.ID].EXScores));
-            let hasEXScoreDP = (('EXScores' in userJSON.musics[item.ID]) && ('DP' in userJSON.musics[item.ID].EXScores));
-            if (hasUserJSON) {
-                canplay.Beginner       = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Beginner    == '1');
-                canplay.Normal         = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Normal      == '1');
-                canplay.Hyper          = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Hyper       == '1');
-                canplay.Another        = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Another     == '1');
-                canplay.Leggendaria    = hasMusic && hasCanplay && (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
-                exscore.SP.Beginner    = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Beginner    : 0;
-                exscore.SP.Normal      = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Normal      : 0;
-                exscore.SP.Hyper       = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Hyper       : 0;
-                exscore.SP.Another     = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Another     : 0;
-                exscore.SP.Leggendaria = hasMusic && hasEXScoreSP ? userJSON.musics[item.ID].EXScores.SP.Leggendaria : 0;
-                exscore.DP.Beginner    = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Beginner    : 0;
-                exscore.DP.Normal      = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Normal      : 0;
-                exscore.DP.Hyper       = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Hyper       : 0;
-                exscore.DP.Another     = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Another     : 0;
-                exscore.DP.Leggendaria = hasMusic && hasEXScoreDP ? userJSON.musics[item.ID].EXScores.DP.Leggendaria : 0;
+            let ctTmp          = ClearTypeArray[ClearTypeArray.length - 1];
+            let canplay        = {"Beginner":false,"Normal":false,"Hyper":false,"Another":false,"Leggendaria":false};
+            let exscore        = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
+            let misscount      = {'SP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}, 'DP': {"Beginner":0,"Normal":0,"Hyper":0,"Another":0,"Leggendaria":0}};
+            let cleartype      = {'SP': {"Beginner":ctTmp,"Normal":ctTmp,"Hyper":ctTmp,"Another":ctTmp,"Leggendaria":ctTmp},
+                                  'DP': {"Beginner":ctTmp,"Normal":ctTmp,"Hyper":ctTmp,"Another":ctTmp,"Leggendaria":ctTmp}};
+
+            let hasUserJSON    = ('musics' in userJSON);
+            let hasMusic       = (item.ID in userJSON.musics);
+            let hasCanplay     = ('Canplay' in userJSON.musics[item.ID]);
+            let hasEXScoreSP   = (('EXScores' in userJSON.musics[item.ID]) && ('SP' in userJSON.musics[item.ID].EXScores));
+            let hasEXScoreDP   = (('EXScores' in userJSON.musics[item.ID]) && ('DP' in userJSON.musics[item.ID].EXScores));
+            let hasMissCountSP = (('MissCount' in userJSON.musics[item.ID]) && ('SP' in userJSON.musics[item.ID].MissCount));
+            let hasMissCountDP = (('MissCount' in userJSON.musics[item.ID]) && ('DP' in userJSON.musics[item.ID].MissCount));
+            let hasClearTypeSP = (('ClearType' in userJSON.musics[item.ID]) && ('SP' in userJSON.musics[item.ID].ClearType));
+            let hasClearTypeDP = (('ClearType' in userJSON.musics[item.ID]) && ('DP' in userJSON.musics[item.ID].ClearType));
+
+            if (hasUserJSON && hasMusic) {
+                if (hasCanplay) {
+                    canplay.Beginner         = (userJSON.musics[item.ID].Canplay.Beginner    == '1');
+                    canplay.Normal           = (userJSON.musics[item.ID].Canplay.Normal      == '1');
+                    canplay.Hyper            = (userJSON.musics[item.ID].Canplay.Hyper       == '1');
+                    canplay.Another          = (userJSON.musics[item.ID].Canplay.Another     == '1');
+                    canplay.Leggendaria      = (userJSON.musics[item.ID].Canplay.Leggendaria == '1');
+                };
+                if (hasEXScoreSP) {
+                    exscore.SP.Beginner      = userJSON.musics[item.ID].EXScores.SP.Beginner;
+                    exscore.SP.Normal        = userJSON.musics[item.ID].EXScores.SP.Normal;
+                    exscore.SP.Hyper         = userJSON.musics[item.ID].EXScores.SP.Hyper;
+                    exscore.SP.Another       = userJSON.musics[item.ID].EXScores.SP.Another;
+                    exscore.SP.Leggendaria   = userJSON.musics[item.ID].EXScores.SP.Leggendaria;
+                };
+                if (hasEXScoreDP) {
+                    exscore.DP.Beginner      = userJSON.musics[item.ID].EXScores.DP.Beginner;
+                    exscore.DP.Normal        = userJSON.musics[item.ID].EXScores.DP.Normal;
+                    exscore.DP.Hyper         = userJSON.musics[item.ID].EXScores.DP.Hyper;
+                    exscore.DP.Another       = userJSON.musics[item.ID].EXScores.DP.Another;
+                    exscore.DP.Leggendaria   = userJSON.musics[item.ID].EXScores.DP.Leggendaria;
+                };
+                if (hasMissCountSP) {
+                    misscount.SP.Beginner    = userJSON.musics[item.ID].MissCount.SP.Beginner;
+                    misscount.SP.Normal      = userJSON.musics[item.ID].MissCount.SP.Normal;
+                    misscount.SP.Hyper       = userJSON.musics[item.ID].MissCount.SP.Hyper;
+                    misscount.SP.Another     = userJSON.musics[item.ID].MissCount.SP.Another;
+                    misscount.SP.Leggendaria = userJSON.musics[item.ID].MissCount.SP.Leggendaria;
+                };
+                if (hasMissCountDP) {
+                    misscount.DP.Beginner    = userJSON.musics[item.ID].MissCount.DP.Beginner;
+                    misscount.DP.Normal      = userJSON.musics[item.ID].MissCount.DP.Normal;
+                    misscount.DP.Hyper       = userJSON.musics[item.ID].MissCount.DP.Hyper;
+                    misscount.DP.Another     = userJSON.musics[item.ID].MissCount.DP.Another;
+                    misscount.DP.Leggendaria = userJSON.musics[item.ID].MissCount.DP.Leggendaria;
+                };
+                if (hasClearTypeSP) {
+                    cleartype.SP.Beginner    = userJSON.musics[item.ID].ClearType.SP.Beginner;
+                    cleartype.SP.Normal      = userJSON.musics[item.ID].ClearType.SP.Normal;
+                    cleartype.SP.Hyper       = userJSON.musics[item.ID].ClearType.SP.Hyper;
+                    cleartype.SP.Another     = userJSON.musics[item.ID].ClearType.SP.Another;
+                    cleartype.SP.Leggendaria = userJSON.musics[item.ID].ClearType.SP.Leggendaria;
+                };
+                if (hasClearTypeDP) {
+                    cleartype.DP.Beginner    = userJSON.musics[item.ID].ClearType.DP.Beginner;
+                    cleartype.DP.Normal      = userJSON.musics[item.ID].ClearType.DP.Normal;
+                    cleartype.DP.Hyper       = userJSON.musics[item.ID].ClearType.DP.Hyper;
+                    cleartype.DP.Another     = userJSON.musics[item.ID].ClearType.DP.Another;
+                    cleartype.DP.Leggendaria = userJSON.musics[item.ID].ClearType.DP.Leggendaria;
+                    };
             };
 
             // BIT・譜面数計算
@@ -1352,6 +1502,7 @@ let musics = {
             };
     
             // 挿入データの作成
+            let swdjlv = ( jQuery('#showdjlevel').val() == 0 || jQuery('#showdjlevel').val() == 1 ? Number(jQuery('#showdjlevel').val()) : -1);
             let unlockCheckbox = {
                 "B": ((!isNaN(SPB.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-b" name="check-playable" class="check-playable" value="' + item.ID + '_b" ' + (canplay.Beginner    ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-b"></label>' : '&nbsp;'),
                 "N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (canplay.Normal      ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
@@ -1408,21 +1559,46 @@ let musics = {
                     "DPA": (!isNaN(DPA.Lv) ? '<input id="exs_' + item.ID + '_dpa" name="exs_' + item.ID + '_dpa" type="text" class="exscore" value="' + exscore.DP.Another     + '">' : ''),
                     "DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + exscore.DP.Leggendaria + '">' : '')
                 },
+                "cleartype": {
+                    "SPB": (!isNaN(SPB.Lv) ? makeSelectTag(item.ID, 'ct', 'spb', ClearTypeArray, cleartype.SP.Beginner   ) : ''),
+                    "SPN": (!isNaN(SPN.Lv) ? makeSelectTag(item.ID, 'ct', 'spn', ClearTypeArray, cleartype.SP.Normal     ) : ''),
+                    "SPH": (!isNaN(SPH.Lv) ? makeSelectTag(item.ID, 'ct', 'sph', ClearTypeArray, cleartype.SP.Hyper      ) : ''),
+                    "SPA": (!isNaN(SPA.Lv) ? makeSelectTag(item.ID, 'ct', 'spa', ClearTypeArray, cleartype.SP.Another    ) : ''),
+                    "SPL": (!isNaN(SPL.Lv) ? makeSelectTag(item.ID, 'ct', 'spl', ClearTypeArray, cleartype.SP.Leggendaria) : ''),
+                    "DPB": (!isNaN(DPB.Lv) ? makeSelectTag(item.ID, 'ct', 'dpb', ClearTypeArray, cleartype.DP.Beginner   ) : ''),
+                    "DPN": (!isNaN(DPN.Lv) ? makeSelectTag(item.ID, 'ct', 'dpn', ClearTypeArray, cleartype.DP.Normal     ) : ''),
+                    "DPH": (!isNaN(DPH.Lv) ? makeSelectTag(item.ID, 'ct', 'dph', ClearTypeArray, cleartype.DP.Hyper      ) : ''),
+                    "DPA": (!isNaN(DPA.Lv) ? makeSelectTag(item.ID, 'ct', 'dpa', ClearTypeArray, cleartype.DP.Another    ) : ''),
+                    "DPL": (!isNaN(DPL.Lv) ? makeSelectTag(item.ID, 'ct', 'dpl', ClearTypeArray, cleartype.DP.Leggendaria) : '')
+                },
+                "misscount": {
+                    "SPB": (!isNaN(SPB.Lv) ? '<input id="mc_' + item.ID + '_spb" name="mc_' + item.ID + '_spb" type="text" class="misscount" value="' + misscount.SP.Beginner    + '">' : ''),
+                    "SPN": (!isNaN(SPN.Lv) ? '<input id="mc_' + item.ID + '_spn" name="mc_' + item.ID + '_spn" type="text" class="misscount" value="' + misscount.SP.Normal      + '">' : ''),
+                    "SPH": (!isNaN(SPH.Lv) ? '<input id="mc_' + item.ID + '_sph" name="mc_' + item.ID + '_sph" type="text" class="misscount" value="' + misscount.SP.Hyper       + '">' : ''),
+                    "SPA": (!isNaN(SPA.Lv) ? '<input id="mc_' + item.ID + '_spa" name="mc_' + item.ID + '_spa" type="text" class="misscount" value="' + misscount.SP.Another     + '">' : ''),
+                    "SPL": (!isNaN(SPL.Lv) ? '<input id="mc_' + item.ID + '_spl" name="mc_' + item.ID + '_spl" type="text" class="misscount" value="' + misscount.SP.Leggendaria + '">' : ''),
+                    "DPB": (!isNaN(DPB.Lv) ? '<input id="mc_' + item.ID + '_dpb" name="mc_' + item.ID + '_dpb" type="text" class="misscount" value="' + misscount.DP.Beginner    + '">' : ''),
+                    "DPN": (!isNaN(DPN.Lv) ? '<input id="mc_' + item.ID + '_dpn" name="mc_' + item.ID + '_dpn" type="text" class="misscount" value="' + misscount.DP.Normal      + '">' : ''),
+                    "DPH": (!isNaN(DPH.Lv) ? '<input id="mc_' + item.ID + '_dph" name="mc_' + item.ID + '_dph" type="text" class="misscount" value="' + misscount.DP.Hyper       + '">' : ''),
+                    "DPA": (!isNaN(DPA.Lv) ? '<input id="mc_' + item.ID + '_dpa" name="mc_' + item.ID + '_dpa" type="text" class="misscount" value="' + misscount.DP.Another     + '">' : ''),
+                    "DPL": (!isNaN(DPL.Lv) ? '<input id="mc_' + item.ID + '_dpl" name="mc_' + item.ID + '_dpl" type="text" class="misscount" value="' + misscount.DP.Leggendaria + '">' : '')
+                },
                 "djlevel": {
-                    "SPB": ( !isNaN(SPB.Lv) && exscore.SP.Beginner    > 0 ) ? '<label for="exs_' + item.ID + '_spb">' + getDJLevel(SPB.Notes * 2, exscore.SP.Beginner   ) + '</label>' : '',
-                    "SPN": ( !isNaN(SPN.Lv) && exscore.SP.Normal      > 0 ) ? '<label for="exs_' + item.ID + '_spn">' + getDJLevel(SPN.Notes * 2, exscore.SP.Normal     ) + '</label>' : '',
-                    "SPH": ( !isNaN(SPH.Lv) && exscore.SP.Hyper       > 0 ) ? '<label for="exs_' + item.ID + '_sph">' + getDJLevel(SPH.Notes * 2, exscore.SP.Hyper      ) + '</label>' : '',
-                    "SPA": ( !isNaN(SPA.Lv) && exscore.SP.Another     > 0 ) ? '<label for="exs_' + item.ID + '_spa">' + getDJLevel(SPA.Notes * 2, exscore.SP.Another    ) + '</label>' : '',
-                    "SPL": ( !isNaN(SPL.Lv) && exscore.SP.Leggendaria > 0 ) ? '<label for="exs_' + item.ID + '_spl">' + getDJLevel(SPL.Notes * 2, exscore.SP.Leggendaria) + '</label>' : '',
-                    "DPB": ( !isNaN(DPB.Lv) && exscore.DP.Beginner    > 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + getDJLevel(DPB.Notes * 2, exscore.DP.Beginner   ) + '</label>' : '',
-                    "DPN": ( !isNaN(DPN.Lv) && exscore.DP.Normal      > 0 ) ? '<label for="exs_' + item.ID + '_dpn">' + getDJLevel(DPN.Notes * 2, exscore.DP.Normal     ) + '</label>' : '',
-                    "DPH": ( !isNaN(DPH.Lv) && exscore.DP.Hyper       > 0 ) ? '<label for="exs_' + item.ID + '_dph">' + getDJLevel(DPH.Notes * 2, exscore.DP.Hyper      ) + '</label>' : '',
-                    "DPA": ( !isNaN(DPA.Lv) && exscore.DP.Another     > 0 ) ? '<label for="exs_' + item.ID + '_dpa">' + getDJLevel(DPA.Notes * 2, exscore.DP.Another    ) + '</label>' : '',
-                    "DPL": ( !isNaN(DPL.Lv) && exscore.DP.Leggendaria > 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + getDJLevel(DPL.Notes * 2, exscore.DP.Leggendaria) + '</label>' : ''
+                    "SPB": ( !isNaN(SPB.Lv) && exscore.SP.Beginner    > 0 ) ? '<label for="exs_' + item.ID + '_spb">' + (swdjlv != -1 ? getDJLevel(SPB.Notes * 2, exscore.SP.Beginner   )[swdjlv] : '') + '</label>' : '',
+                    "SPN": ( !isNaN(SPN.Lv) && exscore.SP.Normal      > 0 ) ? '<label for="exs_' + item.ID + '_spn">' + (swdjlv != -1 ? getDJLevel(SPN.Notes * 2, exscore.SP.Normal     )[swdjlv] : '') + '</label>' : '',
+                    "SPH": ( !isNaN(SPH.Lv) && exscore.SP.Hyper       > 0 ) ? '<label for="exs_' + item.ID + '_sph">' + (swdjlv != -1 ? getDJLevel(SPH.Notes * 2, exscore.SP.Hyper      )[swdjlv] : '') + '</label>' : '',
+                    "SPA": ( !isNaN(SPA.Lv) && exscore.SP.Another     > 0 ) ? '<label for="exs_' + item.ID + '_spa">' + (swdjlv != -1 ? getDJLevel(SPA.Notes * 2, exscore.SP.Another    )[swdjlv] : '') + '</label>' : '',
+                    "SPL": ( !isNaN(SPL.Lv) && exscore.SP.Leggendaria > 0 ) ? '<label for="exs_' + item.ID + '_spl">' + (swdjlv != -1 ? getDJLevel(SPL.Notes * 2, exscore.SP.Leggendaria)[swdjlv] : '') + '</label>' : '',
+                    "DPB": ( !isNaN(DPB.Lv) && exscore.DP.Beginner    > 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + (swdjlv != -1 ? getDJLevel(DPB.Notes * 2, exscore.DP.Beginner   )[swdjlv] : '') + '</label>' : '',
+                    "DPN": ( !isNaN(DPN.Lv) && exscore.DP.Normal      > 0 ) ? '<label for="exs_' + item.ID + '_dpn">' + (swdjlv != -1 ? getDJLevel(DPN.Notes * 2, exscore.DP.Normal     )[swdjlv] : '') + '</label>' : '',
+                    "DPH": ( !isNaN(DPH.Lv) && exscore.DP.Hyper       > 0 ) ? '<label for="exs_' + item.ID + '_dph">' + (swdjlv != -1 ? getDJLevel(DPH.Notes * 2, exscore.DP.Hyper      )[swdjlv] : '') + '</label>' : '',
+                    "DPA": ( !isNaN(DPA.Lv) && exscore.DP.Another     > 0 ) ? '<label for="exs_' + item.ID + '_dpa">' + (swdjlv != -1 ? getDJLevel(DPA.Notes * 2, exscore.DP.Another    )[swdjlv] : '') + '</label>' : '',
+                    "DPL": ( !isNaN(DPL.Lv) && exscore.DP.Leggendaria > 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + (swdjlv != -1 ? getDJLevel(DPL.Notes * 2, exscore.DP.Leggendaria)[swdjlv] : '') + '</label>' : ''
                 },
             };
 
             rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0) + (rBit.Leggendaria ? rBit.Leggendaria : 0));
+            rowspan = (hasMusic ? 5 : 1) - (item.Release.Type !== 'Default' ? 0 : 1);
             addhtml = '<tr class="music m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
                       '<td class="release' + rTypeClass + '">' + rTypeSStr + '</td>' +
                       '<td class="version version' + item.VNo + '">' + item.VShortName + '</td>' +
@@ -1439,8 +1615,8 @@ let musics = {
                       '<td class="dp level dpa m' + item.ID + ' ' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
                       '</tr>' +
                       '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
-                      '<td class="" rowspan="' + (hasMusic ? '3' : '1')+ '"></td>' +
-                      '<td class="other" colspan="4" rowspan="' + (hasMusic ? '3' : '1')+ '">' +
+                      '<td class="" rowspan="' + rowspan + '"></td>' +
+                      '<td class="other" colspan="4" rowspan="' + rowspan + '">' +
                       '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
                       'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
                       ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
@@ -1461,7 +1637,7 @@ let musics = {
                       '<td class="notes dph m' + item.ID + '">' + (!isNaN(DPH.Lv) ? DPH.Notes : '') + '</td>' +
                       '<td class="notes dpa m' + item.ID + '">' + (!isNaN(DPA.Lv) ? DPA.Notes : '') + '</td>' +
                       '</tr>' +
-                      (hasMusic ? 
+                      (hasMusic && item.Release.Type !== 'Default' ? 
                       '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
                       '<td class="playable">解禁</td>' +
                       '<td class="playable spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
@@ -1474,6 +1650,17 @@ let musics = {
                       '</tr>' : '' ) +
                       (hasMusic ? 
                       '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+                      '<td class="cleartype">ClearType</td>' +
+                      '<td class="cleartype spb selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPB + '</td>' +
+                      '<td class="cleartype spn selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPN + '</td>' +
+                      '<td class="cleartype sph selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPH + '</td>' +
+                      '<td class="cleartype spa selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPA + '</td>' +
+                      '<td class="cleartype dpn selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPN + '</td>' +
+                      '<td class="cleartype dph selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPH + '</td>' +
+                      '<td class="cleartype dpa selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPA + '</td>' +
+                      '</tr>' : '' ) +
+                      (hasMusic ? 
+                      '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
                       '<td class="exscore">EXScore</td>' +
                       '<td class="exscore spb m' + item.ID + '">' + scoreClass.djlevel.SPB + scoreClass.exscore.SPB + '</td>' +
                       '<td class="exscore spn m' + item.ID + '">' + scoreClass.djlevel.SPN + scoreClass.exscore.SPN + '</td>' +
@@ -1482,8 +1669,19 @@ let musics = {
                       '<td class="exscore dpn m' + item.ID + '">' + scoreClass.djlevel.DPN + scoreClass.exscore.DPN + '</td>' +
                       '<td class="exscore dph m' + item.ID + '">' + scoreClass.djlevel.DPH + scoreClass.exscore.DPH + '</td>' +
                       '<td class="exscore dpa m' + item.ID + '">' + scoreClass.djlevel.DPA + scoreClass.exscore.DPA + '</td>' +
+                      '</tr>' : '' ) +
+                      (hasMusic ? 
+                      '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+                      '<td class="misscount">MissCount</td>' +
+                      '<td class="misscount spb m' + item.ID + '">' + scoreClass.misscount.SPB + '</td>' +
+                      '<td class="misscount spn m' + item.ID + '">' + scoreClass.misscount.SPN + '</td>' +
+                      '<td class="misscount sph m' + item.ID + '">' + scoreClass.misscount.SPH + '</td>' +
+                      '<td class="misscount spa m' + item.ID + '">' + scoreClass.misscount.SPA + '</td>' +
+                      '<td class="misscount dpn m' + item.ID + '">' + scoreClass.misscount.DPN + '</td>' +
+                      '<td class="misscount dph m' + item.ID + '">' + scoreClass.misscount.DPH + '</td>' +
+                      '<td class="misscount dpa m' + item.ID + '">' + scoreClass.misscount.DPA + '</td>' +
                       '</tr>' : '' );
-
+  
 
             // データ挿入先ごとにオブジェクトに格納
             className = [];
@@ -1640,9 +1838,26 @@ let musics = {
 
         // EXScore更新処理用
         jQuery('td.exscore input.exscore').change(function() {
-            update.start(jQuery(this).prop('id'),jQuery(this).val());
             let tmpID = jQuery(this).prop('id').split('_');
-            jQuery('label[for=' + jQuery(this).prop('id') + ']').text(getDJLevel(Number(jQuery('.m' + tmpID[1] + '.' + tmpID[2] + '.notes').text()) * 2, jQuery(this).val()));
+            let notes = Number(jQuery('.m' + tmpID[1] + '.' + tmpID[2] + '.notes').text());
+            let exscore = Number(jQuery(this).val());
+            let swdjlv = ( jQuery('#showdjlevel').val() == 0 || jQuery('#showdjlevel').val() == 1 ? Number(jQuery('#showdjlevel').val()) : -1);
+            if (exscore <= notes * 2) { update.start(jQuery(this).prop('id'),exscore); };
+            jQuery('label[for=' + jQuery(this).prop('id') + ']').html((swdjlv != -1 ? getDJLevel(notes * 2, exscore)[swdjlv] : ''));
+        });
+
+        // MissCount更新処理用
+        jQuery('td.misscount input.misscount').change(function() {
+            let tmpID = jQuery(this).prop('id').split('_');
+            let notes = Number(jQuery('.m' + tmpID[1] + '.' + tmpID[2] + '.notes').text());
+            let misscount = Number(jQuery(this).val());
+            if (misscount <= notes) { update.start(jQuery(this).prop('id'),misscount); };
+        });
+
+        // ClearType更新処理用
+        jQuery('td.cleartype select').change(function() {
+            // CSSも変更する必要がある
+            update.start(jQuery(this).prop('id'),jQuery(this).val());
         });
 
         jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
