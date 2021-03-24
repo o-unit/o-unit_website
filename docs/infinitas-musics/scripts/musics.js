@@ -395,7 +395,7 @@ function initializeUserJSON(JSONString) {
 	};
 
 	// info
-	userJSON.info = jsonData.info;
+	userJSON.info = { ...jsonData.info };
 
 	// 楽曲情報
 	userJSON.musics = {};
@@ -425,69 +425,41 @@ function initializeUserJSON(JSONString) {
 			tmpSP = tmpData.EXScores.SP;
 			userJSON.musics[item.ID].EXScores.SP = {};
 			userSP = userJSON.musics[item.ID].EXScores.SP;
-			userSP[Diff[0].Name] = (Diff[0].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[0].Name]) ? tmpSP[Diff[0].Name] : 0;
-			userSP[Diff[1].Name] = (Diff[1].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[1].Name]) ? tmpSP[Diff[1].Name] : 0;
-			userSP[Diff[2].Name] = (Diff[2].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[2].Name]) ? tmpSP[Diff[2].Name] : 0;
-			userSP[Diff[3].Name] = (Diff[3].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[3].Name]) ? tmpSP[Diff[3].Name] : 0;
-			userSP[Diff[4].Name] = (Diff[4].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[4].Name]) ? tmpSP[Diff[4].Name] : 0;
+			for (i of Diff) { if ((i.Name in item.Scores.Single) && !isNaN(tmpSP[i.Name])) {userSP[i.Name] = tmpSP[i.Name]; }; };
 		};
 		if (has.EXDP) {
 			tmpDP = tmpData.EXScores.DP;
 			userJSON.musics[item.ID].EXScores.DP = {};
 			userDP = userJSON.musics[item.ID].EXScores.DP;
-			userDP[Diff[0].Name] = (Diff[0].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[0].Name]) ? tmpDP[Diff[0].Name] : 0;
-			userDP[Diff[1].Name] = (Diff[1].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[1].Name]) ? tmpDP[Diff[1].Name] : 0;
-			userDP[Diff[2].Name] = (Diff[2].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[2].Name]) ? tmpDP[Diff[2].Name] : 0;
-			userDP[Diff[3].Name] = (Diff[3].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[3].Name]) ? tmpDP[Diff[3].Name] : 0;
-			userDP[Diff[4].Name] = (Diff[4].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[4].Name]) ? tmpDP[Diff[4].Name] : 0;
+			for (i of Diff) { if ((i.Name in item.Scores.Double) && !isNaN(tmpDP[i.Name])) {userDP[i.Name] = tmpDP[i.Name]; }; };
 		};
 		if (has.MISSSP) {
 			tmpSP = tmpData.MissCount.SP;
 			userJSON.musics[item.ID].MissCount.SP = {};
 			userSP = userJSON.musics[item.ID].MissCount.SP;
-			userSP[Diff[0].Name] = (Diff[0].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[0].Name]) ? tmpSP[Diff[0].Name] : 0;
-			userSP[Diff[1].Name] = (Diff[1].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[1].Name]) ? tmpSP[Diff[1].Name] : 0;
-			userSP[Diff[2].Name] = (Diff[2].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[2].Name]) ? tmpSP[Diff[2].Name] : 0;
-			userSP[Diff[3].Name] = (Diff[3].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[3].Name]) ? tmpSP[Diff[3].Name] : 0;
-			userSP[Diff[4].Name] = (Diff[4].Name in item.Scores.Single) && !isNaN(tmpSP[Diff[4].Name]) ? tmpSP[Diff[4].Name] : 0;
+			for (i of Diff) { if ((i.Name in item.Scores.Single) && !isNaN(tmpSP[i.Name])) {userSP[i.Name] = tmpSP[i.Name]; }; };
 		};
 		if (has.MISSDP) {
 			tmpDP = tmpData.MissCount.DP;
 			userJSON.musics[item.ID].MissCount.DP = {};
 			userDP = userJSON.musics[item.ID].MissCount.DP;
-			userDP[Diff[0].Name] = (Diff[0].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[0].Name]) ? tmpDP[Diff[0].Name] : 0;
-			userDP[Diff[1].Name] = (Diff[1].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[1].Name]) ? tmpDP[Diff[1].Name] : 0;
-			userDP[Diff[2].Name] = (Diff[2].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[2].Name]) ? tmpDP[Diff[2].Name] : 0;
-			userDP[Diff[3].Name] = (Diff[3].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[3].Name]) ? tmpDP[Diff[3].Name] : 0;
-			userDP[Diff[4].Name] = (Diff[4].Name in item.Scores.Double) && !isNaN(tmpDP[Diff[4].Name]) ? tmpDP[Diff[4].Name] : 0;
+			for (i of Diff) { if ((i.Name in item.Scores.Double) && !isNaN(tmpDP[i.Name])) {userDP[i.Name] = tmpDP[i.Name]; }; };
 		};
 		if (has.LAMPSP) {
 			tmpSP = tmpData.ClearType.SP;
 			userJSON.musics[item.ID].ClearType.SP = {};
 			userSP = userJSON.musics[item.ID].ClearType.SP;
-			userSP[Diff[0].Name] = (Diff[0].Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[Diff[0].Name]) ? tmpSP[Diff[0].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userSP[Diff[1].Name] = (Diff[1].Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[Diff[1].Name]) ? tmpSP[Diff[1].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userSP[Diff[2].Name] = (Diff[2].Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[Diff[2].Name]) ? tmpSP[Diff[2].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userSP[Diff[3].Name] = (Diff[3].Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[Diff[3].Name]) ? tmpSP[Diff[3].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userSP[Diff[4].Name] = (Diff[4].Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[Diff[4].Name]) ? tmpSP[Diff[4].Name] : ClearTypeArray[ClearTypeArray.length - 1];
+			for (i of Diff) { if ((i.Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[i.Name])) {userSP[i.Name] = tmpSP[i.Name]; }; };
 		};
 		if (has.LAMPDP) {
 			tmpDP = tmpData.ClearType.DP;
 			userJSON.musics[item.ID].ClearType.DP = {};
 			userDP = userJSON.musics[item.ID].ClearType.DP;
-			userDP[Diff[0].Name] = (Diff[0].Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[Diff[0].Name]) ? tmpDP[Diff[0].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userDP[Diff[1].Name] = (Diff[1].Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[Diff[1].Name]) ? tmpDP[Diff[1].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userDP[Diff[2].Name] = (Diff[2].Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[Diff[2].Name]) ? tmpDP[Diff[2].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userDP[Diff[3].Name] = (Diff[3].Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[Diff[3].Name]) ? tmpDP[Diff[3].Name] : ClearTypeArray[ClearTypeArray.length - 1];
-			userDP[Diff[4].Name] = (Diff[4].Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[Diff[4].Name]) ? tmpDP[Diff[4].Name] : ClearTypeArray[ClearTypeArray.length - 1];
+			for (i of Diff) { if ((i.Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[i.Name])) {userDP[i.Name] = tmpDP[i.Name]; }; };
 		};
 		if (item.Release.Type != 'Default' && has.Canplay) {
 			userCP = userJSON.musics[item.ID].Canplay;
-			userCP[Diff[0].Name] = ( (Diff[0].Name in item.Scores.Single) || (Diff[0].Name in item.Scores.Double) ) && (Diff[0].Name in tmpData.Canplay) ? tmpData.Canplay[Diff[0].Name] : '0';
-			userCP[Diff[1].Name] = ( (Diff[1].Name in item.Scores.Single) || (Diff[1].Name in item.Scores.Double) ) && (Diff[1].Name in tmpData.Canplay) ? tmpData.Canplay[Diff[1].Name] : '0';
-			userCP[Diff[2].Name] = ( (Diff[2].Name in item.Scores.Single) || (Diff[2].Name in item.Scores.Double) ) && (Diff[2].Name in tmpData.Canplay) ? tmpData.Canplay[Diff[2].Name] : '0';
-			userCP[Diff[3].Name] = ( (Diff[3].Name in item.Scores.Single) || (Diff[3].Name in item.Scores.Double) ) && (Diff[3].Name in tmpData.Canplay) ? tmpData.Canplay[Diff[3].Name] : '0';
-			userCP[Diff[4].Name] = ( (Diff[4].Name in item.Scores.Single) || (Diff[4].Name in item.Scores.Double) ) && (Diff[4].Name in tmpData.Canplay) ? tmpData.Canplay[Diff[4].Name] : '0';
+			for (i of Diff) { if ((i.Name in item.Scores.Single) || (i.Name in item.Scores.Double)) {userCP[i.Name] = Number(tmpData.Canplay[i.Name]); }; };
 		};
 	};
 
@@ -505,6 +477,15 @@ function initializeUserJSON(JSONString) {
 		togglePackButton(jQuery('#purchase-Pack' + pid), true);
 	};
 
+	// 検索条件のお気に入り設定
+	userJSON.searchOpts = ('searchOpts' in jsonData) ? JSON.parse(JSON.stringify(jsonData.searchOpts)) : {};
+
+	// 検索条件のお気に入りをドロップダウンメニューに追加
+	jQuery('#searchFavorite option:not(.new)').remove();
+	for (let opt in userJSON.searchOpts) {
+		jQuery('#searchFavorite').append('<option value="' + opt+ '">' + opt+ '</option>');
+	};
+
 	// infoを表示
 	jQuery('#userJSON_djname').text(userJSON.info.id);
 	jQuery('#userJSON_created').text(userJSON.info.created);
@@ -520,6 +501,10 @@ function initializeUserJSON(JSONString) {
 
 	// 検索条件：解禁状況を有効化
 	jQuery("#unlocked").prop('disabled',false);
+};
+
+function makeCustomUserJSONString() {
+
 };
 
  /**
@@ -821,6 +806,7 @@ function getDJLevel(maxScore = 0, EXScore = 0, showType = 0) {
 				case 1: return (minusNum < plusNum) ? DJLevel[(i - 1)] + '-' + minusNum : DJLevel[i] + '+' + plusNum; break;
 				case 2: return DJLevel[i] + '+' + plusNum; break;
 				case 3: return DJLevel[(i - 1)] + '-' + minusNum; break;
+				case 4: return DJLevel[i] + ' ' + Math.floor(EXScore / maxScore * 100) + '%'; break;
 				default: return ''; break;
 			};
  		};
@@ -854,16 +840,16 @@ let newMusic = {
 			}
 		};
 
-		if (jQuery('#new_SPB_Lv').val() >= 1) { JSONData.Scores.Single.Beginner    = self.getScoreData('SPB'); };
-		if (jQuery('#new_SPN_Lv').val() >= 1) { JSONData.Scores.Single.Normal      = self.getScoreData('SPN'); };
-		if (jQuery('#new_SPH_Lv').val() >= 1) { JSONData.Scores.Single.Hyper       = self.getScoreData('SPH'); };
-		if (jQuery('#new_SPA_Lv').val() >= 1) { JSONData.Scores.Single.Another     = self.getScoreData('SPA'); };
-		if (jQuery('#new_SPL_Lv').val() >= 1) { JSONData.Scores.Single.Leggendaria = self.getScoreData('SPL'); };
-		if (jQuery('#new_DPB_Lv').val() >= 1) { JSONData.Scores.Double.Beginner    = self.getScoreData('DPB'); };
-		if (jQuery('#new_DPN_Lv').val() >= 1) { JSONData.Scores.Double.Normal      = self.getScoreData('DPN'); };
-		if (jQuery('#new_DPH_Lv').val() >= 1) { JSONData.Scores.Double.Hyper       = self.getScoreData('DPH'); };
-		if (jQuery('#new_DPA_Lv').val() >= 1) { JSONData.Scores.Double.Another     = self.getScoreData('DPA'); };
-		if (jQuery('#new_DPL_Lv').val() >= 1) { JSONData.Scores.Double.Leggendaria = self.getScoreData('DPL'); };
+		if (jQuery('#new_SPB_Lv').val() >= 1) { JSONData.Scores.Single[Diff[0].Name] = self.getScoreData('SPB'); };
+		if (jQuery('#new_SPN_Lv').val() >= 1) { JSONData.Scores.Single[Diff[1].Name] = self.getScoreData('SPN'); };
+		if (jQuery('#new_SPH_Lv').val() >= 1) { JSONData.Scores.Single[Diff[2].Name] = self.getScoreData('SPH'); };
+		if (jQuery('#new_SPA_Lv').val() >= 1) { JSONData.Scores.Single[Diff[3].Name] = self.getScoreData('SPA'); };
+		if (jQuery('#new_SPL_Lv').val() >= 1) { JSONData.Scores.Single[Diff[4].Name] = self.getScoreData('SPL'); };
+		if (jQuery('#new_DPB_Lv').val() >= 1) { JSONData.Scores.Double[Diff[0].Name] = self.getScoreData('DPB'); };
+		if (jQuery('#new_DPN_Lv').val() >= 1) { JSONData.Scores.Double[Diff[1].Name] = self.getScoreData('DPN'); };
+		if (jQuery('#new_DPH_Lv').val() >= 1) { JSONData.Scores.Double[Diff[2].Name] = self.getScoreData('DPH'); };
+		if (jQuery('#new_DPA_Lv').val() >= 1) { JSONData.Scores.Double[Diff[3].Name] = self.getScoreData('DPA'); };
+		if (jQuery('#new_DPL_Lv').val() >= 1) { JSONData.Scores.Double[Diff[4].Name] = self.getScoreData('DPL'); };
 
 		if (jQuery('#new_bitdate').val() != '') { JSONData.Release.BitDate = jQuery('#new_bitdate').val(); };
 
@@ -1082,13 +1068,13 @@ let musics = {
 			if ( s.params.series.indexOf(parseFloat(item.VNo)) == -1 ) { return false; };
 
 			// 譜面情報でフィルタ
-			if ( !( s.checkScore( item.Scores.Single.Beginner, "SPB" ) &&
-					s.checkScore( item.Scores.Single.Normal,   "SPN" ) &&
-					s.checkScore( item.Scores.Single.Hyper,    "SPH" ) &&
-					s.checkScore( item.Scores.Single.Another,  "SPA" ) &&
-					s.checkScore( item.Scores.Double.Normal,   "DPN" ) &&
-					s.checkScore( item.Scores.Double.Hyper,    "DPH" ) &&
-					s.checkScore( item.Scores.Double.Another,  "DPA" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Single[Diff[0].Name], "SPB" ) &&
+					s.checkScore( item.Scores.Single[Diff[1].Name], "SPN" ) &&
+					s.checkScore( item.Scores.Single[Diff[2].Name], "SPH" ) &&
+					s.checkScore( item.Scores.Single[Diff[3].Name], "SPA" ) &&
+					s.checkScore( item.Scores.Double[Diff[1].Name], "DPN" ) &&
+					s.checkScore( item.Scores.Double[Diff[2].Name], "DPH" ) &&
+					s.checkScore( item.Scores.Double[Diff[3].Name], "DPA" ) ) ) { return false; };
 
 			// BPMでフィルタ
 			if ( s.params.BPM.min !== 0 || s.params.BPM.max !== 9999 || s.params.BPM.changing !== 0) {
@@ -1103,15 +1089,19 @@ let musics = {
 			if ( s.params.release.type.indexOf(item.Release.Type) == -1 ) { return false; };
 
 			// 配信開始月でフィルタ
-			if ( s.params.release.min !== new Date('2000-01-01').getTime() && s.params.release.min && s.params.release.max) {
+			smin = new Date(s.params.release.min).getTime();
+			smax = new Date(s.params.release.max).getTime();
+			if ( smin !== new Date('2000-01-01').getTime() && smin && smax) {
 				itemDate = new Date(item.Release.Date).getTime();
-				if ( (!item.Release.Date) || ( s.params.release.min > itemDate ) || ( itemDate > s.params.release.max ) ) { return false; };
+				if ( (!item.Release.Date) || ( smin > itemDate ) || ( itemDate > smax ) ) { return false; };
 			};
 
 			// BIT配信開始月でフィルタ
-			if ( s.params.bit.min !== new Date('2000-01-01').getTime() && s.params.bit.min && s.params.bit.max ) {
+			smin = new Date(s.params.bitDate.min).getTime();
+			smax = new Date(s.params.bitDate.max).getTime();
+			if ( smin !== new Date('2000-01-01').getTime() && smin && smax ) {
 				itemDate = new Date(item.Release.Date).getTime();
-				if ( (!item.Release.BitDate) || ( s.params.bit.min > itemDate ) || ( itemDate > s.params.bit.max ) ) { return false; };
+				if ( (!item.Release.BitDate) || ( smin > itemDate ) || ( itemDate > smax ) ) { return false; };
 			};
 
 			// 入手可否でフィルタ
@@ -1447,7 +1437,7 @@ let musics = {
 
 			let vals = {'cp': {}, 'ex': {'SP': {}, 'DP':{}}, 'mc': {'SP': {}, 'DP':{}}, 'ct': {'SP': {}, 'DP':{}}};
 			for (i of Diff) {
-				vals.cp[i.Name] = (hasUserJSON && hasMusic && hasCanplay) ? (uJSON.Canplay[i.Name] == '1') : false;
+				vals.cp[i.Name] = (hasUserJSON && hasMusic && hasCanplay) ? (uJSON.Canplay[i.Name] == 1) : false;
 				vals.ex.SP[i.Name] = (hasUserJSON && hasMusic && hasEXScoreSP && (i.Name in uJSON.EXScores.SP)) ? uJSON.EXScores.SP[i.Name] : 0;
 				vals.ex.DP[i.Name] = (hasUserJSON && hasMusic && hasEXScoreDP && (i.Name in uJSON.EXScores.DP)) ? uJSON.EXScores.DP[i.Name] : 0;
 				vals.mc.SP[i.Name] = (hasUserJSON && hasMusic && hasMissCountSP && (i.Name in uJSON.MissCount.SP)) ? uJSON.MissCount.SP[i.Name] : 0;
@@ -1965,16 +1955,12 @@ let s = {
 			DPH: { cn: 0, bss: 0, hcn: 0, notes: { min: 0, max: 99999} },
 			DPA: { cn: 0, bss: 0, hcn: 0, notes: { min: 0, max: 99999} }
 		},
-		notes: {
-			min: 0,
-			max: 99999
-		},
 		release: {
-			type: ['0'],
+			type: [0],
 			min: 0,
 			max: 0
 		},
-		bit: {
+		bitDate: {
 			min: 0,
 			max: 0
 		},
@@ -1988,6 +1974,14 @@ let s = {
 			max: 0,
 			changing: 0
 		},
+		searchopen: false,
+		singleopen: true,
+		extendopen: false,
+		searchfolder: 'VER',
+		searchsort1: 'VERSION',
+		searchsort2: 'SPALV',
+		searchsort3: 'SPHLV',
+		showdjlevel: 0
 	},
 
 	getSearchParam: function() {
@@ -2003,10 +1997,10 @@ let s = {
 		this.getScoreSearchParams('DPN');
 		this.getScoreSearchParams('DPH');
 		this.getScoreSearchParams('DPA');
-		this.params.release.min = new Date(jQuery("#releasedate-min").val()).getTime();
-		this.params.release.max = new Date(jQuery("#releasedate-max").val()).getTime();
-		this.params.bit.min = new Date(jQuery("#bitdate-min").val()).getTime();
-		this.params.bit.max = new Date(jQuery("#bitdate-max").val()).getTime();
+		this.params.release.min = jQuery("#releasedate-min").val();
+		this.params.release.max = jQuery("#releasedate-max").val();
+		this.params.bitDate.min = jQuery("#bitdate-min").val();
+		this.params.bitDate.max = jQuery("#bitdate-max").val();
 		this.params.available = jQuery("#available").val();
 		this.params.unlocked = jQuery("#unlocked").val();
 		this.params.title = jQuery("#title").val();
@@ -2015,6 +2009,14 @@ let s = {
 		this.params.BPM.min = (isNaN(parseInt(jQuery("#opt_bpm_min").val())) ?     0 : parseInt(jQuery("#opt_bpm_min").val()));
 		this.params.BPM.max = (isNaN(parseInt(jQuery("#opt_bpm_max").val())) ?  9999 : parseInt(jQuery("#opt_bpm_max").val()));
 		this.params.BPM.changing = Number(jQuery('#opt_bpm_changing').val());
+		this.params.searchopen = jQuery("#searchopen").val();
+		this.params.singleopen = jQuery("#singleopen").val();
+		this.params.extendopen = jQuery("#extendopen").val();
+		this.params.searchfolder = jQuery("#search-folder").val();
+		this.params.searchsort1 = jQuery("#search-sort1").val();
+		this.params.searchsort2 = jQuery("#search-sort2").val();
+		this.params.searchsort3 = jQuery("#search-sort3").val();
+		this.params.showdjlevel = Number(jQuery('#showdjlevel').val());
 	},
 	getScoreSearchParams: function(score) {
 		[this.params.lv[score].min,this.params.lv[score].max] = jQuery('#' + score + '-levels')[0].noUiSlider.get();
@@ -2034,26 +2036,74 @@ let s = {
 		this.setScoreSearchParams('DPN');
 		this.setScoreSearchParams('DPH');
 		this.setScoreSearchParams('DPA');
-		jQuery("#releasedate-min").val(jQuery("#releasedate-min option[selected=selected]").val());
-		jQuery("#releasedate-max").val(jQuery("#releasedate-max option[selected=selected]").val());
-		jQuery("#bitdate-min").val(jQuery("#bitdate-min option[selected=selected]").val());
-		jQuery("#bitdate-max").val(jQuery("#bitdate-max option[selected=selected]").val());
-		jQuery("#available").val(jQuery("#available option[selected=selected]").val());
-		jQuery("#unlocked").val(jQuery("#unlocked option[selected=selected]").val());
+		jQuery("#releasedate-min").val(jQuery("#releasedate-min option[selected]").val());
+		jQuery("#releasedate-max").val(jQuery("#releasedate-max option[selected]").val());
+		jQuery("#bitdate-min").val(jQuery("#bitdate-min option[selected]").val());
+		jQuery("#bitdate-max").val(jQuery("#bitdate-max option[selected]").val());
+		jQuery("#available").val(jQuery("#available option[selected]").val());
+		jQuery("#unlocked").val(jQuery("#unlocked option[selected]").val());
 		jQuery("#title").val('');
 		jQuery("#genre").val('');
 		jQuery("#artist").val('');
 		jQuery("#opt_bpm_min").val('');
 		jQuery("#opt_bpm_max").val('');
 		jQuery('#opt_bpm_changing').val(0);
+		jQuery("#searchopen").val(jQuery("#searchopen").attr('checked') == 'checked');
+		jQuery("#singleopen").val(jQuery("#singleopen").attr('checked') == 'checked');
+		jQuery("#extendopen").val(jQuery("#extendopen").attr('checked') == 'checked');
+		jQuery("#search-folder").val(jQuery("#search-folder option[selected]").val());
+		jQuery("#search-sort1").val(jQuery("#search-sort1 option[selected]").val());
+		jQuery("#search-sort2").val(jQuery("#search-sort2 option[selected]").val());
+		jQuery("#search-sort3").val(jQuery("#search-sort3 option[selected]").val());
+		jQuery('#showdjlevel').val(jQuery("#showdjlevel option[selected]").val());
+	},
+	getSearchParamFromFavorite: function(optName) {
+		if (!(optName in userJSON.searchOpts)) { return false; };
+		paramObj = JSON.parse(JSON.stringify(userJSON.searchOpts[optName]));
+		if ('series' in paramObj) {jQuery("[name=series]").val(paramObj.series); };
+		if ('release' in paramObj) {jQuery("[name=releasetype]").val(paramObj.release.type); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPB', paramObj.lv.SPB.min, paramObj.lv.SPB.max, paramObj.opt.SPB.cn, paramObj.opt.SPB.bss, paramObj.opt.SPB.hcn, paramObj.opt.SPB.notes.min, paramObj.opt.SPB.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPN', paramObj.lv.SPN.min, paramObj.lv.SPN.max, paramObj.opt.SPN.cn, paramObj.opt.SPN.bss, paramObj.opt.SPN.hcn, paramObj.opt.SPN.notes.min, paramObj.opt.SPN.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPH', paramObj.lv.SPH.min, paramObj.lv.SPH.max, paramObj.opt.SPH.cn, paramObj.opt.SPH.bss, paramObj.opt.SPH.hcn, paramObj.opt.SPH.notes.min, paramObj.opt.SPH.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPA', paramObj.lv.SPA.min, paramObj.lv.SPA.max, paramObj.opt.SPA.cn, paramObj.opt.SPA.bss, paramObj.opt.SPA.hcn, paramObj.opt.SPA.notes.min, paramObj.opt.SPA.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('DPN', paramObj.lv.DPN.min, paramObj.lv.DPN.max, paramObj.opt.DPN.cn, paramObj.opt.DPN.bss, paramObj.opt.DPN.hcn, paramObj.opt.DPN.notes.min, paramObj.opt.DPN.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('DPH', paramObj.lv.DPH.min, paramObj.lv.DPH.max, paramObj.opt.DPH.cn, paramObj.opt.DPH.bss, paramObj.opt.DPH.hcn, paramObj.opt.DPH.notes.min, paramObj.opt.DPH.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('DPA', paramObj.lv.DPA.min, paramObj.lv.DPA.max, paramObj.opt.DPA.cn, paramObj.opt.DPA.bss, paramObj.opt.DPA.hcn, paramObj.opt.DPA.notes.min, paramObj.opt.DPA.notes.max); };
+		if ('release' in paramObj) {jQuery("#releasedate-min").val(paramObj.release.min); };
+		if ('release' in paramObj) {jQuery("#releasedate-max").val(paramObj.release.max); };
+		if ('bitDate' in paramObj) {jQuery("#bitdate-min").val(paramObj.bitDate.min); };
+		if ('bitDate' in paramObj) {jQuery("#bitdate-max").val(paramObj.bitDate.max); };
+		if ('available' in paramObj) {jQuery("#available").val(paramObj.available); };
+		if ('unlocked' in paramObj) {jQuery("#unlocked").val(paramObj.unlocked); };
+		if ('title' in paramObj) {jQuery("#title").val(paramObj.title); };
+		if ('genre' in paramObj) {jQuery("#genre").val(paramObj.genre); };
+		if ('artist' in paramObj) {jQuery("#artist").val(paramObj.artist); };
+		if ('BPM' in paramObj) {jQuery("#opt_bpm_min").val(paramObj.BPM.min); };
+		if ('BPM' in paramObj) {jQuery("#opt_bpm_max").val(paramObj.BPM.max); };
+		if ('BPM' in paramObj) {jQuery('#opt_bpm_changing').val(paramObj.BPM.changing); };
+		if ('searchopen' in paramObj) {jQuery("#searchopen").val(paramObj.searchopen); };
+		if ('singleopen' in paramObj) {jQuery("#singleopen").val(paramObj.singleopen); };
+		if ('extendopen' in paramObj) {jQuery("#extendopen").val(paramObj.extendopen); };
+		if ('searchfolder' in paramObj) {jQuery("#search-folder").val(paramObj.searchfolder); };
+		if ('searchsort1' in paramObj) {jQuery("#search-sort1").val(paramObj.searchsort1); };
+		if ('searchsort2' in paramObj) {jQuery("#search-sort2").val(paramObj.searchsort2); };
+		if ('searchsort3' in paramObj) {jQuery("#search-sort3").val(paramObj.searchsort3); };
+		if ('showdjlevel' in paramObj) {jQuery('#showdjlevel').val(paramObj.showdjlevel); };
+		return true;
+	},
+	setSearchParamToFavorite: function(optName) {
+		if (!('searchOpts' in userJSON)) { return false; };
+		this.getSearchParam();
+		userJSON.searchOpts[optName] = JSON.parse(JSON.stringify(this.params));
+		return true;
 	},
 	setScoreSearchParams: function(score, lvMin = 0, lvMax = 12, CN = 0, BSS = 0, HCN = 0, notesMin = '', notesMax = '') {
 		jQuery('#' + score + '-levels')[0].noUiSlider.set([lvMin,lvMax]);
-		jQuery('#opt_' + score + '_CN').val(CN);
-		jQuery('#opt_' + score + '_BSS').val(BSS);
-		jQuery('#opt_' + score + '_HCN').val(HCN);
-		jQuery('#opt_' + score + '_notes_min').val(notesMin);
-		jQuery('#opt_' + score + '_notes_max').val(notesMax);
+		jQuery('#opt_' + score + '_CN'). val( 0 <= CN  && CN  <= 2 ? CN  : '' );
+		jQuery('#opt_' + score + '_BSS').val( 0 <= BSS && BSS <= 2 ? BSS : '' );
+		jQuery('#opt_' + score + '_HCN').val( 0 <= HCN && HCN <= 2 ? HCN : '' );
+		jQuery('#opt_' + score + '_notes_min').val( 0 < notesMin && notesMin < 99999 ? notesMin : '' );
+		jQuery('#opt_' + score + '_notes_max').val( 0 < notesMax && notesMax < 99999 ? notesMax : '' );
 	},
 	checkScore: function(score, scoretype) {
 		if ( ['SPB','SPN','SPH','SPA','SPL','DPB','DPN','DPH','DPA','DPL'].indexOf(scoretype) == -1 ) { return true; };
@@ -2085,8 +2135,8 @@ let s = {
 		}
 		let notes = ( ( opt.notes.min <= score.Notes ) && ( score.Notes <= opt.notes.max ) );
 		return ( lvcheck && cn && bss && hcn && notes );
-
-	}};
+	}
+};
 
 /**
  * google API scriptを読み込んで、gapi.load('client:auth2')を実行
@@ -2408,10 +2458,8 @@ function handleClientLoad() {
 	makeSelectMonth('#bitdate-max', LaunchDate, lastDate, false);
 	makeSelectMonth('#releasedate-min', LaunchDate, now, true);
 	makeSelectMonth('#releasedate-max', LaunchDate, now, false);
-	jQuery('#bitdate-min option:first-child').attr('selected','');
-	jQuery('#bitdate-max option:last-child').attr('selected','');
-	jQuery('#releasedate-min option:first-child').attr('selected','');
-	jQuery('#releasedate-max option:last-child').attr('selected','');
+	jQuery('#bitdate-min option:first-child, #releasedate-min option:first-child').attr('selected','');
+	jQuery('#bitdate-max option:last-child,  #releasedate-max option:last-child').attr('selected','');
 
 	// 日付セレクトで未指定(val=2000-01-01)の場合に至を無効化
 	jQuery('#bitdate-min').change(function() {
@@ -2498,6 +2546,35 @@ function handleClientLoad() {
 	jQuery('.score_opt input[type="number"]').click(function() { toggleScoreOptButton(this); });
 	jQuery('.score_opt input[type="number"]').change(function() { toggleScoreOptButton(this,true); });
 
+	// 検索条件お気に入りメニュー選択時
+	jQuery('#searchFavorite').on('change', function() {
+		if (jQuery(this).val() == '') {
+			jQuery('#searchFavoriteNewName').removeClass('hidden');
+			jQuery('#searchFavoriteNewName').val('');
+			jQuery('#searchFavoriteRead').addClass('hidden');
+		} else {
+			jQuery('#searchFavoriteNewName').addClass('hidden');
+			jQuery('#searchFavoriteNewName').val(jQuery(this).val());
+			jQuery('#searchFavoriteRead').removeClass('hidden');
+		};
+	});
+
+	// 検索条件お気に入り読込ボタン押下時
+	jQuery('#searchFavoriteRead').on('click', function() {
+		s.getSearchParamFromFavorite(jQuery('#searchFavorite').val());
+		toastbox.FadeInandTimerFadeOut('検索条件「' + jQuery('#searchFavorite').val() + '」を読み込みました。');
+	});
+
+	// 検索条件お気に入り保存ボタン押下時
+	jQuery('#searchFavoriteSave').on('click', function() {
+		if (jQuery('#searchFavoriteNewName').val() == '') {
+			toastbox.FadeInandTimerFadeOut('保存用の名前を付けてください。');
+			return false;
+		};
+		s.setSearchParamToFavorite(jQuery('#searchFavoriteNewName').val());
+		toastbox.FadeInandTimerFadeOut('検索条件「' + jQuery('#searchFavoriteNewName').val() + '」を保存しました。');
+	});
+
 	// 検索結果のヘッダー行を作成
 	let LvArr = ['01','02','03','04','05','06','07','08','09','10','11','12','NO'];
 	let bitEndDate = new Date();
@@ -2557,16 +2634,16 @@ function handleClientLoad() {
 				musicJSON[i]['VShortName'] = VerArray[sliceID].VShortName;
 
 				// 譜面の存在確認
-				SPB = ("Beginner"    in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single.Beginner    : {Level: 0, BPM: 0};
-				SPN = ("Normal"      in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single.Normal      : {Level: 0, BPM: 0};
-				SPH = ("Hyper"       in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single.Hyper       : {Level: 0, BPM: 0};
-				SPA = ("Another"     in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single.Another     : {Level: 0, BPM: 0};
-				SPL = ("Leggendaria" in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single.Leggendaria : {Level: 0, BPM: 0};
-				DPB = ("Beginner"    in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double.Beginner    : {Level: 0, BPM: 0};
-				DPN = ("Normal"      in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double.Normal      : {Level: 0, BPM: 0};
-				DPH = ("Hyper"       in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double.Hyper       : {Level: 0, BPM: 0};
-				DPA = ("Another"     in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double.Another     : {Level: 0, BPM: 0};
-				DPL = ("Leggendaria" in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double.Leggendaria : {Level: 0, BPM: 0};
+				SPB = ([Diff[0].Name] in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single[Diff[0].Name] : {Level: 0, BPM: 0};
+				SPN = ([Diff[1].Name] in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single[Diff[1].Name] : {Level: 0, BPM: 0};
+				SPH = ([Diff[2].Name] in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single[Diff[2].Name] : {Level: 0, BPM: 0};
+				SPA = ([Diff[3].Name] in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single[Diff[3].Name] : {Level: 0, BPM: 0};
+				SPL = ([Diff[4].Name] in musicJSON[i].Scores.Single) ? musicJSON[i].Scores.Single[Diff[4].Name] : {Level: 0, BPM: 0};
+				DPB = ([Diff[0].Name] in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double[Diff[0].Name] : {Level: 0, BPM: 0};
+				DPN = ([Diff[1].Name] in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double[Diff[1].Name] : {Level: 0, BPM: 0};
+				DPH = ([Diff[2].Name] in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double[Diff[2].Name] : {Level: 0, BPM: 0};
+				DPA = ([Diff[3].Name] in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double[Diff[3].Name] : {Level: 0, BPM: 0};
+				DPL = ([Diff[4].Name] in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double[Diff[4].Name] : {Level: 0, BPM: 0};
 
 				// 解禁BITの計算
 				if ("BitDate" in musicJSON[i].Release) {
@@ -2680,6 +2757,8 @@ function handleClientLoad() {
 	jQuery('.purchase input').each(function() { togglePackButton(this, true); });
 	jQuery('#opt_bpm_changing').each(function() { toggleBPMOptButton(this, true); });
 
+	// エラーメッセージ表示エリアの取得
+	JSONmsgObj = jQuery('#json-message');
 };
 
 jQuery(function() { musiclistLoad(); });
