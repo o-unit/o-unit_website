@@ -1122,11 +1122,11 @@ let musics = {
 					for(let key of Object.keys(canplayValue)){ if ((key in scores.Single) || (key in scores.Double)) { values.add(canplayValue[key]); } };
 
 					switch(checktype) {
-						case 'yes':          return (!values.has('0') && values.has('1')); break;
-						case 'partiallyyes': return values.has('1');                       break;
-						case 'partially':    return (values.has('0') && values.has('1'));  break;
-						case 'partiallyno':  return values.has('0');                       break;
-						case 'no':           return (values.has('0') && !values.has('1')); break;
+						case 'yes':          return (!values.has(0) && values.has(1)); break;
+						case 'partiallyyes': return values.has(1);                       break;
+						case 'partially':    return (values.has(0) && values.has(1));  break;
+						case 'partiallyno':  return values.has(0);                       break;
+						case 'no':           return (values.has(0) && !values.has(1)); break;
 						default:             return true;                                  break;
 					};
 				};
@@ -1135,7 +1135,14 @@ let musics = {
 					 (item.Release.Type === 'Monthly' && item.Release.Date.slice(0,7) === now.slice(0,7)) && item.Release.Date <= now ) {
 					if ( ['partially', 'partiallyno', 'no'].indexOf( s.params.unlocked ) != -1 ) { return false; };
 				} else {
-					let canplay = {'Beginner':'0','Normal':'0','Hyper':'0','Another':'0','Leggendaria':'0'};
+					let canplay = {'Beginner':0,'Normal':0,'Hyper':0,'Another':0,'Leggendaria':0};
+					if (item.ID in userJSON.musics && 'Canplay' in userJSON.musics[item.ID]) {
+						for (let key of Object.keys(canplay)) {
+							if ((key in item.Scores.Single) || (key in item.Scores.Double)) {
+								canplay[key] = (userJSON.musics[item.ID].Canplay[key]) ? (userJSON.musics[item.ID].Canplay[key] == 1 ? 1 : 0) : 0;
+							};
+						};
+					};
 					if (item.ID in userJSON.musics && 'Canplay' in userJSON.musics[item.ID]) { canplay = userJSON.musics[item.ID].Canplay; };
 					if (!check_canplay(canplay, item.Scores, s.params.unlocked)) { return false; };
 				};
