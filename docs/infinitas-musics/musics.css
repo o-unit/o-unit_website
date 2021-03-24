@@ -811,6 +811,30 @@ table.musiclist .cleartype {
     text-align: center;
     color: #000000;
 }
+table.musiclist .cleartype .FC {
+	background-color: #00ccffcc;
+}
+table.musiclist .cleartype .EX-H {
+	background-color: #ff0000ff;
+}
+table.musiclist .cleartype .HARD {
+	background-color: #ffffffcc;
+}
+table.musiclist .cleartype .CLEAR {
+	background-color: #0000ffcc;
+}
+table.musiclist .cleartype .EASY {
+	background-color: #00ff00cc;
+}
+table.musiclist .cleartype .A-EASY {
+	background-color: #cc00ffcc;
+}
+table.musiclist .cleartype .FAILED {
+	background-color: #ff333380;
+}
+table.musiclist .cleartype .NOPLAY {
+	background-color: #00000080;
+}
 table.musiclist .exscore {
     padding: 0px;
     text-align: center;
@@ -822,8 +846,8 @@ table.musiclist .exscore label {
 table.musiclist input.exscore {
     vertical-align: middle;
     margin: 0px;
-    background-color: transparent;
-    font-size: 1.1rem;
+    background-color: #33333333;
+    font-size: 1.05rem;
 }
 table.musiclist .misscount {
     padding: 0px;
@@ -833,8 +857,8 @@ table.musiclist .misscount {
 table.musiclist input.misscount {
     vertical-align: middle;
     margin: 0px;
-    background-color: transparent;
-    font-size: 1.1rem;
+    background-color: #ffffff66;
+    font-size: 1.05rem;
 }
 table.musiclist .selectbutton select {
     -moz-appearance: none;
