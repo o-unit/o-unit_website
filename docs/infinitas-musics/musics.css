@@ -173,7 +173,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     width: 700px;
     margin: 0 auto;}
-  
+
   /*タブのスタイル*/
 .tab_item {
     width: calc(100%/8);
@@ -207,7 +207,7 @@
 input[name="formtab"] {
     display: none;
 }
-  
+
 /*タブ切り替えの中身のスタイル*/
 .tab_content {
     display: none;
@@ -817,7 +817,7 @@ table.musiclist .exscore {
     color: #000000;
 }
 table.musiclist .exscore label {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
 }
 table.musiclist input.exscore {
     vertical-align: middle;
@@ -844,6 +844,7 @@ table.musiclist .selectbutton select {
     overflow: hidden;
     margin: 0px;
     font-size: smaller;
+	text-align: center;
 }
 table.musiclist .selectbutton select::-ms-expand {
     display: none;
