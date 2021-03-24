@@ -273,9 +273,9 @@ function outputUserJSONtoLocalStorage(key=PROJECT_ID, callback=toastbox.FadeInan
  *
 **/
 function readUserJSON(readType='new') {
-	let jsonData = {};
-
 	if (readType == "new") {
+		let jsonData = {};
+
 		inData = {};
 		let dummyNow = new Date();
 		dummyNow.setHours(dummyNow.getHours() + 9);
@@ -479,6 +479,7 @@ function initializeUserJSON(JSONString) {
 
 	// 検索条件のお気に入り設定
 	userJSON.searchOpts = ('searchOpts' in jsonData) ? JSON.parse(JSON.stringify(jsonData.searchOpts)) : {};
+	if ('Default' in userJSON.searchOpts) { s.getSearchParamFromFavorite('Default'); };
 
 	// 検索条件のお気に入りをドロップダウンメニューに追加
 	jQuery('#searchFavorite option:not(.new)').remove();
@@ -690,7 +691,7 @@ function makeSelectTag(name, prefix, suffix, list, value) {
 	if (name == '' || prefix == '' || suffix == '' || !Array.isArray(list) || value == '') {return '';};
 
 	let optStr = '';
-	for (let item of list) { optStr += '<option value="' + item + '"' + (item == value ? ' selected' : '') + '>' + item + '</option>'; };
+	for (let item of list) { optStr += '<option value="' + item + '" class="' + item + '"' + (item == value ? ' selected' : '') + '>' + item + '</option>'; };
 	let fullName = prefix + '_' + name + '_' + suffix;
 	return '<select id="' + fullName + '" name="' + fullName + '">' + optStr + '</select>';
 };
@@ -1825,8 +1826,11 @@ let musics = {
 		// ClearType更新処理用
 		jQuery('td.cleartype select').change(function() {
 			// CSSも変更する必要がある
+			jQuery(this).removeClass().addClass(jQuery(this).val());
 			update.start(jQuery(this).prop('id'),jQuery(this).val());
 		});
+		// ClearTypeの色反映
+		jQuery('td.cleartype select').each( function() { jQuery(this).removeClass().addClass(jQuery(this).val()); });
 
 		jQuery('table.musiclist caption').html('(&nbsp;検索結果：' + items.length + '曲&nbsp;)');
 
@@ -2055,9 +2059,9 @@ let s = {
 		jQuery("#opt_bpm_min").val('');
 		jQuery("#opt_bpm_max").val('');
 		jQuery('#opt_bpm_changing').val(0);
-		jQuery("#searchopen").val(jQuery("#searchopen").attr('checked') == 'checked');
-		jQuery("#singleopen").val(jQuery("#singleopen").attr('checked') == 'checked');
-		jQuery("#extendopen").val(jQuery("#extendopen").attr('checked') == 'checked');
+		jQuery("#searchopen").prop('checked', jQuery("#searchopen").attr('checked') == 'checked');
+		jQuery("#singleopen").prop('checked', jQuery("#singleopen").attr('checked') == 'checked');
+		jQuery("#extendopen").prop('checked', jQuery("#extendopen").attr('checked') == 'checked');
 		jQuery("#search-folder").val(jQuery("#search-folder option[selected]").val());
 		jQuery("#search-sort1").val(jQuery("#search-sort1 option[selected]").val());
 		jQuery("#search-sort2").val(jQuery("#search-sort2 option[selected]").val());
@@ -2085,8 +2089,8 @@ let s = {
 		if ('title' in paramObj) {jQuery("#title").val(paramObj.title); };
 		if ('genre' in paramObj) {jQuery("#genre").val(paramObj.genre); };
 		if ('artist' in paramObj) {jQuery("#artist").val(paramObj.artist); };
-		if ('BPM' in paramObj) {jQuery("#opt_bpm_min").val(paramObj.BPM.min); };
-		if ('BPM' in paramObj) {jQuery("#opt_bpm_max").val(paramObj.BPM.max); };
+		if ('BPM' in paramObj) {jQuery("#opt_bpm_min").val( 0 < paramObj.BPM.min && paramObj.BPM.min < 9999 ? paramObj.BPM.min : '' ); };
+		if ('BPM' in paramObj) {jQuery("#opt_bpm_max").val( 0 < paramObj.BPM.max && paramObj.BPM.max < 9999 ? paramObj.BPM.max : '' ); };
 		if ('BPM' in paramObj) {jQuery('#opt_bpm_changing').val(paramObj.BPM.changing); };
 		if ('searchopen' in paramObj) {jQuery("#searchopen").val(paramObj.searchopen); };
 		if ('singleopen' in paramObj) {jQuery("#singleopen").val(paramObj.singleopen); };
