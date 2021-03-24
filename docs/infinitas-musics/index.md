@@ -290,6 +290,7 @@ Add buttons to initiate auth sequence and sign out
                     <option value="1">+-表示</option>
                     <option value="2">+表示</option>
                     <option value="3">-表示</option>
+                    <option value="4">%表示</option>
                     <option value="-1">表示しない</option>
                 </select>
                 <div></div>
@@ -322,6 +323,9 @@ Add buttons to initiate auth sequence and sign out
         </div>
         <hr class="clearfix" />
         <div class="clearfix">
+            <div class="fieldname"></div><div id="json-message" class="inblock"></div>
+		</div>
+        <div class="clearfix">
             <div class="fieldname"></div><div class="inblock"><a id="newtext" class="btn btn--info">データを新規作成</a></div>
         </div>
         <div class="clearfix">
@@ -334,9 +338,6 @@ Add buttons to initiate auth sequence and sign out
             <div class="fieldname">更新日時</div><div id="userJSON_updated" class="inblock"></div>
         </div>
         <hr class="clearfix" />
-        <div class="clearfix" id="json-message-outer" class="hidden">
-            <div class="fieldname"></div><div id="json-message" class="inblock"></div>
-        </div>
         <div class="clearfix">
             <div class="fieldname">ファイル</div>
             <div class="inblock">
@@ -429,6 +430,20 @@ Add buttons to initiate auth sequence and sign out
             <div class="fieldname">購入済パック</div>
             <hr class="clearfix" />
             <div id="purchasebox" class="sg2 purchase"></div>
+        </div>
+        <hr class="sg2 clearfix" />
+        <div class="clearfix">
+            <div class="fieldname">検索・表示<br />お気に入り</div>
+            <div class="inblock">
+                <div class="clearfix">
+					<select id="searchFavorite" name="searchFavorite">
+						<option value="" class="new" selected>(新規作成)</option>
+					</select>
+	                <input id="searchFavoriteNewName" name="searchFavoriteNewName" type="text" placeholder="新規お気に入り名" class="input-200 hidden" />
+                    <a id="searchFavoriteRead" class="btn btn--info">読込</a>
+                    <a id="searchFavoriteSave" class="btn btn--info">保存</a>
+                </div>
+            </div>
         </div>
     </div>
     <div id="formtab-5_content" class="table-outer tab_content">
