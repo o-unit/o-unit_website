@@ -442,6 +442,7 @@ Add buttons to initiate auth sequence and sign out
 	                <input id="searchFavoriteNewName" name="searchFavoriteNewName" type="text" placeholder="新規お気に入り名" class="input-200 hidden" />
                     <a id="searchFavoriteRead" class="btn btn--info">読込</a>
                     <a id="searchFavoriteSave" class="btn btn--info">保存</a>
+                    <a id="searchFavoriteDelete" class="btn btn--danger">削除</a>
                 </div>
             </div>
         </div>
