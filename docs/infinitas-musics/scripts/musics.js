@@ -953,16 +953,17 @@ let update = {
 	execUpdate: () => {
 		delete update.timeoutID;
 		for (item of update.updateArray) {
-			if ( isNaN(item.isAdd) ) { continue; };
 			let tmp = { 'Val': item.mid_diff.split('_'), side: '', dif: '', dVal: '', updateType: ''};
 
 			if (tmp.Val[0] == 'pack') {
 				if (!(tmp.Val[1] in userJSON.packs)) { userJSON.packs[tmp.Val[1]] = {'packname': packlist[tmp.Val[1]].name, 'purchased': '0'}};
 				userJSON.packs[tmp.Val[1]].purchased = item.isAdd ? '1' : '0';
 			} else if (tmp.Val[0] == 'exs') {
+				if ( isNaN(item.isAdd) ) { continue; };
 				tmp.updateType = 'EXScores';
 				tmp.dVal = 0;
 			} else if (tmp.Val[0] == 'mc') {
+				if ( isNaN(item.isAdd) ) { continue; };
 				tmp.updateType = 'MissCount';
 				tmp.dVal = 0;
 			} else if (tmp.Val[0] == 'ct') {
@@ -1092,7 +1093,7 @@ let musics = {
 			// 配信開始月でフィルタ
 			smin = new Date(s.params.release.min).getTime();
 			smax = new Date(s.params.release.max).getTime();
-			if ( smin !== new Date('2000-01-01').getTime() && smin && smax) {
+			if ( smin !== new Date('2000-01-01').getTime() && smin && smax && item.Release.Date != '') {
 				itemDate = new Date(item.Release.Date).getTime();
 				if ( (!item.Release.Date) || ( smin > itemDate ) || ( itemDate > smax ) ) { return false; };
 			};
@@ -1100,8 +1101,8 @@ let musics = {
 			// BIT配信開始月でフィルタ
 			smin = new Date(s.params.bitDate.min).getTime();
 			smax = new Date(s.params.bitDate.max).getTime();
-			if ( smin !== new Date('2000-01-01').getTime() && smin && smax ) {
-				itemDate = new Date(item.Release.Date).getTime();
+			if ( smin !== new Date('2000-01-01').getTime() && smin && smax && item.Release.BitDate != '') {
+				itemDate = new Date(item.Release.BitDate).getTime();
 				if ( (!item.Release.BitDate) || ( smin > itemDate ) || ( itemDate > smax ) ) { return false; };
 			};
 
@@ -2073,13 +2074,27 @@ let s = {
 		paramObj = JSON.parse(JSON.stringify(userJSON.searchOpts[optName]));
 		if ('series' in paramObj) {jQuery("[name=series]").val(paramObj.series); };
 		if ('release' in paramObj) {jQuery("[name=releasetype]").val(paramObj.release.type); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPB', paramObj.lv.SPB.min, paramObj.lv.SPB.max, paramObj.opt.SPB.cn, paramObj.opt.SPB.bss, paramObj.opt.SPB.hcn, paramObj.opt.SPB.notes.min, paramObj.opt.SPB.notes.max); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPN', paramObj.lv.SPN.min, paramObj.lv.SPN.max, paramObj.opt.SPN.cn, paramObj.opt.SPN.bss, paramObj.opt.SPN.hcn, paramObj.opt.SPN.notes.min, paramObj.opt.SPN.notes.max); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPH', paramObj.lv.SPH.min, paramObj.lv.SPH.max, paramObj.opt.SPH.cn, paramObj.opt.SPH.bss, paramObj.opt.SPH.hcn, paramObj.opt.SPH.notes.min, paramObj.opt.SPH.notes.max); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('SPA', paramObj.lv.SPA.min, paramObj.lv.SPA.max, paramObj.opt.SPA.cn, paramObj.opt.SPA.bss, paramObj.opt.SPA.hcn, paramObj.opt.SPA.notes.min, paramObj.opt.SPA.notes.max); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('DPN', paramObj.lv.DPN.min, paramObj.lv.DPN.max, paramObj.opt.DPN.cn, paramObj.opt.DPN.bss, paramObj.opt.DPN.hcn, paramObj.opt.DPN.notes.min, paramObj.opt.DPN.notes.max); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('DPH', paramObj.lv.DPH.min, paramObj.lv.DPH.max, paramObj.opt.DPH.cn, paramObj.opt.DPH.bss, paramObj.opt.DPH.hcn, paramObj.opt.DPH.notes.min, paramObj.opt.DPH.notes.max); };
-		if ('lv' in paramObj && 'opt' in paramObj) {this.setScoreSearchParams('DPA', paramObj.lv.DPA.min, paramObj.lv.DPA.max, paramObj.opt.DPA.cn, paramObj.opt.DPA.bss, paramObj.opt.DPA.hcn, paramObj.opt.DPA.notes.min, paramObj.opt.DPA.notes.max); };
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('SPB', paramObj.lv.SPB.min, paramObj.lv.SPB.max, paramObj.opt.SPB.cn, paramObj.opt.SPB.bss, paramObj.opt.SPB.hcn, paramObj.opt.SPB.notes.min, paramObj.opt.SPB.notes.max);
+		};
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('SPN', paramObj.lv.SPN.min, paramObj.lv.SPN.max, paramObj.opt.SPN.cn, paramObj.opt.SPN.bss, paramObj.opt.SPN.hcn, paramObj.opt.SPN.notes.min, paramObj.opt.SPN.notes.max);
+		};
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('SPH', paramObj.lv.SPH.min, paramObj.lv.SPH.max, paramObj.opt.SPH.cn, paramObj.opt.SPH.bss, paramObj.opt.SPH.hcn, paramObj.opt.SPH.notes.min, paramObj.opt.SPH.notes.max);
+		};
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('SPA', paramObj.lv.SPA.min, paramObj.lv.SPA.max, paramObj.opt.SPA.cn, paramObj.opt.SPA.bss, paramObj.opt.SPA.hcn, paramObj.opt.SPA.notes.min, paramObj.opt.SPA.notes.max);
+		};
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('DPN', paramObj.lv.DPN.min, paramObj.lv.DPN.max, paramObj.opt.DPN.cn, paramObj.opt.DPN.bss, paramObj.opt.DPN.hcn, paramObj.opt.DPN.notes.min, paramObj.opt.DPN.notes.max);
+		};
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('DPH', paramObj.lv.DPH.min, paramObj.lv.DPH.max, paramObj.opt.DPH.cn, paramObj.opt.DPH.bss, paramObj.opt.DPH.hcn, paramObj.opt.DPH.notes.min, paramObj.opt.DPH.notes.max);
+		};
+		if ('lv' in paramObj && 'opt' in paramObj) {
+			this.setScoreSearchParams('DPA', paramObj.lv.DPA.min, paramObj.lv.DPA.max, paramObj.opt.DPA.cn, paramObj.opt.DPA.bss, paramObj.opt.DPA.hcn, paramObj.opt.DPA.notes.min, paramObj.opt.DPA.notes.max);
+		};
 		if ('release' in paramObj) {jQuery("#releasedate-min").val(paramObj.release.min); };
 		if ('release' in paramObj) {jQuery("#releasedate-max").val(paramObj.release.max); };
 		if ('bitDate' in paramObj) {jQuery("#bitdate-min").val(paramObj.bitDate.min); };
@@ -2562,11 +2577,11 @@ function handleClientLoad() {
 		if (jQuery(this).val() == '') {
 			jQuery('#searchFavoriteNewName').removeClass('hidden');
 			jQuery('#searchFavoriteNewName').val('');
-			jQuery('#searchFavoriteRead').addClass('hidden');
+			jQuery('#searchFavoriteRead, #searchFavoriteDelete').addClass('hidden');
 		} else {
 			jQuery('#searchFavoriteNewName').addClass('hidden');
 			jQuery('#searchFavoriteNewName').val(jQuery(this).val());
-			jQuery('#searchFavoriteRead').removeClass('hidden');
+			jQuery('#searchFavoriteRead, #searchFavoriteDelete').removeClass('hidden');
 		};
 	});
 
@@ -2584,6 +2599,15 @@ function handleClientLoad() {
 		};
 		s.setSearchParamToFavorite(jQuery('#searchFavoriteNewName').val());
 		toastbox.FadeInandTimerFadeOut('検索条件「' + jQuery('#searchFavoriteNewName').val() + '」を保存しました。');
+	});
+
+	// 検索条件お気に入り削除ボタン押下時
+	jQuery('#searchFavoriteDelete').on('click', function() {
+		// 確認メッセージ表示後、「いいえ」なら何もしない
+		if (!confirm('検索条件「' + jQuery('#searchFavoriteNewName').val() + '」を削除しますか？')) { return false; };
+
+		delete userJSON.searchOpts[jQuery('#searchFavoriteNewName').val()];
+		toastbox.FadeInandTimerFadeOut('検索条件「' + jQuery('#searchFavoriteNewName').val() + '」を削除しました。');
 	});
 
 	// 検索結果のヘッダー行を作成
