@@ -561,7 +561,7 @@ function makeCheckbox(target,items) {
  * @return なし
  *
 **/
-function makeSelectMonth(target,start,end,isFirst) {
+function makeSelectMonth(target,start,end,isFirst,prependDate = null, appendDate = null) {
 	let tag = jQuery(target);
 	// 開始・終了日を取得 (isFirst=Trueの時、指定月の月初日を取得。falseの時、翌月の0日(=月末日)を取得。)
 	let cDate = isFirst ? new Date(start.getFullYear(), start.getMonth(), 1) : new Date(start.getFullYear(), start.getMonth() + 1, 0);
@@ -573,6 +573,21 @@ function makeSelectMonth(target,start,end,isFirst) {
 		tag.append(jQuery('<option>').val(tY + '-' + zeroPadding(tM,2) + '-' + zeroPadding(tD,2)).text(tY + '/' + zeroPadding(tM,2) ));
 		cDate.setMonth(tM + (isFirst ? 0 : 1),(isFirst ? 1 : 0));
 	} while( endDate >= cDate );
+
+	// 先頭・末尾の要素が日付型で引数に指定されていたら追加する
+	if (toString.call(prependDate) == '[object Array]' && toString.call(prependDate[0]) == '[object Date]') {
+		tY = prependDate[0].getFullYear();
+		tM = prependDate[0].getMonth() + 1;
+		tD = prependDate[0].getDate();
+		tag.prepend(jQuery('<option>').val(tY + '-' + zeroPadding(tM,2) + '-' + zeroPadding(tD,2)).text( prependDate[1] ));
+	};
+	if (toString.call(appendDate) == '[object Array]' && toString.call(appendDate[0]) == '[object Date]') {
+		tY = appendDate[0].getFullYear();
+		tM = appendDate[0].getMonth() + 1;
+		tD = appendDate[0].getDate();
+		tag.append(jQuery('<option>').val(tY + '-' + zeroPadding(tM,2) + '-' + zeroPadding(tD,2)).text( appendDate[1] ));
+	};
+
 };
 
 /**
@@ -1969,12 +1984,12 @@ let s = {
 		},
 		release: {
 			type: [0],
-			min: 0,
-			max: 0
+			min: "2000-01-01",
+			max: "2999-12-31"
 		},
 		bitDate: {
-			min: 0,
-			max: 0
+			min: "2000-01-01",
+			max: "2999-12-31"
 		},
 		available: 'ALL',
 		unlocked: 'ALL',
@@ -2095,10 +2110,10 @@ let s = {
 		if ('lv' in paramObj && 'opt' in paramObj) {
 			this.setScoreSearchParams('DPA', paramObj.lv.DPA.min, paramObj.lv.DPA.max, paramObj.opt.DPA.cn, paramObj.opt.DPA.bss, paramObj.opt.DPA.hcn, paramObj.opt.DPA.notes.min, paramObj.opt.DPA.notes.max);
 		};
-		if ('release' in paramObj) {jQuery("#releasedate-min").val(paramObj.release.min); };
-		if ('release' in paramObj) {jQuery("#releasedate-max").val(paramObj.release.max); };
-		if ('bitDate' in paramObj) {jQuery("#bitdate-min").val(paramObj.bitDate.min); };
-		if ('bitDate' in paramObj) {jQuery("#bitdate-max").val(paramObj.bitDate.max); };
+		if ('release' in paramObj) {jQuery("#releasedate-min").val((this.checkSelectValue(jQuery("#releasedate-min")[0], paramObj.release.min)) ? paramObj.release.min : jQuery("#releasedate-min option[selected]").val()); };
+		if ('release' in paramObj) {jQuery("#releasedate-max").val((this.checkSelectValue(jQuery("#releasedate-max")[0], paramObj.release.max)) ? paramObj.release.max : jQuery("#releasedate-max option[selected]").val()); };
+		if ('bitDate' in paramObj) {jQuery("#bitdate-min").val((this.checkSelectValue(jQuery("#bitdate-min")[0], paramObj.bitDate.min)) ? paramObj.bitDate.min : jQuery("#bitdate-min option[selected]").val()); };
+		if ('bitDate' in paramObj) {jQuery("#bitdate-max").val((this.checkSelectValue(jQuery("#bitdate-max")[0], paramObj.bitDate.max)) ? paramObj.bitDate.max : jQuery("#bitdate-max option[selected]").val()); };
 		if ('available' in paramObj) {jQuery("#available").val(paramObj.available); };
 		if ('unlocked' in paramObj) {jQuery("#unlocked").val(paramObj.unlocked); };
 		if ('title' in paramObj) {jQuery("#title").val(paramObj.title); };
@@ -2161,6 +2176,12 @@ let s = {
 		}
 		let notes = ( ( opt.notes.min <= score.Notes ) && ( score.Notes <= opt.notes.max ) );
 		return ( lvcheck && cn && bss && hcn && notes );
+	},
+	checkSelectValue: function(selObj,hasValue) {
+		for (i of selObj.options) {
+			if (i.value == hasValue) { return true; };
+		};
+		return false;
 	}
 };
 
@@ -2480,19 +2501,19 @@ function handleClientLoad() {
 	// 日付のセレクトボックスを作成
 	let lastDate = new Date();
 	lastDate.setFullYear(lastDate.getFullYear() + 1);
-	makeSelectMonth('#bitdate-min', LaunchDate, lastDate, true);
-	makeSelectMonth('#bitdate-max', LaunchDate, lastDate, false);
-	makeSelectMonth('#releasedate-min', LaunchDate, now, true);
-	makeSelectMonth('#releasedate-max', LaunchDate, now, false);
+	makeSelectMonth('#bitdate-min', LaunchDate, lastDate, true, [new Date("2000-01-01"), "未指定"]);
+	makeSelectMonth('#bitdate-max', LaunchDate, lastDate, false, null, [new Date("2999-12-31"), "未指定"]);
+	makeSelectMonth('#releasedate-min', LaunchDate, now, true, [new Date("2000-01-01"), "未指定"]);
+	makeSelectMonth('#releasedate-max', LaunchDate, now, false, null, [new Date("2999-12-31"), "未指定"]);
 	jQuery('#bitdate-min option:first-child, #releasedate-min option:first-child').attr('selected','');
 	jQuery('#bitdate-max option:last-child,  #releasedate-max option:last-child').attr('selected','');
 
 	// 日付セレクトで未指定(val=2000-01-01)の場合に至を無効化
-	jQuery('#bitdate-min').change(function() {
-		jQuery('#bitdate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
-	});
 	jQuery('#releasedate-min').change(function() {
 		jQuery('#releasedate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
+	});
+	jQuery('#bitdate-min').change(function() {
+		jQuery('#bitdate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
 	});
 
 	// ファイル選択ボタン押下時
@@ -2589,6 +2610,10 @@ function handleClientLoad() {
 	jQuery('#searchFavoriteRead').on('click', function() {
 		s.getSearchParamFromFavorite(jQuery('#searchFavorite').val());
 		toastbox.FadeInandTimerFadeOut('検索条件「' + jQuery('#searchFavorite').val() + '」を読み込みました。');
+
+		// 日付セレクトのページ読込直後の初期化処理
+		jQuery('#releasedate-max').prop('disabled', (jQuery('#releasedate-min').val() === '2000-01-01'));
+		jQuery('#bitdate-max').prop('disabled', (jQuery('#bitdate-min').val() === '2000-01-01'));
 	});
 
 	// 検索条件お気に入り保存ボタン押下時
@@ -2791,6 +2816,10 @@ function handleClientLoad() {
 	jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
 	jQuery('.purchase input').each(function() { togglePackButton(this, true); });
 	jQuery('#opt_bpm_changing').each(function() { toggleBPMOptButton(this, true); });
+
+	// 日付セレクトのページ読込直後の初期化処理
+	jQuery('#releasedate-max').prop('disabled', (jQuery('#releasedate-min').val() === '2000-01-01'));
+	jQuery('#bitdate-max').prop('disabled', (jQuery('#bitdate-min').val() === '2000-01-01'));
 
 	// エラーメッセージ表示エリアの取得
 	JSONmsgObj = jQuery('#json-message');

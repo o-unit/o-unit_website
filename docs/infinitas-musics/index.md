@@ -61,30 +61,24 @@ Add buttons to initiate auth sequence and sign out
         <div class="clearfix">
             <div class="fieldname">配信開始月</div>
             <div class="releasedate-menu selectbutton inblock">
-                <select id="releasedate-min" name="releasedate-min">
-                    <option value="2000-01-01" selected>未指定</option>
-                </select>
+                <select id="releasedate-min" name="releasedate-min"></select>
                 <div></div>
             </div>
             <div class="inblock pad-lr5">～</div>
             <div class="releasedate-menu selectbutton inblock">
-                <select id="releasedate-max" name="releasedate-max" disabled>
-                </select>
+                <select id="releasedate-max" name="releasedate-max"></select>
                 <div></div>
             </div>
         </div>
         <div class="clearfix">
             <div class="fieldname">BIT配信開始月</div>
             <div class="releasedate-menu selectbutton inblock">
-                <select id="bitdate-min" name="bitdate-min">
-                    <option value="2000-01-01" selected>未指定</option>
-                </select>
+                <select id="bitdate-min" name="bitdate-min"></select>
                 <div></div>
             </div>
             <div class="inblock pad-lr5">～</div>
             <div class="releasedate-menu selectbutton inblock">
-                <select id="bitdate-max" name="bitdate-max" disabled>
-                </select>
+                <select id="bitdate-max" name="bitdate-max"></select>
                 <div></div>
             </div>
         </div>
