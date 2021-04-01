@@ -35,12 +35,12 @@ Add buttons to initiate auth sequence and sign out
     <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" />
     <label for="formtab-1" class="tab_item">条件：譜面</label>
     <label for="formtab-2" class="tab_item">条件：その他</label>
-    <label for="formtab-3" class="tab_item">表示設定</label>
-    <label for="formtab-4" class="tab_item">データ設定</label>
-    <label for="formtab-5" class="tab_item">楽曲数・BIT</label>
-    <label for="formtab-6" class="tab_item">？？？</label>
-    <label for="formtab-7" class="tab_item">(管理用1)</label>
-    <label for="formtab-8" class="tab_item">？？？</label>
+    <label for="formtab-3" class="tab_item">条件：記録</label>
+    <label for="formtab-4" class="tab_item">表示設定</label>
+    <label for="formtab-5" class="tab_item">データ設定</label>
+    <label for="formtab-6" class="tab_item">楽曲数・BIT</label>
+    <label for="formtab-7" class="tab_item">？？？</label>
+    <label for="formtab-8" class="tab_item">(管理用1)</label>
     <div id="formtab-1_content" class="tab_content">
         <div id="scorefilterbox"></div>
     </div>
@@ -93,20 +93,6 @@ Add buttons to initiate auth sequence and sign out
                 <div></div>
             </div>
         </div>
-        <div class="clearfix">
-            <div class="fieldname">解禁状況</div>
-            <div class="selectbutton inblock">
-                <select id="unlocked" name="unlocked" disabled>
-                    <option value="ALL" selected>全て</option>
-                    <option value="yes">全譜面解禁済</option>
-                    <option value="partiallyyes">1譜面以上解禁済</option>
-                    <option value="partially">解禁中</option>
-                    <option value="partiallyno">1譜面以上未解禁</option>
-                    <option value="no">未解禁</option>
-                </select>
-                <div></div>
-            </div>
-        </div>
         <hr class="clearfix" />
         <div class="clearfix">
             <div class="fieldname">曲名</div>
@@ -134,6 +120,183 @@ Add buttons to initiate auth sequence and sign out
         <div class="clearfix"><span>※可変 … 曲中にBPM変化のある曲・譜面毎にBPMが違う曲</span></div>
     </div>
     <div id="formtab-3_content" class="tab_content">
+        <div class="clearfix">
+            <div class="fieldname">解禁状況</div>
+            <div class="selectbutton inblock">
+                <select id="unlocked" name="unlocked" disabled>
+                    <option value="ALL" selected>全て</option>
+                    <option value="yes">全譜面解禁済</option>
+                    <option value="partiallyyes">1譜面以上解禁済</option>
+                    <option value="partially">解禁中</option>
+                    <option value="partiallyno">1譜面以上未解禁</option>
+                    <option value="no">未解禁</option>
+                </select>
+                <div></div>
+            </div>
+        </div>
+        <hr class="clearfix" />
+        <div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">SPB<br /><span id="djlevel_SPB_min" class="level_number"></span>～<span id="djlevel_SPB_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_SPB_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_SPB_min" name="exscore_SPB_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_SPB_max" name="exscore_SPB_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_SPB_min" name="misscount_SPB_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_SPB_max" name="misscount_SPB_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_SPB" class="inblock"></div>
+			</div>
+		</div>
+        <hr class="clearfix" />
+		<div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">SPN<br /><span id="djlevel_SPN_min" class="level_number"></span>～<span id="djlevel_SPN_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_SPN_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_SPN_min" name="exscore_SPN_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_SPN_max" name="exscore_SPN_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_SPN_min" name="misscount_SPN_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_SPN_max" name="misscount_SPN_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_SPN" class="inblock"></div>
+			</div>
+		</div>
+        <hr class="clearfix" />
+		<div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">SPH<br /><span id="djlevel_SPH_min" class="level_number"></span>～<span id="djlevel_SPH_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_SPH_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_SPH_min" name="exscore_SPH_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_SPH_max" name="exscore_SPH_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_SPH_min" name="misscount_SPH_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_SPH_max" name="misscount_SPH_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_SPH" class="inblock"></div>
+			</div>
+		</div>
+        <hr class="clearfix" />
+		<div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">SPA<br /><span id="djlevel_SPA_min" class="level_number"></span>～<span id="djlevel_SPA_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_SPA_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_SPA_min" name="exscore_SPA_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_SPA_max" name="exscore_SPA_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_SPA_min" name="misscount_SPA_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_SPA_max" name="misscount_SPA_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_SPA" class="inblock"></div>
+			</div>
+		</div>
+        <hr class="clearfix" />
+		<div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">DPN<br /><span id="djlevel_DPN_min" class="level_number"></span>～<span id="djlevel_DPN_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_DPN_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_DPN_min" name="exscore_DPN_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_DPN_max" name="exscore_DPN_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_DPN_min" name="misscount_DPN_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_DPN_max" name="misscount_DPN_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_DPN" class="inblock"></div>
+			</div>
+		</div>
+        <hr class="clearfix" />
+		<div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">DPH<br /><span id="djlevel_DPH_min" class="level_number"></span>～<span id="djlevel_DPH_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_DPH_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_DPH_min" name="exscore_DPH_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_DPH_max" name="exscore_DPH_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_DPH_min" name="misscount_DPH_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_DPH_max" name="misscount_DPH_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_DPH" class="inblock"></div>
+			</div>
+		</div>
+        <hr class="clearfix" />
+		<div class="clearfix">
+			<div class="inblock sliderbox">
+				<div class="fieldname">DPA<br /><span id="djlevel_DPA_min" class="level_number"></span>～<span id="djlevel_DPA_max" class="level_number"></span></div>
+				<div class="inblock slider_outer"><div id="djlevel_DPA_levels"></div></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">EXスコア</div>
+				<div class="notes-menu"><input id="exscore_DPA_min" name="exscore_DPA_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="exscore_DPA_max" name="exscore_DPA_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">MISS COUNT</div>
+				<div class="notes-menu"><input id="misscount_DPA_min" name="misscount_DPA_min" type="text" placeholder="0" class="input-60" /></div>
+				<div class="inblock pad-lr5">～</div>
+				<div class="notes-menu"><input id="misscount_DPA_max" name="misscount_DPA_max" type="text" placeholder="99999" class="input-60" /></div>
+			</div>
+			<div class="inblock">
+				<div class="fieldname">クリアランプ</div>
+				<div id="clearTypebox_DPA" class="inblock"></div>
+			</div>
+		</div>
+    </div>
+    <div id="formtab-4_content" class="tab_content">
         <div class="clearfix">
             <div class="settings-check"><input id="searchopen" name="searchopen" type="checkbox" value="1" /></div>
             <div class="inblock"><label for="searchopen">検索後に全てのフォルダを開く</label></div>
@@ -291,7 +454,7 @@ Add buttons to initiate auth sequence and sign out
             </div>
         </div>
     </div>
-    <div id="formtab-4_content" class="tab_content">
+    <div id="formtab-5_content" class="tab_content">
         <div class="clearfix">
             <div>
             データ保存設定の利用にあたり、以下について同意されたものとみなします。<br />
@@ -441,7 +604,7 @@ Add buttons to initiate auth sequence and sign out
             </div>
         </div>
     </div>
-    <div id="formtab-5_content" class="table-outer tab_content">
+    <div id="formtab-6_content" class="table-outer tab_content">
         <div class="info-lastupdated"></div>
         <table class="infotable">
             <colgroup span="1" class="section1"></colgroup>
@@ -470,10 +633,10 @@ Add buttons to initiate auth sequence and sign out
             </thead>
         </table>
     </div>
-    <div id="formtab-6_content" class="tab_content">
-        <div id="scorefilterbox"></div>
-    </div>
     <div id="formtab-7_content" class="tab_content">
+        <div></div>
+    </div>
+    <div id="formtab-8_content" class="tab_content">
         <div class="clearfix">
             <div class="fieldname"><label for="new_genre">ジャンル</label></div>
             <div class="inblock"><input id="new_genre" name="new_genre" type="text" placeholder="ジャンル名…" class="input-260" /></div>
@@ -600,17 +763,14 @@ Add buttons to initiate auth sequence and sign out
         <div class="clearfix"><textarea id="new_comment" name="new_comment" placeholder="コメントを入力…" class="textarea-100p height-8"></textarea></div>
         <div class="clearfix"><textarea id="new_json" name="new_json" placeholder="ここにJSONが表示されます…" class="textarea-100p height-8"></textarea></div>
     </div>
-    <div id="formtab-8_content" class="tab_content">
-        <div id="scorefilterbox"></div>
-    </div>
     <label for="formtab-1" class="tab_item formtab-bottom">条件：譜面</label>
     <label for="formtab-2" class="tab_item formtab-bottom">条件：その他</label>
-    <label for="formtab-3" class="tab_item formtab-bottom">表示設定</label>
-    <label for="formtab-4" class="tab_item formtab-bottom">データ設定</label>
-    <label for="formtab-5" class="tab_item formtab-bottom">楽曲数・BIT</label>
-    <label for="formtab-6" class="tab_item formtab-bottom">？？？</label>
-    <label for="formtab-7" class="tab_item formtab-bottom">(管理用1)</label>
-    <label for="formtab-8" class="tab_item formtab-bottom">？？？</label>
+    <label for="formtab-3" class="tab_item formtab-bottom">条件：記録</label>
+    <label for="formtab-4" class="tab_item formtab-bottom">表示設定</label>
+    <label for="formtab-5" class="tab_item formtab-bottom">データ設定</label>
+    <label for="formtab-6" class="tab_item formtab-bottom">楽曲数・BIT</label>
+    <label for="formtab-7" class="tab_item formtab-bottom">？？？</label>
+    <label for="formtab-8" class="tab_item formtab-bottom">(管理用1)</label>
 </div>
 
 <form id="searchbuttonform" enctype="application/x-www-form-urlencoded" onsubmit="return false;">
