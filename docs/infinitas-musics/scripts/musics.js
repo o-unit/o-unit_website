@@ -118,6 +118,9 @@ let Diff = [
 let ClearTypeArray = ['FC', 'EX-H', 'HARD', 'CLEAR', 'EASY', 'A-EASY', 'FAILED', 'NOPLAY'];
 let ShortClearTypeArray = ['FC', 'EXH', 'HARD', 'CLR', 'EASY', 'A-E', 'FAIL', 'NO'];
 
+let DJLevelArray = ['MAX','AAA','AA','A','B','C','D','E','F',''];
+let DJLevelArray2 = ['MAX','MAX-','AAA','AAA-','AA','AA-','A','A-','B','B-','C','C-','D','D-','E','E-','F','F-',''];
+
 let userJSON = {};
 
 let PROJECT_ID = 'infinitas-musiclist';
@@ -179,6 +182,35 @@ function convKana(src, to = 'KtoH') {
 		case 'KtoH': return src.replace(/[\u3041-\u3096]/g, function(match) { return String.fromCharCode(match.charCodeAt(0) + 0x60); });
 		default: return src;
 	};
+};
+
+/**
+ *  参考 ： https://qiita.com/riversun/items/60307d58f9b2f461082a
+ * targetオブジェクトにsourceオブジェクトの値をdeep mergeする
+ * @param {*} target
+ * @param {*} source
+ * @param {*} opts
+ * @returns
+ */
+function mergeDeeply(target, source, opts) {
+    const isObject = obj => obj && typeof obj === 'object' && !Array.isArray(obj);
+    const isConcatArray = opts && opts.concatArray;
+    let result = Object.assign({}, target);
+    if (isObject(target) && isObject(source)) {
+        for (const [sourceKey, sourceValue] of Object.entries(source)) {
+            const targetValue = target[sourceKey];
+            if (isConcatArray && Array.isArray(sourceValue) && Array.isArray(targetValue)) {
+                result[sourceKey] = targetValue.concat(...sourceValue);
+            }
+            else if (isObject(sourceValue) && target.hasOwnProperty(sourceKey)) {
+                result[sourceKey] = mergeDeeply(targetValue, sourceValue, opts);
+            }
+            else {
+                Object.assign(result, {[sourceKey]: sourceValue});
+            }
+        }
+    }
+    return result;
 };
 
 /**
@@ -676,7 +708,6 @@ function makeScorefilter(target,items){
 			'<div class="inblock pad-lr5">～</div>' +
 			'<div class="notes-menu">' + notes_max_input + '</div>' +
 			'</div>' +
-			'</div>' +
 			((item[0] === items.slice(-1)[0][0]) ? '' : '<hr class="clearfix" />');
 	};
 	jQuery(target).append(addHtml);
@@ -809,20 +840,19 @@ function getNotesValue(inputNotes) {
 function getDJLevel(maxScore = 0, EXScore = 0, showType = 0) {
  	if (isNaN(maxScore) || isNaN(EXScore) || maxScore == 0 || EXScore == 0 || maxScore < EXScore ) { return ''; };
 
- 	let DJLevel = ['MAX','AAA','AA','A','B','C','D','E','F'];
  	let borderFloat = [ maxScore, maxScore / 9 * 8, maxScore / 9 * 7, maxScore / 9 * 6, maxScore / 9 * 5, maxScore / 9 * 4, maxScore / 9 * 3, maxScore / 9 * 2, 0 ];
 
  	for ( let i = 0; i < 9; i++ ) {
  		if (EXScore >= Math.ceil(borderFloat[i])) {
- 			if (i == 0) { return DJLevel[i]; };
+ 			if (i == 0) { return DJLevelArray[i]; };
  			minusNum = Math.ceil(borderFloat[(i - 1)]) - EXScore;
  			plusNum = EXScore - Math.ceil(borderFloat[i]);
 			switch (showType) {
-				case 0: return DJLevel[i]; break;
-				case 1: return (minusNum < plusNum) ? DJLevel[(i - 1)] + '-' + minusNum : DJLevel[i] + '+' + plusNum; break;
-				case 2: return DJLevel[i] + '+' + plusNum; break;
-				case 3: return DJLevel[(i - 1)] + '-' + minusNum; break;
-				case 4: return DJLevel[i] + ' ' + Math.floor(EXScore / maxScore * 100) + '%'; break;
+				case 0: return DJLevelArray[i]; break;
+				case 1: return (minusNum < plusNum) ? DJLevelArray[(i - 1)] + '-' + minusNum : DJLevelArray[i] + '+' + plusNum; break;
+				case 2: return DJLevelArray[i] + '+' + plusNum; break;
+				case 3: return DJLevelArray[(i - 1)] + '-' + minusNum; break;
+				case 4: return DJLevelArray[i] + ' ' + Math.floor(EXScore / maxScore * 100) + '%'; break;
 				default: return ''; break;
 			};
  		};
@@ -1085,13 +1115,13 @@ let musics = {
 			if ( s.params.series.indexOf(parseFloat(item.VNo)) == -1 ) { return false; };
 
 			// 譜面情報でフィルタ
-			if ( !( s.checkScore( item.Scores.Single[Diff[0].Name], "SPB" ) &&
-					s.checkScore( item.Scores.Single[Diff[1].Name], "SPN" ) &&
-					s.checkScore( item.Scores.Single[Diff[2].Name], "SPH" ) &&
-					s.checkScore( item.Scores.Single[Diff[3].Name], "SPA" ) &&
-					s.checkScore( item.Scores.Double[Diff[1].Name], "DPN" ) &&
-					s.checkScore( item.Scores.Double[Diff[2].Name], "DPH" ) &&
-					s.checkScore( item.Scores.Double[Diff[3].Name], "DPA" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Single[Diff[0].Name], "SPB" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Single[Diff[1].Name], "SPN" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Single[Diff[2].Name], "SPH" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Single[Diff[3].Name], "SPA" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Double[Diff[1].Name], "DPN" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Double[Diff[2].Name], "DPH" ) ) ) { return false; };
+			if ( !( s.checkScore( item.Scores.Double[Diff[3].Name], "DPA" ) ) ) { return false; };
 
 			// BPMでフィルタ
 			if ( s.params.BPM.min !== 0 || s.params.BPM.max !== 9999 || s.params.BPM.changing !== 0) {
@@ -1140,11 +1170,11 @@ let musics = {
 
 					switch(checktype) {
 						case 'yes':          return (!values.has(0) && values.has(1)); break;
-						case 'partiallyyes': return values.has(1);                       break;
+						case 'partiallyyes': return values.has(1);                     break;
 						case 'partially':    return (values.has(0) && values.has(1));  break;
-						case 'partiallyno':  return values.has(0);                       break;
+						case 'partiallyno':  return values.has(0);                     break;
 						case 'no':           return (values.has(0) && !values.has(1)); break;
-						default:             return true;                                  break;
+						default:             return true;                              break;
 					};
 				};
 
@@ -1162,6 +1192,21 @@ let musics = {
 					};
 					if (item.ID in userJSON.musics && 'Canplay' in userJSON.musics[item.ID]) { canplay = userJSON.musics[item.ID].Canplay; };
 					if (!check_canplay(canplay, item.Scores, s.params.unlocked)) { return false; };
+				};
+			};
+
+			// DJLevelでフィルタ
+			if ( s.params.djlevel.min != 0 || s.params.djlevel.min != (DJLevelArray2.length - 1) ) {
+				if ((item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID])) {
+					if (('SP' in userJSON.musics[item.ID].EXScores)) {
+						iSP = item.Scores.Single;
+						uSP = userJSON.musics[item.ID].EXScores.SP;
+						if (Diff[0].Name in uSP) {
+							ind = DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[0].Name].Notes*2,uSP[Diff[0].Name],1).replace(/[+0-9]/g, ''));
+							if ( ind) {};
+						};
+					};
+
 				};
 			};
 
@@ -1982,25 +2027,41 @@ let s = {
 			DPH: { cn: 0, bss: 0, hcn: 0, notes: { min: 0, max: 99999} },
 			DPA: { cn: 0, bss: 0, hcn: 0, notes: { min: 0, max: 99999} }
 		},
-		release: {
-			type: [0],
-			min: "2000-01-01",
-			max: "2999-12-31"
+		djlevel: {
+			SPB: { min: 0, max: DJLevelArray2.length - 1 },
+			SPN: { min: 0, max: DJLevelArray2.length - 1 },
+			SPH: { min: 0, max: DJLevelArray2.length - 1 },
+			SPA: { min: 0, max: DJLevelArray2.length - 1 },
+			DPN: { min: 0, max: DJLevelArray2.length - 1 },
+			DPH: { min: 0, max: DJLevelArray2.length - 1 },
+			DPA: { min: 0, max: DJLevelArray2.length - 1 }
 		},
-		bitDate: {
-			min: "2000-01-01",
-			max: "2999-12-31"
+		exscore: {
+			SPB: {min: 0, max: 99999},
+			SPN: {min: 0, max: 99999},
+			SPH: {min: 0, max: 99999},
+			SPA: {min: 0, max: 99999},
+			DPN: {min: 0, max: 99999},
+			DPH: {min: 0, max: 99999},
+			DPA: {min: 0, max: 99999}
 		},
+		misscount: {
+			SPB: {min: 0, max: 99999},
+			SPN: {min: 0, max: 99999},
+			SPH: {min: 0, max: 99999},
+			SPA: {min: 0, max: 99999},
+			DPN: {min: 0, max: 99999},
+			DPH: {min: 0, max: 99999},
+			DPA: {min: 0, max: 99999}
+		},
+		release: { type: [0], min: "2000-01-01", max: "2999-12-31" },
+		bitDate: { min: "2000-01-01", max: "2999-12-31" },
 		available: 'ALL',
 		unlocked: 'ALL',
 		title: '',
 		genre: '',
 		artist: '',
-		BPM: {
-			min: 0,
-			max: 0,
-			changing: 0
-		},
+		BPM: { min: 0, max: 0, changing: 0 },
 		searchopen: false,
 		singleopen: true,
 		extendopen: false,
@@ -2052,6 +2113,11 @@ let s = {
 		this.params.opt[score].hcn = Number(jQuery('#opt_' + score + '_HCN').val());
 		this.params.opt[score].notes.min = (isNaN(parseInt(jQuery('#opt_' + score + '_notes_min').val())) ?     0 : parseInt(jQuery('#opt_' + score + '_notes_min').val()));
 		this.params.opt[score].notes.max = (isNaN(parseInt(jQuery('#opt_' + score + '_notes_max').val())) ? 99999 : parseInt(jQuery('#opt_' + score + '_notes_max').val()));
+		[this.params.djlevel[score].min,this.params.djlevel[score].max] = jQuery('#djlevel_' + score + '_levels')[0].noUiSlider.get();
+		this.params.exscore[score].min = (isNaN(parseInt(jQuery('#exscore_' + score + '_min').val())) ?     0 : parseInt(jQuery('#exscore_' + score + '_min').val()));
+		this.params.exscore[score].max = (isNaN(parseInt(jQuery('#exscore_' + score + '_max').val())) ? 99999 : parseInt(jQuery('#exscore_' + score + '_max').val()));
+		this.params.misscount[score].min = (isNaN(parseInt(jQuery('#misscount_' + score + '_min').val())) ?     0 : parseInt(jQuery('#misscount_' + score + '_min').val()));
+		this.params.misscount[score].max = (isNaN(parseInt(jQuery('#misscount_' + score + '_max').val())) ? 99999 : parseInt(jQuery('#misscount_' + score + '_max').val()));
 	},
 	setDefaultSearchParam: function() {
 		jQuery("[name=series]").each(function(){jQuery(this).prop('checked', true)});
@@ -2086,29 +2152,120 @@ let s = {
 	},
 	getSearchParamFromFavorite: function(optName) {
 		if (!(optName in userJSON.searchOpts)) { return false; };
-		paramObj = JSON.parse(JSON.stringify(userJSON.searchOpts[optName]));
+		let paramObj = mergeDeeply(this.params, userJSON.searchOpts[optName]);
 		if ('series' in paramObj) {jQuery("[name=series]").val(paramObj.series); };
 		if ('release' in paramObj) {jQuery("[name=releasetype]").val(paramObj.release.type); };
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('SPB', paramObj.lv.SPB.min, paramObj.lv.SPB.max, paramObj.opt.SPB.cn, paramObj.opt.SPB.bss, paramObj.opt.SPB.hcn, paramObj.opt.SPB.notes.min, paramObj.opt.SPB.notes.max);
+			this.setScoreSearchParams('SPB',
+									  paramObj.lv.SPB.min,
+									  paramObj.lv.SPB.max,
+									  paramObj.opt.SPB.cn,
+									  paramObj.opt.SPB.bss,
+									  paramObj.opt.SPB.hcn,
+									  paramObj.opt.SPB.notes.min,
+									  paramObj.opt.SPB.notes.max,
+									  paramObj.djlevel.SPB.min,
+									  paramObj.djlevel.SPB.max,
+									  paramObj.exscore.SPB.min,
+									  paramObj.exscore.SPB.max,
+									  paramObj.misscount.SPB.min,
+									  paramObj.misscount.SPB.max);
 		};
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('SPN', paramObj.lv.SPN.min, paramObj.lv.SPN.max, paramObj.opt.SPN.cn, paramObj.opt.SPN.bss, paramObj.opt.SPN.hcn, paramObj.opt.SPN.notes.min, paramObj.opt.SPN.notes.max);
+			this.setScoreSearchParams('SPN',
+									  paramObj.lv.SPN.min,
+									  paramObj.lv.SPN.max,
+									  paramObj.opt.SPN.cn,
+									  paramObj.opt.SPN.bss,
+									  paramObj.opt.SPN.hcn,
+									  paramObj.opt.SPN.notes.min,
+									  paramObj.opt.SPN.notes.max,
+									  paramObj.djlevel.SPN.min,
+									  paramObj.djlevel.SPN.max,
+									  paramObj.exscore.SPN.min,
+									  paramObj.exscore.SPN.max,
+									  paramObj.misscount.SPN.min,
+									  paramObj.misscount.SPN.max);
 		};
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('SPH', paramObj.lv.SPH.min, paramObj.lv.SPH.max, paramObj.opt.SPH.cn, paramObj.opt.SPH.bss, paramObj.opt.SPH.hcn, paramObj.opt.SPH.notes.min, paramObj.opt.SPH.notes.max);
+			this.setScoreSearchParams('SPH',
+									  paramObj.lv.SPH.min,
+									  paramObj.lv.SPH.max,
+									  paramObj.opt.SPH.cn,
+									  paramObj.opt.SPH.bss,
+									  paramObj.opt.SPH.hcn,
+									  paramObj.opt.SPH.notes.min,
+									  paramObj.opt.SPH.notes.max,
+									  paramObj.djlevel.SPH.min,
+									  paramObj.djlevel.SPH.max,
+									  paramObj.exscore.SPH.min,
+									  paramObj.exscore.SPH.max,
+									  paramObj.misscount.SPH.min,
+									  paramObj.misscount.SPH.max);
 		};
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('SPA', paramObj.lv.SPA.min, paramObj.lv.SPA.max, paramObj.opt.SPA.cn, paramObj.opt.SPA.bss, paramObj.opt.SPA.hcn, paramObj.opt.SPA.notes.min, paramObj.opt.SPA.notes.max);
+			this.setScoreSearchParams('SPA',
+									  paramObj.lv.SPA.min,
+									  paramObj.lv.SPA.max,
+									  paramObj.opt.SPA.cn,
+									  paramObj.opt.SPA.bss,
+									  paramObj.opt.SPA.hcn,
+									  paramObj.opt.SPA.notes.min,
+									  paramObj.opt.SPA.notes.max,
+									  paramObj.djlevel.SPA.min,
+									  paramObj.djlevel.SPA.max,
+									  paramObj.exscore.SPA.min,
+									  paramObj.exscore.SPA.max,
+									  paramObj.misscount.SPA.min,
+									  paramObj.misscount.SPA.max);
 		};
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('DPN', paramObj.lv.DPN.min, paramObj.lv.DPN.max, paramObj.opt.DPN.cn, paramObj.opt.DPN.bss, paramObj.opt.DPN.hcn, paramObj.opt.DPN.notes.min, paramObj.opt.DPN.notes.max);
+			this.setScoreSearchParams('DPN',
+									  paramObj.lv.DPN.min,
+									  paramObj.lv.DPN.max,
+									  paramObj.opt.DPN.cn,
+									  paramObj.opt.DPN.bss,
+									  paramObj.opt.DPN.hcn,
+									  paramObj.opt.DPN.notes.min,
+									  paramObj.opt.DPN.notes.max,
+									  paramObj.djlevel.DPN.min,
+									  paramObj.djlevel.DPN.max,
+									  paramObj.exscore.DPN.min,
+									  paramObj.exscore.DPN.max,
+									  paramObj.misscount.DPN.min,
+									  paramObj.misscount.DPN.max);
 		};
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('DPH', paramObj.lv.DPH.min, paramObj.lv.DPH.max, paramObj.opt.DPH.cn, paramObj.opt.DPH.bss, paramObj.opt.DPH.hcn, paramObj.opt.DPH.notes.min, paramObj.opt.DPH.notes.max);
+			this.setScoreSearchParams('DPH',
+									  paramObj.lv.DPH.min,
+									  paramObj.lv.DPH.max,
+									  paramObj.opt.DPH.cn,
+									  paramObj.opt.DPH.bss,
+									  paramObj.opt.DPH.hcn,
+									  paramObj.opt.DPH.notes.min,
+									  paramObj.opt.DPH.notes.max,
+									  paramObj.djlevel.DPH.min,
+									  paramObj.djlevel.DPH.max,
+									  paramObj.exscore.DPH.min,
+									  paramObj.exscore.DPH.max,
+									  paramObj.misscount.DPH.min,
+									  paramObj.misscount.DPH.max);
 		};
 		if ('lv' in paramObj && 'opt' in paramObj) {
-			this.setScoreSearchParams('DPA', paramObj.lv.DPA.min, paramObj.lv.DPA.max, paramObj.opt.DPA.cn, paramObj.opt.DPA.bss, paramObj.opt.DPA.hcn, paramObj.opt.DPA.notes.min, paramObj.opt.DPA.notes.max);
+			this.setScoreSearchParams('DPA',
+									  paramObj.lv.DPA.min,
+									  paramObj.lv.DPA.max,
+									  paramObj.opt.DPA.cn,
+									  paramObj.opt.DPA.bss,
+									  paramObj.opt.DPA.hcn,
+									  paramObj.opt.DPA.notes.min,
+									  paramObj.opt.DPA.notes.max,
+									  paramObj.djlevel.DPA.min,
+									  paramObj.djlevel.DPA.max,
+									  paramObj.exscore.DPA.min,
+									  paramObj.exscore.DPA.max,
+									  paramObj.misscount.DPA.min,
+									  paramObj.misscount.DPA.max);
 		};
 		if ('release' in paramObj) {jQuery("#releasedate-min").val((this.checkSelectValue(jQuery("#releasedate-min")[0], paramObj.release.min)) ? paramObj.release.min : jQuery("#releasedate-min option[selected]").val()); };
 		if ('release' in paramObj) {jQuery("#releasedate-max").val((this.checkSelectValue(jQuery("#releasedate-max")[0], paramObj.release.max)) ? paramObj.release.max : jQuery("#releasedate-max option[selected]").val()); };
@@ -2138,13 +2295,19 @@ let s = {
 		userJSON.searchOpts[optName] = JSON.parse(JSON.stringify(this.params));
 		return true;
 	},
-	setScoreSearchParams: function(score, lvMin = 0, lvMax = 12, CN = 0, BSS = 0, HCN = 0, notesMin = '', notesMax = '') {
+	setScoreSearchParams: function(score, lvMin = 0, lvMax = 12, CN = 0, BSS = 0, HCN = 0, notesMin = '', notesMax = '',
+								   djlevelMin = 0, djlevelMax = DJLevelArray2.length - 1, exscoreMin = '', exscoreMax = '', misscountMin = '', misscountMax = '') {
 		jQuery('#' + score + '-levels')[0].noUiSlider.set([lvMin,lvMax]);
 		jQuery('#opt_' + score + '_CN'). val( 0 <= CN  && CN  <= 2 ? CN  : '' );
 		jQuery('#opt_' + score + '_BSS').val( 0 <= BSS && BSS <= 2 ? BSS : '' );
 		jQuery('#opt_' + score + '_HCN').val( 0 <= HCN && HCN <= 2 ? HCN : '' );
 		jQuery('#opt_' + score + '_notes_min').val( 0 < notesMin && notesMin < 99999 ? notesMin : '' );
 		jQuery('#opt_' + score + '_notes_max').val( 0 < notesMax && notesMax < 99999 ? notesMax : '' );
+		jQuery('#djlevel_' + score + '_levels')[0].noUiSlider.set([djlevelMin,djlevelMax]);
+		jQuery('#exscore_' + score + '_min').val( 0 < exscoreMin && exscoreMin < 99999 ? exscoreMin : '' );
+		jQuery('#exscore_' + score + '_max').val( 0 < exscoreMax && exscoreMax < 99999 ? exscoreMax : '' );
+		jQuery('#misscount_' + score + '_min').val( 0 < misscountMin && misscountMin < 99999 ? misscountMin : '' );
+		jQuery('#misscount_' + score + '_max').val( 0 < misscountMax && misscountMax < 99999 ? misscountMax : '' );
 	},
 	checkScore: function(score, scoretype) {
 		if ( ['SPB','SPN','SPH','SPA','SPL','DPB','DPN','DPH','DPA','DPL'].indexOf(scoretype) == -1 ) { return true; };
@@ -2516,6 +2679,37 @@ function handleClientLoad() {
 		jQuery('#bitdate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
 	});
 
+	for (i of ['SPB','SPN','SPH','SPA','DPN','DPH','DPA']) {
+		// 検索条件のDJレベルスライダー作成
+		slider = jQuery('#djlevel_' + i + '_levels')[0];
+		noUiSlider.create(slider, {
+			range: {'min': 0, 'max': DJLevelArray2.length - 1},
+			step: 1,
+			start: [0,DJLevelArray2.length - 1],
+			connect: [false, true, false],
+			tooltips: true,
+			format: {
+				to: function (value) { return parseInt(value); },
+				from: function (value) { return parseInt(value); }
+			}
+		});
+
+		// DJレベルスライダー変更時の動作
+		let nodes_djlevel = [jQuery('#djlevel_' + i + '_min'), jQuery('#djlevel_' + i + '_max')];
+		slider.noUiSlider.on('update', function (values, handle, unencoded, isTap, positions) {
+			nodes_djlevel[handle].text(values[handle] == 0 ? '無' : DJLevelArray2[(DJLevelArray2.length - 1 - parseInt(values[handle]))]);
+			jQuery(slider).find('.noUi-handle[data-handle=' + handle + '] .noUi-tooltip').text(values[handle] == 0 ? '無' : DJLevelArray2[(DJLevelArray2.length - 1 - parseInt(values[handle]))]);
+		});
+
+		// 検索条件のクリアランプ項目作成
+		let clearTypeButtonList = [];
+		for (let item of ClearTypeArray) {
+			clearTypeButtonList.push( ['clearType_' + i,item, false, item, ['clearTypeButton']] );
+		};
+		makeCheckbox('#clearTypebox_' + i,clearTypeButtonList);
+	};
+
+
 	// ファイル選択ボタン押下時
 	jQuery('#localfile').on('change', function() {
 		if ('info' in userJSON) {
@@ -2662,7 +2856,7 @@ function handleClientLoad() {
 	pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
 	makeHeaderLine(headerLine);
 
-	// チェックボックスをラジオボタンの様に使用する
+	// チェックボックスをラジオボタンとして使用してタブメニュー表示
 	let csobj = jQuery('#musicsearch').find('input[data-checkgroup]');
 	csobj.on('click',function() {
 		let group = jQuery(this).attr('data-checkgroup');
@@ -2812,10 +3006,11 @@ function handleClientLoad() {
 	};
 
 
-	// 譜面検索条件ボタン・購入済みパックボタンのクリックイベントを実行しておく(再読み込み対策)
+	// 再読み込み対策(開閉・ボタンの見た目を初期化)
 	jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
 	jQuery('.purchase input').each(function() { togglePackButton(this, true); });
 	jQuery('#opt_bpm_changing').each(function() { toggleBPMOptButton(this, true); });
+	csobj.filter( function() { return jQuery(this).attr('data-checkgroup') == 'formtab'; } ).prop('checked', false);
 
 	// 日付セレクトのページ読込直後の初期化処理
 	jQuery('#releasedate-max').prop('disabled', (jQuery('#releasedate-min').val() === '2000-01-01'));
