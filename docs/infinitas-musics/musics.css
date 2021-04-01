@@ -402,6 +402,15 @@ input[id="formtab-10"]:checked ~ [for="formtab-10"] {
     border-top: 6px solid #3b9cba;
     pointer-events: none;
 }
+#musicsearch #clearTypebox_SPB .vname,
+#musicsearch #clearTypebox_SPN .vname,
+#musicsearch #clearTypebox_SPH .vname,
+#musicsearch #clearTypebox_SPA .vname,
+#musicsearch #clearTypebox_DPN .vname,
+#musicsearch #clearTypebox_DPH .vname,
+#musicsearch #clearTypebox_DPA .vname {
+	width: 5.5rem;
+}
 #musicsearch .noUi-target {
     margin: 15px 15px 10px 15px;
     max-width: 280px;
