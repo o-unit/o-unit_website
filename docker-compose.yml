@@ -1,0 +1,15 @@
+version: '3'
+services:
+  jekyll:
+    restart: always
+    image: jekyll/jekyll
+    container_name: jekyll
+    volumes:
+      - "./docs:/srv/jekyll"
+    command: jekyll serve --force_polling
+    ports:
+      - "4000:4000"
+    environment:
+      JEKYLL_UID: "2000"
+      JEKYLL_GID: "2000"
+
