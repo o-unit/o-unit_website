@@ -733,6 +733,72 @@ function makeScorefilter(target,items){
 	};
 };
 
+/**
+ * 楽曲記録の検索条件を作成
+ *
+ * @param {String}  target  - 対象タグのid(jQueryのセレクタ)
+ *        {{String,String}...} items - {name属性, VNo, isChecked?, 表示テキスト}の配列
+ * @return なし
+ *
+**/
+function makeRecordfilter(target,items){
+	let addHtml = '';
+	let slider;
+	for (let item of items) {
+		let djlv_min_label = '<span id="djlevel_' + item[0] + '_min" class="level_number"></span>';
+		let djlv_max_label = '<span id="djlevel_' + item[0] + '_max" class="level_number"></span>';
+		let exscore_min_input = '<input id="exscore_' + item[0] + '_min" name="exscore_' + item[0] + '_min" type="text" placeholder="0" class="input-60" />';
+		let exscore_max_input = '<input id="exscore_' + item[0] + '_max" name="exscore_' + item[0] + '_max" type="text" placeholder="99999" class="input-60" />';
+		let misscount_min_input = '<input id="misscount_' + item[0] + '_min" name="misscount_' + item[0] + '_min" type="text" placeholder="0" class="input-60" />';
+		let misscount_max_input = '<input id="misscount_' + item[0] + '_max" name="misscount_' + item[0] + '_max" type="text" placeholder="99999" class="input-60" />';
+		addHtml +=
+			'<div class="inblock sliderbox">' +
+			'<div class="fieldname">' + item[0] + '<br />' + djlv_min_label + '～' + djlv_max_label + '</div>' +
+			'<div class="inblock slider_outer"><div id="djlevel_' + item[0] + '_levels"></div></div>' +
+			'</div>' +
+			'<div class="inblock">' +
+			'<div class="fieldname">EXスコア</div>' +
+			'<div class="notes-menu">' + exscore_min_input + '</div><div class="inblock pad-lr5">～</div><div class="notes-menu">' + exscore_max_input + '</div>' +
+			'</div>' +
+			'<div class="inblock">' +
+			'<div class="fieldname">MISS COUNT</div>' +
+			'<div class="notes-menu">' + misscount_min_input + '</div><div class="inblock pad-lr5">～</div><div class="notes-menu">' + misscount_max_input + '</div>' +
+			'</div>' +
+			'<div class="inblock">' +
+			'<div class="fieldname">クリアランプ</div><div id="clearTypebox_' + item[0] + '" class="inblock"></div></div>' +
+			((item[0] === items.slice(-1)[0][0]) ? '' : '<hr class="clearfix" />');
+	};
+	jQuery(target).append(addHtml);
+
+	for (item of items) {
+		slider = jQuery('#djlevel_' + item[0] + '_levels')[0];
+		noUiSlider.create(slider, {
+			range: {'min': item[1], 'max': item[2]},
+			step: 1,
+			start: [item[1],item[2]],
+			connect: [false, true, false],
+			tooltips: true,
+			format: {
+				to: function (value) { return parseInt(value); },
+				from: function (value) { return parseInt(value); }
+			}
+		});
+
+		let nodes = [jQuery('#djlevel_' + item[0] + '_min'), jQuery('#djlevel_' + item[0] + '_max')];
+		jQuery(slider)[0].noUiSlider.on('update', function (values, handle, unencoded, isTap, positions) {
+			score = this.target.id.split('_')[1];
+			txt = unencoded[handle] == 0 ? '無' : DJLevelArray2[(DJLevelArray2.length - 1 - Math.ceil(unencoded[handle]))];
+			nodes[handle].text(unencoded[handle] == 0 ? '無' : txt);
+			jQuery('.noUi-handle[data-handle=' + handle + '] .noUi-tooltip').text(txt);
+		});
+
+		// 検索条件のクリアランプ項目作成
+		let clearTypeButtonList = [];
+		for (let i of ClearTypeArray) { clearTypeButtonList.push( ['clearType_' + item[0], i, true, i, ['clearTypeButton']] ); };
+		makeCheckbox('#clearTypebox_' + item[0],clearTypeButtonList);
+	};
+};
+
 function makeSelectTag(name, prefix, suffix, list, value) {
 	if (name == '' || prefix == '' || suffix == '' || !Array.isArray(list) || value == '') {return '';};
 
@@ -1196,19 +1262,61 @@ let musics = {
 			};
 
 			// DJLevelでフィルタ
-			if ( s.params.djlevel.min != 0 || s.params.djlevel.min != (DJLevelArray2.length - 1) ) {
-				if ((item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID])) {
-					if (('SP' in userJSON.musics[item.ID].EXScores)) {
-						iSP = item.Scores.Single;
-						uSP = userJSON.musics[item.ID].EXScores.SP;
-						if (Diff[0].Name in uSP) {
-							ind = DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[0].Name].Notes*2,uSP[Diff[0].Name],1).replace(/[+0-9]/g, ''));
-							if ( ind) {};
-						};
-					};
+			let hasEXScore = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) ?
+				{ 'SP': 'SP' in userJSON.musics[item.ID].EXScores, 'DP': 'DP' in userJSON.musics[item.ID].EXScores } : { 'SP': false, 'DP': false };
+			iSP = item.Scores.Single;
+			iDP = item.Scores.Double;
 
-				};
+			if ( !hasEXScore.SP && !hasEXScore.DP ) {
+				if ( (Diff[0].Name in iSP ? s.params.djlevel.SPB.min != 0 : false) ||
+					 (Diff[1].Name in iSP ? s.params.djlevel.SPN.min != 0 : false) ||
+					 (Diff[2].Name in iSP ? s.params.djlevel.SPH.min != 0 : false) ||
+					 (Diff[3].Name in iSP ? s.params.djlevel.SPA.min != 0 : false) ||
+					 (Diff[1].Name in iDP ? s.params.djlevel.DPN.min != 0 : false) ||
+					 (Diff[2].Name in iDP ? s.params.djlevel.DPH.min != 0 : false) ||
+					 (Diff[3].Name in iDP ? s.params.djlevel.DPA.min != 0 : false) ) { return false; };
 			};
+
+			if (hasEXScore.SP) {
+				uSP = userJSON.musics[item.ID].EXScores.SP;
+				if (Diff[0].Name in uSP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[0].Name].Notes*2,uSP[Diff[0].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.SPB.min || s.params.djlevel.SPB.max < val ) { return false; };
+				} else if ( Diff[0].Name in iSP ? s.params.djlevel.SPB.min != 0 : false ) { return false; };
+				if (Diff[1].Name in uSP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[1].Name].Notes*2,uSP[Diff[1].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.SPN.min || s.params.djlevel.SPN.max < val ) { return false; };
+				} else if ( Diff[1].Name in iSP ? s.params.djlevel.SPN.min != 0 : false ) { return false; };
+				if (Diff[2].Name in uSP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[2].Name].Notes*2,uSP[Diff[2].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.SPH.min || s.params.djlevel.SPH.max < val ) { return false; };
+				} else if ( Diff[2].Name in iSP ? s.params.djlevel.SPH.min != 0 : false ) { return false; };
+				if (Diff[3].Name in uSP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[3].Name].Notes*2,uSP[Diff[3].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.SPA.min || s.params.djlevel.SPA.max < val ) { return false; };
+				} else if ( Diff[3].Name in iSP ? s.params.djlevel.SPA.min != 0 : false ) { return false; };
+			} else if ( (Diff[0].Name in iSP ? s.params.djlevel.SPB.min != 0 : false) ||
+						(Diff[1].Name in iSP ? s.params.djlevel.SPN.min != 0 : false) ||
+						(Diff[2].Name in iSP ? s.params.djlevel.SPH.min != 0 : false) ||
+						(Diff[3].Name in iSP ? s.params.djlevel.SPA.min != 0 : false) ) { return false; };
+
+			if (hasEXScore.DP) {
+				uDP = userJSON.musics[item.ID].EXScores.DP;
+				if (Diff[1].Name in uDP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iDP[Diff[1].Name].Notes*2,uDP[Diff[1].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.DPN.min || s.params.djlevel.DPN.max < val ) { return false; };
+				} else if ( Diff[1].Name in iDP ? s.params.djlevel.DPN.min != 0 : false ) { return false; };
+				if (Diff[2].Name in uDP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iDP[Diff[2].Name].Notes*2,uDP[Diff[2].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.DPH.min || s.params.djlevel.DPH.max < val ) { return false; };
+				} else if ( Diff[2].Name in iDP ? s.params.djlevel.DPH.min != 0 : false ) { return false; };
+				if (Diff[3].Name in uDP ) {
+					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iDP[Diff[3].Name].Notes*2,uDP[Diff[3].Name],1).replace(/[+0-9]/g, ''));
+					if ( val < s.params.djlevel.DPA.min || s.params.djlevel.DPA.max < val ) { return false; };
+				} else if ( Diff[3].Name in iDP ? s.params.djlevel.DPA.min != 0 : false ) { return false; };
+			} else if ( (Diff[1].Name in iDP ? s.params.djlevel.DPN.min != 0 : false) ||
+						(Diff[2].Name in iDP ? s.params.djlevel.DPH.min != 0 : false) ||
+						(Diff[3].Name in iDP ? s.params.djlevel.DPA.min != 0 : false) ) { return false; };
 
 			// 曲名でフィルタ
 			if (s.params.title && item.Title.indexOf(s.params.title) == -1) { return false; };
@@ -2116,6 +2224,8 @@ let s = {
 		this.params.showdjlevel = Number(jQuery('#showdjlevel').val());
 	},
 	getScoreSearchParams: function(score) {
+		this.params.cleartype[score] = [];
+		let thisTmp = this;
 		[this.params.lv[score].min,this.params.lv[score].max] = jQuery('#' + score + '-levels')[0].noUiSlider.get();
 		this.params.opt[score].cn = Number(jQuery('#opt_' + score + '_CN').val());
 		this.params.opt[score].bss = Number(jQuery('#opt_' + score + '_BSS').val());
@@ -2629,6 +2739,7 @@ function handleClientLoad() {
 										['DPN',0,12],
 										['DPH',0,12],
 										['DPA',0,12] ]);
+
 	// 検索条件のリリース条件項目作成
 	let releaseButtonList = [ ['releasetype', 'Default',       true, 'デフォルト楽曲'],
 							  ['releasetype', 'Monthly',       true, '特定月プレイ特典'],
@@ -2684,36 +2795,14 @@ function handleClientLoad() {
 		jQuery('#bitdate-max').prop('disabled', (jQuery(this).val() === '2000-01-01'));
 	});
 
-	for (i of ['SPB','SPN','SPH','SPA','DPN','DPH','DPA']) {
-		// 検索条件のDJレベルスライダー作成
-		slider = jQuery('#djlevel_' + i + '_levels')[0];
-		noUiSlider.create(slider, {
-			range: {'min': 0, 'max': DJLevelArray2.length - 1},
-			step: 1,
-			start: [0,DJLevelArray2.length - 1],
-			connect: [false, true, false],
-			tooltips: true,
-			format: {
-				to: function (value) { return parseInt(value); },
-				from: function (value) { return parseInt(value); }
-			}
-		});
-
-		// DJレベルスライダー変更時の動作
-		let nodes_djlevel = [jQuery('#djlevel_' + i + '_min'), jQuery('#djlevel_' + i + '_max')];
-		slider.noUiSlider.on('update', function (values, handle, unencoded, isTap, positions) {
-			nodes_djlevel[handle].text(values[handle] == 0 ? '無' : DJLevelArray2[(DJLevelArray2.length - 1 - parseInt(values[handle]))]);
-			jQuery(slider).find('.noUi-handle[data-handle=' + handle + '] .noUi-tooltip').text(values[handle] == 0 ? '無' : DJLevelArray2[(DJLevelArray2.length - 1 - parseInt(values[handle]))]);
-		});
-
-		// 検索条件のクリアランプ項目作成
-		let clearTypeButtonList = [];
-		for (let item of ClearTypeArray) {
-			clearTypeButtonList.push( ['clearType_' + i,item, true, item, ['clearTypeButton']] );
-		};
-		makeCheckbox('#clearTypebox_' + i,clearTypeButtonList);
-	};
-
+	// 楽曲記録の検索条件を作成
+	makeRecordfilter('#recordfilterbox',[ ['SPB',0,DJLevelArray2.length - 1],
+										  ['SPN',0,DJLevelArray2.length - 1],
+										  ['SPH',0,DJLevelArray2.length - 1],
+										  ['SPA',0,DJLevelArray2.length - 1],
+										  ['DPN',0,DJLevelArray2.length - 1],
+										  ['DPH',0,DJLevelArray2.length - 1],
+										  ['DPA',0,DJLevelArray2.length - 1] ]);
 
 	// ファイル選択ボタン押下時
 	jQuery('#localfile').on('change', function() {
