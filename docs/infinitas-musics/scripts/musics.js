@@ -108,10 +108,10 @@ let NotesArray = [
 	'2000-',    'NO'];
 
 let Diff = [
-	{'Name': 'Beginner', 'Short': 'B'},
-	{'Name': 'Normal', 'Short': 'N'},
-	{'Name': 'Hyper', 'Short': 'H'},
-	{'Name': 'Another', 'Short': 'A'},
+	{'Name': 'Beginner',    'Short': 'B'},
+	{'Name': 'Normal',      'Short': 'N'},
+	{'Name': 'Hyper',       'Short': 'H'},
+	{'Name': 'Another',     'Short': 'A'},
 	{'Name': 'Leggendaria', 'Short': 'L'}
 ];
 
@@ -900,8 +900,8 @@ function getNotesValue(inputNotes) {
  *
  * @param {Integer} maxScore - 楽曲の理論値
  * @param {Integer} EXScore - EXScore
- * @param {Integer} showType - 表示
- * @returns {[String, String]} - DJLevel, +-表記
+ * @param {Integer} showType - 表示タイプ
+ * @returns {String} - 加工済みDJLevel文字列
  */
 function getDJLevel(maxScore = 0, EXScore = 0, showType = 0) {
  	if (isNaN(maxScore) || isNaN(EXScore) || maxScore == 0 || EXScore == 0 || maxScore < EXScore ) { return ''; };
@@ -1264,59 +1264,26 @@ let musics = {
 			// DJLevelでフィルタ
 			let hasEXScore = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) ?
 				{ 'SP': 'SP' in userJSON.musics[item.ID].EXScores, 'DP': 'DP' in userJSON.musics[item.ID].EXScores } : { 'SP': false, 'DP': false };
-			iSP = item.Scores.Single;
-			iDP = item.Scores.Double;
-
-			if ( !hasEXScore.SP && !hasEXScore.DP ) {
-				if ( (Diff[0].Name in iSP ? s.params.djlevel.SPB.min != 0 : false) ||
-					 (Diff[1].Name in iSP ? s.params.djlevel.SPN.min != 0 : false) ||
-					 (Diff[2].Name in iSP ? s.params.djlevel.SPH.min != 0 : false) ||
-					 (Diff[3].Name in iSP ? s.params.djlevel.SPA.min != 0 : false) ||
-					 (Diff[1].Name in iDP ? s.params.djlevel.DPN.min != 0 : false) ||
-					 (Diff[2].Name in iDP ? s.params.djlevel.DPH.min != 0 : false) ||
-					 (Diff[3].Name in iDP ? s.params.djlevel.DPA.min != 0 : false) ) { return false; };
+			let iSP = item.Scores.Single;
+			let iDP = item.Scores.Double;
+			let uSP = hasEXScore.SP ? userJSON.musics[item.ID].EXScores.SP : {};
+			let uDP = hasEXScore.DP ? userJSON.musics[item.ID].EXScores.DP : {};
+			let getVal = (Arr, iN, uS) => Arr.length - 1 - Arr.findIndex((i) => i == getDJLevel(iN*2,uS,1).replace(/[+0-9]/g, ''));
+			let chkDJLevel = (dif, type, i, u) => {
+				if (dif in u ) {
+					val = getVal(DJLevelArray2, i[dif].Notes, u[dif]);
+					if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; };
+				} else if ( dif in i ? s.params.djlevel[type].min != 0 : false ) { return false; };
+				return true;
 			};
 
-			if (hasEXScore.SP) {
-				uSP = userJSON.musics[item.ID].EXScores.SP;
-				if (Diff[0].Name in uSP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[0].Name].Notes*2,uSP[Diff[0].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.SPB.min || s.params.djlevel.SPB.max < val ) { return false; };
-				} else if ( Diff[0].Name in iSP ? s.params.djlevel.SPB.min != 0 : false ) { return false; };
-				if (Diff[1].Name in uSP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[1].Name].Notes*2,uSP[Diff[1].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.SPN.min || s.params.djlevel.SPN.max < val ) { return false; };
-				} else if ( Diff[1].Name in iSP ? s.params.djlevel.SPN.min != 0 : false ) { return false; };
-				if (Diff[2].Name in uSP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[2].Name].Notes*2,uSP[Diff[2].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.SPH.min || s.params.djlevel.SPH.max < val ) { return false; };
-				} else if ( Diff[2].Name in iSP ? s.params.djlevel.SPH.min != 0 : false ) { return false; };
-				if (Diff[3].Name in uSP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iSP[Diff[3].Name].Notes*2,uSP[Diff[3].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.SPA.min || s.params.djlevel.SPA.max < val ) { return false; };
-				} else if ( Diff[3].Name in iSP ? s.params.djlevel.SPA.min != 0 : false ) { return false; };
-			} else if ( (Diff[0].Name in iSP ? s.params.djlevel.SPB.min != 0 : false) ||
-						(Diff[1].Name in iSP ? s.params.djlevel.SPN.min != 0 : false) ||
-						(Diff[2].Name in iSP ? s.params.djlevel.SPH.min != 0 : false) ||
-						(Diff[3].Name in iSP ? s.params.djlevel.SPA.min != 0 : false) ) { return false; };
-
-			if (hasEXScore.DP) {
-				uDP = userJSON.musics[item.ID].EXScores.DP;
-				if (Diff[1].Name in uDP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iDP[Diff[1].Name].Notes*2,uDP[Diff[1].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.DPN.min || s.params.djlevel.DPN.max < val ) { return false; };
-				} else if ( Diff[1].Name in iDP ? s.params.djlevel.DPN.min != 0 : false ) { return false; };
-				if (Diff[2].Name in uDP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iDP[Diff[2].Name].Notes*2,uDP[Diff[2].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.DPH.min || s.params.djlevel.DPH.max < val ) { return false; };
-				} else if ( Diff[2].Name in iDP ? s.params.djlevel.DPH.min != 0 : false ) { return false; };
-				if (Diff[3].Name in uDP ) {
-					val = DJLevelArray2.length - 1 - DJLevelArray2.findIndex((i) => i == getDJLevel(iDP[Diff[3].Name].Notes*2,uDP[Diff[3].Name],1).replace(/[+0-9]/g, ''));
-					if ( val < s.params.djlevel.DPA.min || s.params.djlevel.DPA.max < val ) { return false; };
-				} else if ( Diff[3].Name in iDP ? s.params.djlevel.DPA.min != 0 : false ) { return false; };
-			} else if ( (Diff[1].Name in iDP ? s.params.djlevel.DPN.min != 0 : false) ||
-						(Diff[2].Name in iDP ? s.params.djlevel.DPH.min != 0 : false) ||
-						(Diff[3].Name in iDP ? s.params.djlevel.DPA.min != 0 : false) ) { return false; };
+			if (!( chkDJLevel(Diff[0].Name, 'SPB', iSP, uSP) ) ) { return false; };
+			if (!( chkDJLevel(Diff[1].Name, 'SPN', iSP, uSP) ) ) { return false; };
+			if (!( chkDJLevel(Diff[2].Name, 'SPH', iSP, uSP) ) ) { return false; };
+			if (!( chkDJLevel(Diff[3].Name, 'SPA', iSP, uSP) ) ) { return false; };
+			if (!( chkDJLevel(Diff[1].Name, 'DPN', iDP, uDP) ) ) { return false; };
+			if (!( chkDJLevel(Diff[2].Name, 'DPH', iDP, uDP) ) ) { return false; };
+			if (!( chkDJLevel(Diff[3].Name, 'DPA', iDP, uDP) ) ) { return false; };
 
 			// 曲名でフィルタ
 			if (s.params.title && item.Title.indexOf(s.params.title) == -1) { return false; };
