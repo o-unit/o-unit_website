@@ -1673,16 +1673,16 @@ let musics = {
 					"DPL": '<div class="notesstyle' + (DPL.HBSS ? ' hbss' : DPL.BSS ? ' bss' : '') + '"></div>'
 				},
 				"exscore": {
-					"SPB": (!isNaN(SPB.Lv) ? '<input id="exs_' + item.ID + '_spb" name="exs_' + item.ID + '_spb" type="text" class="exscore" value="' + vals.ex.SP[Diff[0].Name] + '">' : ''),
-					"SPN": (!isNaN(SPN.Lv) ? '<input id="exs_' + item.ID + '_spn" name="exs_' + item.ID + '_spn" type="text" class="exscore" value="' + vals.ex.SP[Diff[1].Name] + '">' : ''),
-					"SPH": (!isNaN(SPH.Lv) ? '<input id="exs_' + item.ID + '_sph" name="exs_' + item.ID + '_sph" type="text" class="exscore" value="' + vals.ex.SP[Diff[2].Name] + '">' : ''),
-					"SPA": (!isNaN(SPA.Lv) ? '<input id="exs_' + item.ID + '_spa" name="exs_' + item.ID + '_spa" type="text" class="exscore" value="' + vals.ex.SP[Diff[3].Name] + '">' : ''),
-					"SPL": (!isNaN(SPL.Lv) ? '<input id="exs_' + item.ID + '_spl" name="exs_' + item.ID + '_spl" type="text" class="exscore" value="' + vals.ex.SP[Diff[4].Name] + '">' : ''),
-					"DPB": (!isNaN(DPB.Lv) ? '<input id="exs_' + item.ID + '_dpb" name="exs_' + item.ID + '_dpb" type="text" class="exscore" value="' + vals.ex.DP[Diff[0].Name] + '">' : ''),
-					"DPN": (!isNaN(DPN.Lv) ? '<input id="exs_' + item.ID + '_dpn" name="exs_' + item.ID + '_dpn" type="text" class="exscore" value="' + vals.ex.DP[Diff[1].Name] + '">' : ''),
-					"DPH": (!isNaN(DPH.Lv) ? '<input id="exs_' + item.ID + '_dph" name="exs_' + item.ID + '_dph" type="text" class="exscore" value="' + vals.ex.DP[Diff[2].Name] + '">' : ''),
-					"DPA": (!isNaN(DPA.Lv) ? '<input id="exs_' + item.ID + '_dpa" name="exs_' + item.ID + '_dpa" type="text" class="exscore" value="' + vals.ex.DP[Diff[3].Name] + '">' : ''),
-					"DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + vals.ex.DP[Diff[4].Name] + '">' : '')
+					"SPB": (!isNaN(SPB.Lv) ? '<input id="exs_' + item.ID + '_spb" name="exs_' + item.ID + '_spb" type="text" class="exscore" value="' + vals.ex.SP[Diff[0].Name] + '" placeholder="0">' : ''),
+					"SPN": (!isNaN(SPN.Lv) ? '<input id="exs_' + item.ID + '_spn" name="exs_' + item.ID + '_spn" type="text" class="exscore" value="' + vals.ex.SP[Diff[1].Name] + '" placeholder="0">' : ''),
+					"SPH": (!isNaN(SPH.Lv) ? '<input id="exs_' + item.ID + '_sph" name="exs_' + item.ID + '_sph" type="text" class="exscore" value="' + vals.ex.SP[Diff[2].Name] + '" placeholder="0">' : ''),
+					"SPA": (!isNaN(SPA.Lv) ? '<input id="exs_' + item.ID + '_spa" name="exs_' + item.ID + '_spa" type="text" class="exscore" value="' + vals.ex.SP[Diff[3].Name] + '" placeholder="0">' : ''),
+					"SPL": (!isNaN(SPL.Lv) ? '<input id="exs_' + item.ID + '_spl" name="exs_' + item.ID + '_spl" type="text" class="exscore" value="' + vals.ex.SP[Diff[4].Name] + '" placeholder="0">' : ''),
+					"DPB": (!isNaN(DPB.Lv) ? '<input id="exs_' + item.ID + '_dpb" name="exs_' + item.ID + '_dpb" type="text" class="exscore" value="' + vals.ex.DP[Diff[0].Name] + '" placeholder="0">' : ''),
+					"DPN": (!isNaN(DPN.Lv) ? '<input id="exs_' + item.ID + '_dpn" name="exs_' + item.ID + '_dpn" type="text" class="exscore" value="' + vals.ex.DP[Diff[1].Name] + '" placeholder="0">' : ''),
+					"DPH": (!isNaN(DPH.Lv) ? '<input id="exs_' + item.ID + '_dph" name="exs_' + item.ID + '_dph" type="text" class="exscore" value="' + vals.ex.DP[Diff[2].Name] + '" placeholder="0">' : ''),
+					"DPA": (!isNaN(DPA.Lv) ? '<input id="exs_' + item.ID + '_dpa" name="exs_' + item.ID + '_dpa" type="text" class="exscore" value="' + vals.ex.DP[Diff[3].Name] + '" placeholder="0">' : ''),
+					"DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + vals.ex.DP[Diff[4].Name] + '" placeholder="0">' : '')
 				},
 				"djlevel": {
 					"SPB": ( !isNaN(SPB.Lv) && vals.ex.SP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spb">' + (swdjlv != -1 ? getDJLevel(SPB.Notes * 2, vals.ex.SP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
@@ -1709,16 +1709,16 @@ let musics = {
 					"DPL": (!isNaN(DPL.Lv) ? makeSelectTag(item.ID, 'ct', 'dpl', ClearTypeArray, vals.ct.DP[Diff[4].Name]) : '')
 				},
 				"misscount": {
-					"SPB": (!isNaN(SPB.Lv) ? '<input id="mc_' + item.ID + '_spb" name="mc_' + item.ID + '_spb" type="text" class="misscount" value="' + vals.mc.SP[Diff[0].Name] + '">' : ''),
-					"SPN": (!isNaN(SPN.Lv) ? '<input id="mc_' + item.ID + '_spn" name="mc_' + item.ID + '_spn" type="text" class="misscount" value="' + vals.mc.SP[Diff[1].Name] + '">' : ''),
-					"SPH": (!isNaN(SPH.Lv) ? '<input id="mc_' + item.ID + '_sph" name="mc_' + item.ID + '_sph" type="text" class="misscount" value="' + vals.mc.SP[Diff[2].Name] + '">' : ''),
-					"SPA": (!isNaN(SPA.Lv) ? '<input id="mc_' + item.ID + '_spa" name="mc_' + item.ID + '_spa" type="text" class="misscount" value="' + vals.mc.SP[Diff[3].Name] + '">' : ''),
-					"SPL": (!isNaN(SPL.Lv) ? '<input id="mc_' + item.ID + '_spl" name="mc_' + item.ID + '_spl" type="text" class="misscount" value="' + vals.mc.SP[Diff[4].Name] + '">' : ''),
-					"DPB": (!isNaN(DPB.Lv) ? '<input id="mc_' + item.ID + '_dpb" name="mc_' + item.ID + '_dpb" type="text" class="misscount" value="' + vals.mc.DP[Diff[0].Name] + '">' : ''),
-					"DPN": (!isNaN(DPN.Lv) ? '<input id="mc_' + item.ID + '_dpn" name="mc_' + item.ID + '_dpn" type="text" class="misscount" value="' + vals.mc.DP[Diff[1].Name] + '">' : ''),
-					"DPH": (!isNaN(DPH.Lv) ? '<input id="mc_' + item.ID + '_dph" name="mc_' + item.ID + '_dph" type="text" class="misscount" value="' + vals.mc.DP[Diff[2].Name] + '">' : ''),
-					"DPA": (!isNaN(DPA.Lv) ? '<input id="mc_' + item.ID + '_dpa" name="mc_' + item.ID + '_dpa" type="text" class="misscount" value="' + vals.mc.DP[Diff[3].Name] + '">' : ''),
-					"DPL": (!isNaN(DPL.Lv) ? '<input id="mc_' + item.ID + '_dpl" name="mc_' + item.ID + '_dpl" type="text" class="misscount" value="' + vals.mc.DP[Diff[4].Name] + '">' : '')
+					"SPB": (!isNaN(SPB.Lv) ? '<input id="mc_' + item.ID + '_spb" name="mc_' + item.ID + '_spb" type="text" class="misscount" value="' + vals.mc.SP[Diff[0].Name] + '" placeholder="0">' : ''),
+					"SPN": (!isNaN(SPN.Lv) ? '<input id="mc_' + item.ID + '_spn" name="mc_' + item.ID + '_spn" type="text" class="misscount" value="' + vals.mc.SP[Diff[1].Name] + '" placeholder="0">' : ''),
+					"SPH": (!isNaN(SPH.Lv) ? '<input id="mc_' + item.ID + '_sph" name="mc_' + item.ID + '_sph" type="text" class="misscount" value="' + vals.mc.SP[Diff[2].Name] + '" placeholder="0">' : ''),
+					"SPA": (!isNaN(SPA.Lv) ? '<input id="mc_' + item.ID + '_spa" name="mc_' + item.ID + '_spa" type="text" class="misscount" value="' + vals.mc.SP[Diff[3].Name] + '" placeholder="0">' : ''),
+					"SPL": (!isNaN(SPL.Lv) ? '<input id="mc_' + item.ID + '_spl" name="mc_' + item.ID + '_spl" type="text" class="misscount" value="' + vals.mc.SP[Diff[4].Name] + '" placeholder="0">' : ''),
+					"DPB": (!isNaN(DPB.Lv) ? '<input id="mc_' + item.ID + '_dpb" name="mc_' + item.ID + '_dpb" type="text" class="misscount" value="' + vals.mc.DP[Diff[0].Name] + '" placeholder="0">' : ''),
+					"DPN": (!isNaN(DPN.Lv) ? '<input id="mc_' + item.ID + '_dpn" name="mc_' + item.ID + '_dpn" type="text" class="misscount" value="' + vals.mc.DP[Diff[1].Name] + '" placeholder="0">' : ''),
+					"DPH": (!isNaN(DPH.Lv) ? '<input id="mc_' + item.ID + '_dph" name="mc_' + item.ID + '_dph" type="text" class="misscount" value="' + vals.mc.DP[Diff[2].Name] + '" placeholder="0">' : ''),
+					"DPA": (!isNaN(DPA.Lv) ? '<input id="mc_' + item.ID + '_dpa" name="mc_' + item.ID + '_dpa" type="text" class="misscount" value="' + vals.mc.DP[Diff[3].Name] + '" placeholder="0">' : ''),
+					"DPL": (!isNaN(DPL.Lv) ? '<input id="mc_' + item.ID + '_dpl" name="mc_' + item.ID + '_dpl" type="text" class="misscount" value="' + vals.mc.DP[Diff[4].Name] + '" placeholder="0">' : '')
 				},
 			};
 
