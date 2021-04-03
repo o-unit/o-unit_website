@@ -1261,29 +1261,49 @@ let musics = {
 				};
 			};
 
-			// DJLevelでフィルタ
-			let hasEXScore = (item.ID in userJSON.musics) && ('EXScores' in userJSON.musics[item.ID]) ?
-				{ 'SP': 'SP' in userJSON.musics[item.ID].EXScores, 'DP': 'DP' in userJSON.musics[item.ID].EXScores } : { 'SP': false, 'DP': false };
+			// DJLevel・EXScore・MissCountでフィルタ
+			let uM = item.ID in userJSON.musics ? userJSON.musics[item.ID] : {};
+			let uEX = 'EXScores' in uM ? uM.EXScores : {};
+			let uMC = 'MissCount' in uM ? uM.MissCount : {};
+			let uCT = 'ClearType' in uM ? uM.ClearType : {};
 			let iSP = item.Scores.Single;
 			let iDP = item.Scores.Double;
-			let uSP = hasEXScore.SP ? userJSON.musics[item.ID].EXScores.SP : {};
-			let uDP = hasEXScore.DP ? userJSON.musics[item.ID].EXScores.DP : {};
+			let uEXSP = 'SP' in uEX ? uEX.SP : {};
+			let uEXDP = 'DP' in uEX ? uEX.DP : {};
+			let uMCSP = 'SP' in uMC ? uMC.SP : {};
+			let uMCDP = 'DP' in uMC ? uMC.DP : {};
+			let uCTSP = 'SP' in uCT ? uCT.SP : {};
+			let uCTDP = 'DP' in uCT ? uCT.DP : {};
 			let getVal = (Arr, iN, uS) => Arr.length - 1 - Arr.findIndex((i) => i == getDJLevel(iN*2,uS,1).replace(/[+0-9]/g, ''));
-			let chkDJLevel = (dif, type, i, u) => {
-				if (dif in u ) {
-					val = getVal(DJLevelArray2, i[dif].Notes, u[dif]);
-					if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; };
-				} else if ( dif in i ? s.params.djlevel[type].min != 0 : false ) { return false; };
+			let chkScoreRecord = (dif, type, i, uEX, uMC, uCT) => {
+				if ( dif in uEX ) {
+					val = getVal(DJLevelArray2, i[dif].Notes, uEX[dif]);
+					if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; }; // DJLevel
+					if ( uEX[dif] < s.params.exscore[type].min || s.params.exscore[type].max < uEX[dif] ) { return false; }; // EXScore
+				} else {
+					if ( dif in i ? s.params.djlevel[type].min != 0 || s.params.djlevel[type].max != DJLevelArray2.length - 1 : false ) { return false; }; // DJLevel
+					if ( dif in i ? s.params.exscore[type].min != 0 || s.params.exscore[type].max != 99999 : false ) { return false; }; // EXScore
+				};
+				if ( dif in uMC ) {
+					if ( uMC[dif] < s.params.misscount[type].min || s.params.misscount[type].max < uMC[dif] ) { return false; }; // MissCount
+				} else {
+					if ( dif in i ? s.params.misscount[type].min != 0 || s.params.misscount[type].max != 99999 : false ) { return false; }; // MissCount
+				};
+				if ( dif in uCT ) {
+					if ( -1 == s.params.cleartype[type].indexOf(uCT[dif]) ) { return false; }; // ClearType
+				} else {
+					if ( dif in i ? -1 == s.params.cleartype[type].indexOf(ClearTypeArray[ClearTypeArray.length - 1]) : false ) { return false; }; // ClearType
+				};
 				return true;
 			};
 
-			if (!( chkDJLevel(Diff[0].Name, 'SPB', iSP, uSP) ) ) { return false; };
-			if (!( chkDJLevel(Diff[1].Name, 'SPN', iSP, uSP) ) ) { return false; };
-			if (!( chkDJLevel(Diff[2].Name, 'SPH', iSP, uSP) ) ) { return false; };
-			if (!( chkDJLevel(Diff[3].Name, 'SPA', iSP, uSP) ) ) { return false; };
-			if (!( chkDJLevel(Diff[1].Name, 'DPN', iDP, uDP) ) ) { return false; };
-			if (!( chkDJLevel(Diff[2].Name, 'DPH', iDP, uDP) ) ) { return false; };
-			if (!( chkDJLevel(Diff[3].Name, 'DPA', iDP, uDP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[0].Name, 'SPB', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[1].Name, 'SPN', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[2].Name, 'SPH', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[3].Name, 'SPA', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[1].Name, 'DPN', iDP, uEXDP, uMCDP, uCTDP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[2].Name, 'DPH', iDP, uEXDP, uMCDP, uCTDP) ) ) { return false; };
+			if (!( chkScoreRecord(Diff[3].Name, 'DPA', iDP, uEXDP, uMCDP, uCTDP) ) ) { return false; };
 
 			// 曲名でフィルタ
 			if (s.params.title && item.Title.indexOf(s.params.title) == -1) { return false; };
@@ -1582,10 +1602,10 @@ let musics = {
 			let vals = {'cp': {}, 'ex': {'SP': {}, 'DP':{}}, 'mc': {'SP': {}, 'DP':{}}, 'ct': {'SP': {}, 'DP':{}}};
 			for (i of Diff) {
 				vals.cp[i.Name] = (hasUserJSON && hasMusic && hasCanplay) ? (uJSON.Canplay[i.Name] == 1) : false;
-				vals.ex.SP[i.Name] = (hasUserJSON && hasMusic && hasEXScoreSP && (i.Name in uJSON.EXScores.SP)) ? uJSON.EXScores.SP[i.Name] : 0;
-				vals.ex.DP[i.Name] = (hasUserJSON && hasMusic && hasEXScoreDP && (i.Name in uJSON.EXScores.DP)) ? uJSON.EXScores.DP[i.Name] : 0;
-				vals.mc.SP[i.Name] = (hasUserJSON && hasMusic && hasMissCountSP && (i.Name in uJSON.MissCount.SP)) ? uJSON.MissCount.SP[i.Name] : 0;
-				vals.mc.DP[i.Name] = (hasUserJSON && hasMusic && hasMissCountDP && (i.Name in uJSON.MissCount.DP)) ? uJSON.MissCount.DP[i.Name] : 0;
+				vals.ex.SP[i.Name] = (hasUserJSON && hasMusic && hasEXScoreSP && (i.Name in uJSON.EXScores.SP)) ? uJSON.EXScores.SP[i.Name] : '';
+				vals.ex.DP[i.Name] = (hasUserJSON && hasMusic && hasEXScoreDP && (i.Name in uJSON.EXScores.DP)) ? uJSON.EXScores.DP[i.Name] : '';
+				vals.mc.SP[i.Name] = (hasUserJSON && hasMusic && hasMissCountSP && (i.Name in uJSON.MissCount.SP)) ? uJSON.MissCount.SP[i.Name] : '';
+				vals.mc.DP[i.Name] = (hasUserJSON && hasMusic && hasMissCountDP && (i.Name in uJSON.MissCount.DP)) ? uJSON.MissCount.DP[i.Name] : '';
 				vals.ct.SP[i.Name] = (hasUserJSON && hasMusic && hasClearTypeSP && (i.Name in uJSON.ClearType.SP)) ? uJSON.ClearType.SP[i.Name] : ctTmp;
 				vals.ct.DP[i.Name] = (hasUserJSON && hasMusic && hasClearTypeDP && (i.Name in uJSON.ClearType.DP)) ? uJSON.ClearType.DP[i.Name] : ctTmp;
 			};
@@ -1664,6 +1684,18 @@ let musics = {
 					"DPA": (!isNaN(DPA.Lv) ? '<input id="exs_' + item.ID + '_dpa" name="exs_' + item.ID + '_dpa" type="text" class="exscore" value="' + vals.ex.DP[Diff[3].Name] + '">' : ''),
 					"DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + vals.ex.DP[Diff[4].Name] + '">' : '')
 				},
+				"djlevel": {
+					"SPB": ( !isNaN(SPB.Lv) && vals.ex.SP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spb">' + (swdjlv != -1 ? getDJLevel(SPB.Notes * 2, vals.ex.SP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
+					"SPN": ( !isNaN(SPN.Lv) && vals.ex.SP[Diff[1].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spn">' + (swdjlv != -1 ? getDJLevel(SPN.Notes * 2, vals.ex.SP[Diff[1].Name], swdjlv) : '') + '</label>' : '',
+					"SPH": ( !isNaN(SPH.Lv) && vals.ex.SP[Diff[2].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_sph">' + (swdjlv != -1 ? getDJLevel(SPH.Notes * 2, vals.ex.SP[Diff[2].Name], swdjlv) : '') + '</label>' : '',
+					"SPA": ( !isNaN(SPA.Lv) && vals.ex.SP[Diff[3].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spa">' + (swdjlv != -1 ? getDJLevel(SPA.Notes * 2, vals.ex.SP[Diff[3].Name], swdjlv) : '') + '</label>' : '',
+					"SPL": ( !isNaN(SPL.Lv) && vals.ex.SP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spl">' + (swdjlv != -1 ? getDJLevel(SPL.Notes * 2, vals.ex.SP[Diff[4].Name], swdjlv) : '') + '</label>' : '',
+					"DPB": ( !isNaN(DPB.Lv) && vals.ex.DP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + (swdjlv != -1 ? getDJLevel(DPB.Notes * 2, vals.ex.DP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
+					"DPN": ( !isNaN(DPN.Lv) && vals.ex.DP[Diff[1].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpn">' + (swdjlv != -1 ? getDJLevel(DPN.Notes * 2, vals.ex.DP[Diff[1].Name], swdjlv) : '') + '</label>' : '',
+					"DPH": ( !isNaN(DPH.Lv) && vals.ex.DP[Diff[2].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dph">' + (swdjlv != -1 ? getDJLevel(DPH.Notes * 2, vals.ex.DP[Diff[2].Name], swdjlv) : '') + '</label>' : '',
+					"DPA": ( !isNaN(DPA.Lv) && vals.ex.DP[Diff[3].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpa">' + (swdjlv != -1 ? getDJLevel(DPA.Notes * 2, vals.ex.DP[Diff[3].Name], swdjlv) : '') + '</label>' : '',
+					"DPL": ( !isNaN(DPL.Lv) && vals.ex.DP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + (swdjlv != -1 ? getDJLevel(DPL.Notes * 2, vals.ex.DP[Diff[4].Name], swdjlv) : '') + '</label>' : ''
+				},
 				"cleartype": {
 					"SPB": (!isNaN(SPB.Lv) ? makeSelectTag(item.ID, 'ct', 'spb', ClearTypeArray, vals.ct.SP[Diff[0].Name]) : ''),
 					"SPN": (!isNaN(SPN.Lv) ? makeSelectTag(item.ID, 'ct', 'spn', ClearTypeArray, vals.ct.SP[Diff[1].Name]) : ''),
@@ -1687,18 +1719,6 @@ let musics = {
 					"DPH": (!isNaN(DPH.Lv) ? '<input id="mc_' + item.ID + '_dph" name="mc_' + item.ID + '_dph" type="text" class="misscount" value="' + vals.mc.DP[Diff[2].Name] + '">' : ''),
 					"DPA": (!isNaN(DPA.Lv) ? '<input id="mc_' + item.ID + '_dpa" name="mc_' + item.ID + '_dpa" type="text" class="misscount" value="' + vals.mc.DP[Diff[3].Name] + '">' : ''),
 					"DPL": (!isNaN(DPL.Lv) ? '<input id="mc_' + item.ID + '_dpl" name="mc_' + item.ID + '_dpl" type="text" class="misscount" value="' + vals.mc.DP[Diff[4].Name] + '">' : '')
-				},
-				"djlevel": {
-					"SPB": ( !isNaN(SPB.Lv) && vals.ex.SP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spb">' + (swdjlv != -1 ? getDJLevel(SPB.Notes * 2, vals.ex.SP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
-					"SPN": ( !isNaN(SPN.Lv) && vals.ex.SP[Diff[1].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spn">' + (swdjlv != -1 ? getDJLevel(SPN.Notes * 2, vals.ex.SP[Diff[1].Name], swdjlv) : '') + '</label>' : '',
-					"SPH": ( !isNaN(SPH.Lv) && vals.ex.SP[Diff[2].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_sph">' + (swdjlv != -1 ? getDJLevel(SPH.Notes * 2, vals.ex.SP[Diff[2].Name], swdjlv) : '') + '</label>' : '',
-					"SPA": ( !isNaN(SPA.Lv) && vals.ex.SP[Diff[3].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spa">' + (swdjlv != -1 ? getDJLevel(SPA.Notes * 2, vals.ex.SP[Diff[3].Name], swdjlv) : '') + '</label>' : '',
-					"SPL": ( !isNaN(SPL.Lv) && vals.ex.SP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spl">' + (swdjlv != -1 ? getDJLevel(SPL.Notes * 2, vals.ex.SP[Diff[4].Name], swdjlv) : '') + '</label>' : '',
-					"DPB": ( !isNaN(DPB.Lv) && vals.ex.DP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + (swdjlv != -1 ? getDJLevel(DPB.Notes * 2, vals.ex.DP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
-					"DPN": ( !isNaN(DPN.Lv) && vals.ex.DP[Diff[1].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpn">' + (swdjlv != -1 ? getDJLevel(DPN.Notes * 2, vals.ex.DP[Diff[1].Name], swdjlv) : '') + '</label>' : '',
-					"DPH": ( !isNaN(DPH.Lv) && vals.ex.DP[Diff[2].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dph">' + (swdjlv != -1 ? getDJLevel(DPH.Notes * 2, vals.ex.DP[Diff[2].Name], swdjlv) : '') + '</label>' : '',
-					"DPA": ( !isNaN(DPA.Lv) && vals.ex.DP[Diff[3].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpa">' + (swdjlv != -1 ? getDJLevel(DPA.Notes * 2, vals.ex.DP[Diff[3].Name], swdjlv) : '') + '</label>' : '',
-					"DPL": ( !isNaN(DPL.Lv) && vals.ex.DP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + (swdjlv != -1 ? getDJLevel(DPL.Notes * 2, vals.ex.DP[Diff[4].Name], swdjlv) : '') + '</label>' : ''
 				},
 			};
 
