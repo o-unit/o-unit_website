@@ -6,6 +6,8 @@ services:
     container_name: jekyll
     volumes:
       - "./docs:/srv/jekyll"
+      - "./vendor/bundle:/usr/local/bundle"
+      - "./gem:/usr/gem"
     command: jekyll serve --force_polling
     ports:
       - "4000:4000"

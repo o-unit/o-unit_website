@@ -355,3 +355,7 @@ MigrationBackup/
 # Jekyll (User add)
 _site
 .jekyll-metadata
+
+# docker-compose (User Add)
+gem
+vendor
