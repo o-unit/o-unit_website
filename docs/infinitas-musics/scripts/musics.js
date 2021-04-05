@@ -359,7 +359,7 @@ let user = {
 				return false;
 			};
 		},
-		LocalFile: (fileObj, callback=initializeUserJSON) => {
+		file: (fileObj, callback=initializeUserJSON) => {
 			if (fileObj == null) { return false; };
 			let r = new FileReader();
 
@@ -432,66 +432,44 @@ function initializeUserJSON(JSONString) {
 	// 楽曲情報
 	userJSON.musics = {};
 	for (item of musics.JSON) {
-		has = {};
-		has.ID =      (item.ID in jsonData.musics);
-		tmpData =    jsonData.musics[item.ID];
-		has.Canplay =  has.ID && ('Canplay' in tmpData);
-		has.EX =       has.ID && ('EXScores'  in tmpData);
-		has.EXSP =    has.EX && ('SP' in tmpData.EXScores);
-		has.EXDP =    has.EX && ('DP' in tmpData.EXScores);
-		has.MISS =    has.ID && ('MissCount' in tmpData);
-		has.MISSSP =  has.MISS && ('SP' in tmpData.MissCount);
-		has.MISSDP =  has.MISS && ('DP' in tmpData.MissCount);
-		has.LAMP =    has.ID && ('ClearType' in tmpData);
-		has.LAMPSP =  has.LAMP && ('SP' in tmpData.ClearType);
-		has.LAMPDP =  has.LAMP && ('DP' in tmpData.ClearType);
+		if ( !(item.ID in jsonData.musics) ) { continue; };
+		rM = jsonData.musics[item.ID];
+		has =  { 'ID': true, 'Canplay': ('Canplay' in rM), 'EX': ('EXScores' in rM), 'MISS': ('MissCount' in rM), 'LAMP': ('ClearType' in rM) };
+		has.MISSSP =  has.MISS && ('SP' in rM.MissCount);
+		has.MISSDP =  has.MISS && ('DP' in rM.MissCount);
+		has.LAMPSP =  has.LAMP && ('SP' in rM.ClearType);
+		has.LAMPDP =  has.LAMP && ('DP' in rM.ClearType);
 
-		userJSON.musics[item.ID] = {};
-		userJSON.musics[item.ID].title = ( has.ID && ('title' in tmpData)) ? tmpData.title : item.Title;
-		if (has.EX) { userJSON.musics[item.ID].EXScores = {}; };
-		if (has.MISS) { userJSON.musics[item.ID].MissCount = {}; };
-		if (has.LAMP) { userJSON.musics[item.ID].ClearType = {}; };
-		if (has.Canplay) { userJSON.musics[item.ID].Canplay = {}; };
-
-		if (has.EXSP) {
-			tmpSP = tmpData.EXScores.SP;
-			userJSON.musics[item.ID].EXScores.SP = {};
-			userSP = userJSON.musics[item.ID].EXScores.SP;
-			for (i of Diff) { if ((i.Name in item.Scores.Single) && !isNaN(tmpSP[i.Name])) {userSP[i.Name] = tmpSP[i.Name]; }; };
+		let getVal = (iM, rM) => {
+			let retVal = {};
+			for (i of Diff) { if ((i.Name in iM) && !isNaN(rM[i.Name]) ) { retVal[i.Name] = rM[i.Name]; }; };
+			return retVal;
 		};
-		if (has.EXDP) {
-			tmpDP = tmpData.EXScores.DP;
-			userJSON.musics[item.ID].EXScores.DP = {};
-			userDP = userJSON.musics[item.ID].EXScores.DP;
-			for (i of Diff) { if ((i.Name in item.Scores.Double) && !isNaN(tmpDP[i.Name])) {userDP[i.Name] = tmpDP[i.Name]; }; };
+		let getClearType = (iM, rM) => {
+			let retVal = {};
+			for (i of Diff) { if ((i.Name in iM) && ClearTypeArray.includes(rM[i.Name]) ) { retVal[i.Name] = rM[i.Name]; }; };
+			return retVal;
 		};
-		if (has.MISSSP) {
-			tmpSP = tmpData.MissCount.SP;
-			userJSON.musics[item.ID].MissCount.SP = {};
-			userSP = userJSON.musics[item.ID].MissCount.SP;
-			for (i of Diff) { if ((i.Name in item.Scores.Single) && !isNaN(tmpSP[i.Name])) {userSP[i.Name] = tmpSP[i.Name]; }; };
+		userJSON.musics[item.ID] = { 'title': ('title' in rM) ? rM.title : item.Title };
+		uM = userJSON.musics[item.ID];
+		if (has.EX) {
+			uM.EXScores = {};
+			if ('SP' in rM.EXScores) { uM.EXScores.SP = getVal( item.Scores.Single, rM.EXScores.SP ); };
+			if ('DP' in rM.EXScores) { uM.EXScores.DP = getVal( item.Scores.Double, rM.EXScores.DP ); };
 		};
-		if (has.MISSDP) {
-			tmpDP = tmpData.MissCount.DP;
-			userJSON.musics[item.ID].MissCount.DP = {};
-			userDP = userJSON.musics[item.ID].MissCount.DP;
-			for (i of Diff) { if ((i.Name in item.Scores.Double) && !isNaN(tmpDP[i.Name])) {userDP[i.Name] = tmpDP[i.Name]; }; };
+		if (has.MISS) {
+			uM.MissCount = {};
+			if ('SP' in rM.MissCount) { uM.MissCount.SP = getVal( item.Scores.Single, rM.MissCount.SP ); };
+			if ('DP' in rM.MissCount) { uM.MissCount.DP = getVal( item.Scores.Double, rM.MissCount.DP ); };
 		};
-		if (has.LAMPSP) {
-			tmpSP = tmpData.ClearType.SP;
-			userJSON.musics[item.ID].ClearType.SP = {};
-			userSP = userJSON.musics[item.ID].ClearType.SP;
-			for (i of Diff) { if ((i.Name in item.Scores.Single) && ClearTypeArray.includes(tmpSP[i.Name])) {userSP[i.Name] = tmpSP[i.Name]; }; };
+		if (has.LAMP) {
+			uM.ClearType = {};
+			if ('SP' in rM.ClearType) { uM.ClearType.SP = getClearType( item.Scores.Single, rM.ClearType.SP ); };
+			if ('DP' in rM.ClearType) { uM.ClearType.DP = getClearType( item.Scores.Double, rM.ClearType.DP ); };
 		};
-		if (has.LAMPDP) {
-			tmpDP = tmpData.ClearType.DP;
-			userJSON.musics[item.ID].ClearType.DP = {};
-			userDP = userJSON.musics[item.ID].ClearType.DP;
-			for (i of Diff) { if ((i.Name in item.Scores.Double) && ClearTypeArray.includes(tmpDP[i.Name])) {userDP[i.Name] = tmpDP[i.Name]; }; };
-		};
-		if (item.Release.Type != 'Default' && has.Canplay) {
-			userCP = userJSON.musics[item.ID].Canplay;
-			for (i of Diff) { if ((i.Name in item.Scores.Single) || (i.Name in item.Scores.Double)) {userCP[i.Name] = Number(tmpData.Canplay[i.Name]); }; };
+		if (has.Canplay) {
+			uM.Canplay = {};
+			for (i of Diff) { if ((i.Name in item.Scores.Single) || (i.Name in item.Scores.Double)) {uM.Canplay[i.Name] = Number(rM.Canplay[i.Name]); }; };
 		};
 	};
 
