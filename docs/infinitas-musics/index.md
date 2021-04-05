@@ -398,8 +398,8 @@ Add buttons to initiate auth sequence and sign out
                 </div>
             </div>
         </div>
-        <hr class="clearfix" />
 <!--
+        <hr class="clearfix" />
         <div class="clearfix">
             <div class="fieldname">GoogleDrive</div>
             <div class="inblock">
