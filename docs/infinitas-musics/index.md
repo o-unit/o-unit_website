@@ -34,12 +34,12 @@ Add buttons to initiate auth sequence and sign out
     <input id="formtab-7" name="formtab" class="formtabinput" type="checkbox" value="7" data-checkgroup="formtab" />
     <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" />
     <label for="formtab-1" class="tab_item">条件：譜面</label>
-    <label for="formtab-2" class="tab_item">条件：その他</label>
-    <label for="formtab-3" class="tab_item">条件：記録</label>
-    <label for="formtab-4" class="tab_item">表示設定</label>
-    <label for="formtab-5" class="tab_item">データ設定</label>
-    <label for="formtab-6" class="tab_item">楽曲数・BIT</label>
-    <label for="formtab-7" class="tab_item">？？？</label>
+    <label for="formtab-2" class="tab_item">条件：楽曲</label>
+    <label for="formtab-3" class="tab_item">条件：成績</label>
+    <label for="formtab-4" class="tab_item">楽曲数・BIT</label>
+    <label for="formtab-5" class="tab_item">設定：表示</label>
+    <label for="formtab-6" class="tab_item">設定：データ</label>
+    <label for="formtab-7" class="tab_item">使い方</label>
     <label for="formtab-8" class="tab_item">(管理用1)</label>
     <div id="formtab-1_content" class="tab_content">
         <div id="scorefilterbox"></div>
@@ -137,7 +137,36 @@ Add buttons to initiate auth sequence and sign out
         <hr class="clearfix" />
 		<div id="recordfilterbox"></div>
     </div>
-    <div id="formtab-4_content" class="tab_content">
+    <div id="formtab-4_content" class="table-outer tab_content">
+        <div class="info-lastupdated"></div>
+        <table class="infotable">
+            <colgroup span="1" class="section1"></colgroup>
+            <colgroup span="1" class="section2"></colgroup>
+            <colgroup span="1" class="total"></colgroup>
+            <colgroup span="5" class="scoreinfo single"></colgroup>
+            <colgroup span="4" class="scoreinfo double"></colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="2" colspan="2">&nbsp;</th>
+                    <th rowspan="2" class="total">曲数 / 譜面数</th>
+                    <th colspan="5" class="sp">譜面数：single</th>
+                    <th colspan="4" class="dp">譜面数：double</th>
+                </tr>
+                <tr>
+                    <th class="sp level all">合計</th>
+                    <th class="sp level spb">B</th>
+                    <th class="sp level spn">N</th>
+                    <th class="sp level sph">H</th>
+                    <th class="sp level spa">A</th>
+                    <th class="dp level all">合計</th>
+                    <th class="dp level dpn">N</th>
+                    <th class="dp level dph">H</th>
+                    <th class="dp level dpa">A</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="formtab-5_content" class="tab_content">
         <div class="clearfix">
             <div class="settings-check"><input id="searchopen" name="searchopen" type="checkbox" value="1" /></div>
             <div class="inblock"><label for="searchopen">検索後に全てのフォルダを開く</label></div>
@@ -295,11 +324,12 @@ Add buttons to initiate auth sequence and sign out
             </div>
         </div>
     </div>
-    <div id="formtab-5_content" class="tab_content">
+    <div id="formtab-6_content" class="tab_content">
         <div class="clearfix">
             <div>
             データ保存設定の利用にあたり、以下について同意されたものとみなします。<br />
             <ul>
+<!--
                 <li>google Driveに保存する場合<br />
                     <ul>
                         <li class="warn">2021/03/10時点で開発中のため、googleログイン時に警告画面が表示される可能性があります！</li>
@@ -309,6 +339,14 @@ Add buttons to initiate auth sequence and sign out
                         <li>google Driveで編集を行った場合の動作は保証しません。</li>
                     </ul>
                 </li>
+-->
+                <li>ローカルストレージに保存する場合<br />
+                    <ul>
+                        <li>ブラウザの設定からサイトデータを削除した場合にはデータが削除されます。</li>
+                        <li>ブラウザの同期機能ではデータの同期は出来ません。</li>
+                        <li>複数のブラウザでデータを共有する場合はファイルとして保存してください。</li>
+                    </ul>
+                </li>
                 <li>ファイルとして保存する場合<br />
                     <ul>
                         <li>ファイルを手動で編集した際の動作は保証しません。</li>
@@ -316,7 +354,7 @@ Add buttons to initiate auth sequence and sign out
                 </li>
             </ul>
             以上のことに同意していただいた上でのデータ保存設定をご利用ください。<br />
-            利用方法は作成中です…(´・ω・`)<br />
+            データ保存設定についての説明は作成中です。<br />
             </div>
         </div>
         <hr class="clearfix" />
@@ -361,6 +399,7 @@ Add buttons to initiate auth sequence and sign out
             </div>
         </div>
         <hr class="clearfix" />
+<!--
         <div class="clearfix">
             <div class="fieldname">GoogleDrive</div>
             <div class="inblock">
@@ -374,6 +413,7 @@ Add buttons to initiate auth sequence and sign out
                 <input id="gdid" name="gdid" type="text" placeholder="googleDrive FileID…" class="input-200" disabled />
             </div>
         </div>
+-->
         <!-- <hr class="clearfix sg2" />
         <div class="clearfix sg2 rival">
             <div class="fieldname">ライバル1</div>
@@ -445,37 +485,72 @@ Add buttons to initiate auth sequence and sign out
             </div>
         </div>
     </div>
-    <div id="formtab-6_content" class="table-outer tab_content">
-        <div class="info-lastupdated"></div>
-        <table class="infotable">
-            <colgroup span="1" class="section1"></colgroup>
-            <colgroup span="1" class="section2"></colgroup>
-            <colgroup span="1" class="total"></colgroup>
-            <colgroup span="5" class="scoreinfo single"></colgroup>
-            <colgroup span="4" class="scoreinfo double"></colgroup>
-            <thead>
-                <tr>
-                    <th rowspan="2" colspan="2">&nbsp;</th>
-                    <th rowspan="2" class="total">曲数 / 譜面数</th>
-                    <th colspan="5" class="sp">譜面数：single</th>
-                    <th colspan="4" class="dp">譜面数：double</th>
-                </tr>
-                <tr>
-                    <th class="sp level all">合計</th>
-                    <th class="sp level spb">B</th>
-                    <th class="sp level spn">N</th>
-                    <th class="sp level sph">H</th>
-                    <th class="sp level spa">A</th>
-                    <th class="dp level all">合計</th>
-                    <th class="dp level dpn">N</th>
-                    <th class="dp level dph">H</th>
-                    <th class="dp level dpa">A</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
     <div id="formtab-7_content" class="tab_content">
-        <div></div>
+        <div class="clearfix">
+            <ol>
+                <li><h3>[検索条件全般について]</h3>
+                    全ての検索条件はAND検索になります。<br />
+                    OR検索は現時点では出来ません。<br />
+                </li>
+                <li><h3>[条件：譜面]</h3>
+                    譜面毎のレベル・特殊ノート・ノート数で表示対象を絞り込めます。<br />
+                    <ul>
+                        <li><h4>[レベル]</h4>
+                            「無」～「12」までの表示したいレベルを指定できます。<br />
+                            例）<br />
+                            「SPB：1～3」を指定 ⇒ Single・Beginner譜面のある楽曲を表示<br />
+                            「SPA：12～12」を指定 ⇒ Single・Another譜面のレベルが12の楽曲を表示<br />
+                            「SPA：1～12、DPA：無～無」 を指定 ⇒ Single・Another譜面があり、Double・Another譜面の無い楽曲を表示<br />
+                        </li>
+                        <li><h4>[特殊ノート]</h4>
+                            「CN(チャージノート)」「BSS(バックスピンスクラッチ)」「HCN(ヘルチャージノート)」を指定できます。<br />
+                            「HCN」についてはHCNとHBSSのどちらかを含むかどうかで判定しています。<br />
+                            例）<br />
+                            「SPN CN：有」を指定 ⇒ Single・Normal譜面にCNのある楽曲を表示<br />
+                            「SPH CN：有、SPH BSS：有」を指定 ⇒ Single・Hyper譜面にCN・BSSのある楽曲を表示<br />
+                            「SPN BSS：有、SPH BSS：無」を指定 ⇒ Single・Normal譜面にBSSがあり、Single・Hyper譜面にBSSの無い楽曲を表示<br />
+                        </li>
+                        <li><h4>[ノート数]</h4>
+                            ノート数を指定できます。<br />
+                            例）<br />
+                            「SPH 1000～(空白)、SPA (空白)～1300」を指定 ⇒ Single・Hyper譜面が1000ノーツ以上でSingle・Another譜面が1300ノーツ以下の楽曲を表示<br />
+                        </li>
+                    </ul>
+                </li>
+                <li><h3>[条件：楽曲]</h3>
+                    楽曲のシリーズ・配信条件・配信開始月などの情報で表示対象を絞り込めます。<br />
+                    <ul>
+                        <li><h4>[シリーズ]</h4>
+                            「1st style」～「INFINITAS」まで、シリーズ毎に楽曲を指定できます。<br />
+                            ボタンの背景色が青色がON・背景色無しがOFFです。<br />
+                        </li>
+                        <li><h4>[配信条件]</h4>
+                            配信条件毎に楽曲を指定できます。<br />
+                            ボタンの背景色が青色がON・背景色無しがOFFです。<br />
+                        </li>
+                        <li><h4>[配信開始月・BIT配信開始月]</h4>
+                            配信開始月・BIT配信開始月で楽曲を指定できます。<br />
+                            例）<br />
+                            「配信開始月 2016/01～2016/12」を指定 ⇒ 配信開始月が2016年1月～2016年12月の楽曲を表示<br />
+                            「BIT配信開始月 2018/01～未指定」を指定 ⇒ BITによる配信開始月が2018年1月以降の楽曲を表示<br />
+                        </li>
+                        <li><h4>[入手可否]</h4>
+                            現時点での入手可否で楽曲を指定できます。<br />
+                            例）<br />
+                            「入手可否 現在入手可能」を指定 ⇒ 現時点でいづれかの解禁方法で解禁できる楽曲を表示<br />
+                            「入手可否 現在入手不可」を指定 ⇒ 現時点で解禁不可の楽曲を表示<br />
+                        </li>
+                        <li><h4>[曲名・ジャンル・アーティスト]</h4>
+                            曲名・ジャンル名・アーティスト名を部分一致で検索して楽曲を指定できます。<br />
+                        </li>
+                        <li><h4>[BPM]</h4>
+                            楽曲のBPMで楽曲を指定できます。(可変BPMの楽曲を除く)<br />
+                            可変BPMの楽曲については、可変の有無で指定できます。
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
     </div>
     <div id="formtab-8_content" class="tab_content">
         <div class="clearfix">
@@ -605,12 +680,12 @@ Add buttons to initiate auth sequence and sign out
         <div class="clearfix"><textarea id="new_json" name="new_json" placeholder="ここにJSONが表示されます…" class="textarea-100p height-8"></textarea></div>
     </div>
     <label for="formtab-1" class="tab_item formtab-bottom">条件：譜面</label>
-    <label for="formtab-2" class="tab_item formtab-bottom">条件：その他</label>
-    <label for="formtab-3" class="tab_item formtab-bottom">条件：記録</label>
-    <label for="formtab-4" class="tab_item formtab-bottom">表示設定</label>
-    <label for="formtab-5" class="tab_item formtab-bottom">データ設定</label>
-    <label for="formtab-6" class="tab_item formtab-bottom">楽曲数・BIT</label>
-    <label for="formtab-7" class="tab_item formtab-bottom">？？？</label>
+    <label for="formtab-2" class="tab_item formtab-bottom">条件：楽曲</label>
+    <label for="formtab-3" class="tab_item formtab-bottom">条件：成績</label>
+    <label for="formtab-4" class="tab_item formtab-bottom">楽曲数・BIT</label>
+    <label for="formtab-5" class="tab_item formtab-bottom">設定：表示</label>
+    <label for="formtab-6" class="tab_item formtab-bottom">設定：データ</label>
+    <label for="formtab-7" class="tab_item formtab-bottom">使い方</label>
     <label for="formtab-8" class="tab_item formtab-bottom">(管理用1)</label>
 </div>
 
