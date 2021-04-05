@@ -435,10 +435,6 @@ function initializeUserJSON(JSONString) {
 		if ( !(item.ID in jsonData.musics) ) { continue; };
 		rM = jsonData.musics[item.ID];
 		has =  { 'ID': true, 'Canplay': ('Canplay' in rM), 'EX': ('EXScores' in rM), 'MISS': ('MissCount' in rM), 'LAMP': ('ClearType' in rM) };
-		has.MISSSP =  has.MISS && ('SP' in rM.MissCount);
-		has.MISSDP =  has.MISS && ('DP' in rM.MissCount);
-		has.LAMPSP =  has.LAMP && ('SP' in rM.ClearType);
-		has.LAMPDP =  has.LAMP && ('DP' in rM.ClearType);
 
 		let getVal = (iM, rM) => {
 			let retVal = {};
