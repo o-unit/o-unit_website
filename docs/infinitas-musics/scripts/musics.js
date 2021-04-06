@@ -326,7 +326,7 @@ function readUserJSON(readType='new') {
 		switch (readType) {
 			case 'localstorage' : readUserJSONfromLocalStorage(); break;
 			case 'file'         : readUserJSONfromLocalFile(jQuery('#localfile')[0].files[0]);    break;
-			case 'googleDrive'  : getGoogleDriveFile(jQuery('#gdid').val());  break;
+//			case 'googleDrive'  : getGoogleDriveFile(jQuery('#gdid').val());  break;
 		};
 	};
 };
@@ -1115,10 +1115,10 @@ let update = {
 
 		if (Cookies.get('infinitas_LocalStorageEnable') == 1) {
 			outputUserJSONtoLocalStorage();
-		}else if (jQuery('#gdid').val() != '') {
+/*		}else if (jQuery('#gdid').val() != '') {
 			updateFileContent(jQuery('#gdid').val(), blob, function(response) {
 				toastbox.FadeInandTimerFadeOut('楽曲解禁状況をgoogleDriveに保存しました。');
-			});
+			}); */
 		};
 	},
 	cancel: function() {
@@ -1235,50 +1235,6 @@ let musics = {
 				};
 			};
 
-			// DJLevel・EXScore・MissCountでフィルタ
-			let uM = item.ID in userJSON.musics ? userJSON.musics[item.ID] : {};
-			let uEX = 'EXScores' in uM ? uM.EXScores : {};
-			let uMC = 'MissCount' in uM ? uM.MissCount : {};
-			let uCT = 'ClearType' in uM ? uM.ClearType : {};
-			let iSP = item.Scores.Single;
-			let iDP = item.Scores.Double;
-			let uEXSP = 'SP' in uEX ? uEX.SP : {};
-			let uEXDP = 'DP' in uEX ? uEX.DP : {};
-			let uMCSP = 'SP' in uMC ? uMC.SP : {};
-			let uMCDP = 'DP' in uMC ? uMC.DP : {};
-			let uCTSP = 'SP' in uCT ? uCT.SP : {};
-			let uCTDP = 'DP' in uCT ? uCT.DP : {};
-			let getVal = (Arr, iN, uS) => Arr.length - 1 - Arr.findIndex((i) => i == getDJLevel(iN*2,uS,1).replace(/[+0-9]/g, ''));
-			let chkScoreRecord = (dif, type, i, uEX, uMC, uCT) => {
-				if ( dif in uEX ) {
-					val = getVal(DJLevelArray2, i[dif].Notes, uEX[dif]);
-					if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; }; // DJLevel
-					if ( uEX[dif] < s.params.exscore[type].min || s.params.exscore[type].max < uEX[dif] ) { return false; }; // EXScore
-				} else {
-					if ( dif in i ? s.params.djlevel[type].min != 0 || s.params.djlevel[type].max != DJLevelArray2.length - 1 : false ) { return false; }; // DJLevel
-					if ( dif in i ? s.params.exscore[type].min != 0 || s.params.exscore[type].max != 99999 : false ) { return false; }; // EXScore
-				};
-				if ( dif in uMC ) {
-					if ( uMC[dif] < s.params.misscount[type].min || s.params.misscount[type].max < uMC[dif] ) { return false; }; // MissCount
-				} else {
-					if ( dif in i ? s.params.misscount[type].min != 0 || s.params.misscount[type].max != 99999 : false ) { return false; }; // MissCount
-				};
-				if ( dif in uCT ) {
-					if ( -1 == s.params.cleartype[type].indexOf(uCT[dif]) ) { return false; }; // ClearType
-				} else {
-					if ( dif in i ? -1 == s.params.cleartype[type].indexOf(ClearTypeArray[ClearTypeArray.length - 1]) : false ) { return false; }; // ClearType
-				};
-				return true;
-			};
-
-			if (!( chkScoreRecord(Diff[0].Name, 'SPB', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
-			if (!( chkScoreRecord(Diff[1].Name, 'SPN', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
-			if (!( chkScoreRecord(Diff[2].Name, 'SPH', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
-			if (!( chkScoreRecord(Diff[3].Name, 'SPA', iSP, uEXSP, uMCSP, uCTSP) ) ) { return false; };
-			if (!( chkScoreRecord(Diff[1].Name, 'DPN', iDP, uEXDP, uMCDP, uCTDP) ) ) { return false; };
-			if (!( chkScoreRecord(Diff[2].Name, 'DPH', iDP, uEXDP, uMCDP, uCTDP) ) ) { return false; };
-			if (!( chkScoreRecord(Diff[3].Name, 'DPA', iDP, uEXDP, uMCDP, uCTDP) ) ) { return false; };
-
 			// 曲名でフィルタ
 			if (s.params.title && item.Title.indexOf(s.params.title) == -1) { return false; };
 
@@ -1287,6 +1243,44 @@ let musics = {
 
 			// アーティスト名でフィルタ
 			if (s.params.artist && item.Artist.indexOf(s.params.artist) == -1) { return false; };
+
+			// DJLevel・EXScore・MissCountでフィルタ
+			if ('musics' in userJSON) {
+				let uM = item.ID in userJSON.musics ? userJSON.musics[item.ID] : {};
+				let uEX = { 'SP': 'EXScores' in uM && 'SP' in uM.EXScores ? uM.EXScores.SP : {}, 'DP': 'EXScores' in uM && 'DP' in uM.EXScores ? uM.EXScores.DP : {} };
+				let uMC = { 'SP': 'MissCount' in uM && 'SP' in uM.MissCount ? uM.MissCount.SP : {}, 'DP': 'MissCount' in uM && 'DP' in uM.MissCount ? uM.MissCount.DP : {} };
+				let uCT = { 'SP': 'ClearType' in uM && 'SP' in uM.ClearType ? uM.ClearType.SP : {}, 'DP': 'ClearType' in uM && 'DP' in uM.ClearType ? uM.ClearType.DP : {} };
+				let getVal = (Arr, iN, uS) => Arr.length - 1 - Arr.findIndex((i) => i == getDJLevel(iN*2,uS,1).replace(/[+0-9]/g, ''));
+				let chkScoreRecord = (dif, type, i, uEX, uMC, uCT) => {
+					if ( dif in uEX ) {
+						val = getVal(DJLevelArray2, i[dif].Notes, uEX[dif]);
+						if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; }; // DJLevel
+						if ( uEX[dif] < s.params.exscore[type].min || s.params.exscore[type].max < uEX[dif] ) { return false; }; // EXScore
+					} else {
+						if ( dif in i ? s.params.djlevel[type].min != 0 || s.params.djlevel[type].max != DJLevelArray2.length - 1 : false ) { return false; }; // DJLevel
+						if ( dif in i ? s.params.exscore[type].min != 0 || s.params.exscore[type].max != 99999 : false ) { return false; }; // EXScore
+					};
+					if ( dif in uMC ) {
+						if ( uMC[dif] < s.params.misscount[type].min || s.params.misscount[type].max < uMC[dif] ) { return false; }; // MissCount
+					} else {
+						if ( dif in i ? s.params.misscount[type].min != 0 || s.params.misscount[type].max != 99999 : false ) { return false; }; // MissCount
+					};
+					if ( dif in uCT ) {
+						if ( -1 == s.params.cleartype[type].indexOf(uCT[dif]) ) { return false; }; // ClearType
+					} else {
+						if ( dif in i ? -1 == s.params.cleartype[type].indexOf(ClearTypeArray[ClearTypeArray.length - 1]) : false ) { return false; }; // ClearType
+					};
+					return true;
+				};
+
+				if (!( chkScoreRecord(Diff[0].Name, 'SPB', item.Scores.Single, uEX.SP, uMC.SP, uCT.SP) ) ) { return false; };
+				if (!( chkScoreRecord(Diff[1].Name, 'SPN', item.Scores.Single, uEX.SP, uMC.SP, uCT.SP) ) ) { return false; };
+				if (!( chkScoreRecord(Diff[2].Name, 'SPH', item.Scores.Single, uEX.SP, uMC.SP, uCT.SP) ) ) { return false; };
+				if (!( chkScoreRecord(Diff[3].Name, 'SPA', item.Scores.Single, uEX.SP, uMC.SP, uCT.SP) ) ) { return false; };
+				if (!( chkScoreRecord(Diff[1].Name, 'DPN', item.Scores.Double, uEX.DP, uMC.DP, uCT.DP) ) ) { return false; };
+				if (!( chkScoreRecord(Diff[2].Name, 'DPH', item.Scores.Double, uEX.DP, uMC.DP, uCT.DP) ) ) { return false; };
+				if (!( chkScoreRecord(Diff[3].Name, 'DPA', item.Scores.Double, uEX.DP, uMC.DP, uCT.DP) ) ) { return false; };
+			};
 
 			return true;
 		});
@@ -1697,7 +1691,7 @@ let musics = {
 			};
 
 			rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0) + (rBit.Leggendaria ? rBit.Leggendaria : 0));
-			rowspan = (hasMusic ? 5 : 1) - (item.Release.Type !== 'Default' ? 0 : 1);
+			rowspan = (hasUserJSON ? 5 - (item.Release.Type !== 'Default' ? 0 : 1) : 1);
 			addhtml = '<tr class="music m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
 					  '<td class="release' + rTypeClass + '">' + rTypeSStr + '</td>' +
 					  '<td class="version version' + item.VNo + '">' + item.VShortName + '</td>' +
@@ -1736,7 +1730,7 @@ let musics = {
 					  '<td class="notes dph m' + item.ID + '">' + (!isNaN(DPH.Lv) ? DPH.Notes : '') + '</td>' +
 					  '<td class="notes dpa m' + item.ID + '">' + (!isNaN(DPA.Lv) ? DPA.Notes : '') + '</td>' +
 					  '</tr>' +
-					  (hasMusic && item.Release.Type !== 'Default' ?
+					  (hasUserJSON && item.Release.Type !== 'Default' ?
 					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
 					  '<td class="playable">解禁</td>' +
 					  '<td class="playable spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
@@ -1747,7 +1741,7 @@ let musics = {
 					  '<td class="playable dph m' + item.ID + '">&nbsp;</td>' +
 					  '<td class="playable dpa m' + item.ID + '">&nbsp;</td>' +
 					  '</tr>' : '' ) +
-					  (hasMusic ?
+					  (hasUserJSON ?
 					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
 					  '<td class="cleartype">ClearType</td>' +
 					  '<td class="cleartype spb selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPB + '</td>' +
@@ -1758,7 +1752,7 @@ let musics = {
 					  '<td class="cleartype dph selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPH + '</td>' +
 					  '<td class="cleartype dpa selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPA + '</td>' +
 					  '</tr>' : '' ) +
-					  (hasMusic ?
+					  (hasUserJSON ?
 					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
 					  '<td class="exscore">EXScore</td>' +
 					  '<td class="exscore spb m' + item.ID + '">' + scoreClass.djlevel.SPB + scoreClass.exscore.SPB + '</td>' +
@@ -1769,7 +1763,7 @@ let musics = {
 					  '<td class="exscore dph m' + item.ID + '">' + scoreClass.djlevel.DPH + scoreClass.exscore.DPH + '</td>' +
 					  '<td class="exscore dpa m' + item.ID + '">' + scoreClass.djlevel.DPA + scoreClass.exscore.DPA + '</td>' +
 					  '</tr>' : '' ) +
-					  (hasMusic ?
+					  (hasUserJSON ?
 					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
 					  '<td class="misscount">MissCount</td>' +
 					  '<td class="misscount spb m' + item.ID + '">' + scoreClass.misscount.SPB + '</td>' +
@@ -2781,6 +2775,7 @@ function handleClientLoad() {
 		readUserJSON('new');
 	});
 
+/**
 	// API有効化ボタン押下時
 	jQuery('#googleapiEnable').on('click', function() {
 		gapiScriptLoad();
@@ -2792,6 +2787,7 @@ function handleClientLoad() {
 		Cookies.remove('infinitas_gapiEnable', {path: ''});
 		// メッセージ表示したほうがわかりやすい
 	});
+**/
 
 	// LocalStorage有効化ボタン押下時
 	jQuery('#localStorageEnable').on('click', function() {
@@ -3047,6 +3043,7 @@ function handleClientLoad() {
 		jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').addClass('hidden');
 	};
 
+/**
 	// googleAPIクライアントの初期化
 	if (Cookies.get('infinitas_gapiEnable') == 1) {
 		gapiScriptLoad();
@@ -3059,7 +3056,7 @@ function handleClientLoad() {
 		jQuery('#googleapiEnable').removeClass('hidden');
 		jQuery('#googleSignin, #gdfileget, #googleSignout, #googleapiDisable, #gdid').addClass('hidden');
 	};
-
+**/
 
 	// 再読み込み対策(開閉・ボタンの見た目を初期化)
 	jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
