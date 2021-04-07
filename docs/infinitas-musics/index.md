@@ -35,7 +35,7 @@ Add buttons to initiate auth sequence and sign out
     <input id="formtab-8" name="formtab" class="formtabinput" type="checkbox" value="8" data-checkgroup="formtab" />
     <label for="formtab-1" class="tab_item">条件：譜面</label>
     <label for="formtab-2" class="tab_item">条件：楽曲</label>
-    <label for="formtab-3" class="tab_item">条件：成績</label>
+    <label for="formtab-3" class="tab_item">条件：実績</label>
     <label for="formtab-4" class="tab_item">楽曲数・BIT</label>
     <label for="formtab-5" class="tab_item">設定：表示</label>
     <label for="formtab-6" class="tab_item">設定：データ</label>
@@ -740,7 +740,7 @@ Add buttons to initiate auth sequence and sign out
     </div>
     <label for="formtab-1" class="tab_item formtab-bottom">条件：譜面</label>
     <label for="formtab-2" class="tab_item formtab-bottom">条件：楽曲</label>
-    <label for="formtab-3" class="tab_item formtab-bottom">条件：成績</label>
+    <label for="formtab-3" class="tab_item formtab-bottom">条件：実績</label>
     <label for="formtab-4" class="tab_item formtab-bottom">楽曲数・BIT</label>
     <label for="formtab-5" class="tab_item formtab-bottom">設定：表示</label>
     <label for="formtab-6" class="tab_item formtab-bottom">設定：データ</label>
