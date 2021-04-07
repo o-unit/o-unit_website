@@ -538,6 +538,9 @@ table.infotable .level {
 table.infotable th {
     background-color: #cecfd1;
 }
+table.infotable td {
+    padding: 0.25rem 0.1rem;
+}
 table.infotable .section1 {
     border-right: 1px dotted #9b9b9b;
     min-width: 4rem;
