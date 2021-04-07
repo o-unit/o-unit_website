@@ -1881,13 +1881,14 @@ let musics = {
 				jQuery('#' + className).find('.headerline th').append(addText);
 				jQuery('#' + className).show();
 				if (jQuery('#searchopen').prop('checked') ) {
+					let baseTarget = jQuery('#' + className);
 					if (jQuery('#extendopen').prop('checked')) {
-						jQuery('#' + className).children('.music_other').show();
+						baseTarget.children('.music_other').show();
 					} else {
-						jQuery('#' + className).children('.music_other').hide();
+						baseTarget.children('.music_other').hide();
 					}
 					jQuery('#' + className).children('.music').show();
-					jQuery('#' + className + ' .headerline').addClass('opened');
+					baseTarget.children('.headerline').addClass('opened');
 				};
 			};
 		};
@@ -3017,10 +3018,12 @@ function handleClientLoad() {
 				jQuery('.musiclist .headerline').not(this).removeClass('opened');
 				classStr = (jQuery('#extendopen').prop('checked') ? '.music, .music_other' : '.music');
 				jQuery(this).parent().children(classStr).fadeIn('fast');
+				jQuery(window).scrollTop(jQuery(this).offset().top - 36);
 			} else {
 				// jQuery('.musiclist tbody').children('.music_other').hide();
 				classStr = (jQuery('#extendopen').prop('checked') ? '.music, .music_other' : '.music');
 				jQuery(this).parent().children(classStr).fadeIn('fast');
+				jQuery(window).scrollTop(jQuery(this).offset().top - 36);
 			};
 		};
 		jQuery(this).toggleClass('opened');
