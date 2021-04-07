@@ -61,6 +61,7 @@ let packlist = {
 	'0000011': {'type':'Standard',  'name':'楽曲パック vol.11',                           'inputName':'楽曲パックVol.11', 'shortName':'Pack11',  'inputid':'#purchase-Pack0000011'},
 	'0000012': {'type':'Standard',  'name':'楽曲パック vol.12',                           'inputName':'楽曲パックVol.12', 'shortName':'Pack12',  'inputid':'#purchase-Pack0000012'},
 	'0000013': {'type':'Standard',  'name':'楽曲パック vol.13',                           'inputName':'楽曲パックVol.13', 'shortName':'Pack13',  'inputid':'#purchase-Pack0000013'},
+	'0000014': {'type':'Standard',  'name':'楽曲パック vol.14',                           'inputName':'楽曲パックVol.14', 'shortName':'Pack14',  'inputid':'#purchase-Pack0000014'},
 	'0010001': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.1', 'inputName':'SSパックVol.1',    'shortName':'PackSS1', 'inputid':'#purchase-Pack0010001'},
 	'0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'#purchase-Pack0020001'}
 };
@@ -1496,7 +1497,7 @@ let musics = {
 			let isPack = false;
 			switch ( m[1] ) {
 				case 'BIT':
-					isReleased = ( ("BitDate" in item.Release) && rBit4Y2M2D < now4Y2M2D ) ? true : false;
+					isReleased = ( ("BitDate" in item.Release) && rBit4Y2M2D <= now4Y2M2D ) ? true : false;
 					rTypeClass = isReleased ?  ' bit': ' bitbeforerelease';
 					rTypeStr   = 'BIT解禁';
 					rTypeSStr  = r2Y2M;
@@ -1533,7 +1534,7 @@ let musics = {
 					rTypeClass = ' monthly';
 					rTypeStr = '特定月プレイ';
 					rTypeSStr=r2Y2M;
-					if ( now4Y2M2D < r4Y2M2D ) {
+					if ( now4Y2M2D <= r4Y2M2D ) {
 						isReleased = false;
 						rTypeClass = ' monthlybeforerelease';
 					} else if ( r2Y2M == now2Y2M ) {
@@ -3026,7 +3027,7 @@ function handleClientLoad() {
 	});
 
 	// 新曲追加用フォームの入力時
-	jQuery('#formtab-7_content input, #formtab-7_content textarea').change(function() {
+	jQuery('#formtab-8_content').find('input, textarea').change(function() {
 		newMusic.makeJSON();
 	});
 
