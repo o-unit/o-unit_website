@@ -7,7 +7,7 @@ layout: "single-nosidebar"
 <script type="text/javascript" src="./musiclist.js" defer></script>
 <script type="text/javascript" src="./scripts/musics.js" defer></script>
 
-<div id="toastbox"></div>
+<div id="toastbox" class="hidden"></div>
 
 <div id="musicsearch" class="table-outer">
 	<input id="formtab-1" name="formtab" class="formtabinput" type="checkbox" value="1" data-checkgroup="formtab" />
