@@ -212,6 +212,36 @@ function mergeDeeply(target, source, opts) {
 };
 
 /**
+ * fade処理をするための自作関数たち
+ */
+let fade = {
+	in: (objArr, ms = 1000) => {
+		objArr.forEach((obj) => {
+			obj.style.opacity = 0;
+			obj.style.transition = "opacity " + ms + "ms";
+			obj.classList.remove('hidden');
+			setTimeout(function(){obj.style.opacity = 1;}, 50);
+		});
+	},
+	out: (objArr, ms = 1000) => {
+		objArr.forEach((obj) => {
+			obj.style.opacity = 1;
+			obj.style.transition = "opacity " + ms + "ms";
+			setTimeout(function(){obj.style.opacity = 0;}, 1);
+			setTimeout(function(){obj.classList.add('hidden');}, ms + 50);
+		});
+	},
+	toggle: (objArr, ms = 1000) => {
+		objArr.forEach((obj) => {
+			obj.style.transition = "opacity " + ms + "ms";
+			obj.classList.hasValue('hidden') ? obj.classList.remove('hidden') : '';
+			setTimeout(function(){obj.style.opacity = 1 - obj.style.opacity;}, 1);
+			obj.classList.hasValue('hidden') ? '' : setTimeout(function(){obj.classList.add('hidden');}, ms + 1);
+		});
+	}
+};
+
+/**
  * headerLine配列に追加
  * @param {*} prefix
  * @param {*} className
@@ -1023,48 +1053,49 @@ let newMusic = {
 
 /**
  * トーストボックス表示用オブジェクト
+ * TODO:jQuery削除！
  */
 let toastbox = {
+	target: document.getElementById('toastbox'),
 	toastObj: jQuery('#toastbox'),
 	defaultTimer: 5000, // ポップアップ時間(ミリ秒)
 	timerID: null,
 
-	setObject: (selector='#toastbox') => {
-		toastbox.toastObj = jQuery(selector);
+	setObject: (selector='toastbox') => {
+		toastbox.target = document.getElementById(selector);
 	},
 	message: (msg='') =>  {
-		if (toastbox.toastObj.length == 0) { toastbox.setObject(); };
+		if (toastbox.target === null) { toastbox.setObject(); };
 
-
-		if (toastbox.toastObj.is(':hidden')) {
+		if (toastbox.target.is(':hidden')) {
 			toastbox.fadeIn(msg);
 		} else {
-			toastbox.toastObj.html(msg);
+			toastbox.target.innerHTML = msg;
 		};
 	},
-	fadeIn: (msg='', type='fast') => {
-		if (toastbox.toastObj.length == 0) { toastbox.setObject(); };
+	fadeIn: (msg='', ms=1000) => {
+		if (toastbox.target === null) { toastbox.setObject(); };
 
-		toastbox.toastObj.fadeIn(type);
-		if (msg != '') { toastbox.toastObj.html(msg); };
+		if (msg != '') { toastbox.target.innerHTML =msg; };
+		fade.in([toastbox.target], ms);
 	},
-	fadeOut: (type='fast') => {
-		if (toastbox.toastObj.length == 0) { toastbox.setObject(); };
+	fadeOut: (ms=1000) => {
+		if (toastbox.target === null) { toastbox.setObject(); };
 
-		toastbox.toastObj.fadeOut(type);
-		toastbox.toastObj.html('');
+		fade.out([toastbox.target], ms);
+		toastbox.target.innerHTML = '';
 	},
-	timerFadeIn: (msg='', timer=toastbox.defaultTimer, type='fast') => toastbox.timerID = window.setTimeout(function() {toastbox.fadeIn(msg, type);}, timer),
-	timerFadeOut: (timer=toastbox.defaultTimer, type='fast') => toastbox.timerID = window.setTimeout(function() {toastbox.fadeOut(type);}, timer),
-	FadeInandTimerFadeOut: (msg='', timer=toastbox.defaultTimer, type='fast') => {
-		if (toastbox.toastObj.length == 0) { toastbox.setObject(); };
+	timerFadeIn: (msg='', timer=toastbox.defaultTimer, ms=1000) => toastbox.timerID = setTimeout(() => {fade.in([toastbox.target],ms); toastbox.target.innerHTML = msg;}, timer),
+	timerFadeOut: (timer=toastbox.defaultTimer, ms=1000) => toastbox.timerID = setTimeout(() => {fade.out([toastbox.target], ms);}, timer),
+	FadeInandTimerFadeOut: (msg='', timer=toastbox.defaultTimer, ms=1000) => {
+		if (toastbox.target === null) { toastbox.setObject(); };
 
-		toastbox.fadeIn(msg, type);
-		toastbox.timerFadeOut(timer, type);
+		toastbox.fadeIn(msg, ms);
+		toastbox.timerFadeOut(timer, ms);
 	},
 	timerCancel: () => {
 		if(typeof toastbox.timerID == "number") {
-			window.clearTimeout(toastbox.timerID);
+			clearTimeout(toastbox.timerID);
 			delete toastbox.timerID;
 		};
 	}
@@ -1148,7 +1179,7 @@ let update = {
 		let dummyNow = new Date();
 		dummyNow.setHours(dummyNow.getHours() + 9);
 		userJSON.info.updated = dummyNow.toISOString().split('Z')[0] + '+09:00';
-		jQuery('#userJSON_updated').text(userJSON.info.updated);
+		document.getElementById('userJSON_updated').innerText = userJSON.info.updated;
 
 		// 完了処理
 		toastbox.FadeInandTimerFadeOut(update.updateArray.length + '件の楽曲解禁状況を更新しました。');
@@ -1157,7 +1188,8 @@ let update = {
 		let blob = new Blob([JSON.stringify(userJSON, undefined, '\t')], {type: 'application\/json'});
 		url = URL.createObjectURL(blob);
 
-		jQuery('#downloadButton').attr({"href": url, "download": "user.json"});
+		document.getElementById('downloadButton').setAttribute("href", url);
+		document.getElementById('downloadButton').setAttribute("download", "musiclist_userdata.json");
 
 		if (Cookies.get('infinitas_LocalStorageEnable') == 1) {
 			outputUserJSONtoLocalStorage();
@@ -1169,7 +1201,7 @@ let update = {
 	},
 	cancel: function() {
 		if(typeof update.timeoutID == "number") {
-			window.clearTimeout(update.timeoutID);
+			clearTimeout(update.timeoutID);
 			delete update.timeoutID;
 		};
 	},
