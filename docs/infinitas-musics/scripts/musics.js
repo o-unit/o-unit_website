@@ -586,7 +586,7 @@ function initializeUserJSON(JSONString) {
 	dlBtn.setAttribute("download", "musiclist_userdata.json");
 
 	// 検索条件：解禁状況を有効化
-	document.getElementById('unlocked').setAttribute('disabled',false);
+	document.getElementById('unlocked').removeAttribute('disabled');
 };
 
 function makeCustomUserJSONString() {
@@ -1228,7 +1228,7 @@ let musics = {
 		s.getSearchParam();
 		let now = dateFormat.format(new Date(), 'yyyy-MM-dd');
 
-		return jQuery.grep(items,function(item,index){
+		return jQuery.grep(items,function(item,index){ // TODO: jQueryをどうやって削除するか？
 			// シリーズ情報でフィルタ
 			if ( s.params.series.indexOf(parseFloat(item.VNo)) == -1 ) { return false; };
 
