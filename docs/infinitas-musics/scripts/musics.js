@@ -2643,6 +2643,13 @@ function updateFileContent(fileId, contentBlob, callback) {
  * webページロード完了後の処理
  */
 function handleClientLoad() {
+	// トーストボックスの設定
+	obj = document.createElement('div');
+	obj.classList.add('hidden');
+	obj.id = 'toastbox';
+	document.body.appendChild(obj);
+	toastbox.setObject();
+
 	// musiclist
 	musics.JSON = musiclist.musics;
 	musics.infoJSON = musiclist.info;
