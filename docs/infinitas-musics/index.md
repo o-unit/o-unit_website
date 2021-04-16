@@ -693,7 +693,7 @@ layout: "single-nosidebar"
 <div id="search-message"></div>
 
 <div class="table-outer">
-	<table class="musiclist">
+	<table id='musiclist' class="musiclist">
 		<caption></caption>
 		<colgroup span="1" class="release"></colgroup>
 		<colgroup span="1" class="version"></colgroup>

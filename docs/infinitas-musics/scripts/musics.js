@@ -603,7 +603,7 @@ function makeCustomUserJSONString() {
 function makeHeaderLine(items) {
 	let addHtml = '';
 	for(let item of items){
-		addHtml += '<tbody id="' + item[0] + '" class="headertbody" style="display: none;"><tr class="headerline ' + item[1] + '"><th colspan="13"><div class="vername">' + item[2] +'</div></th></tr></tbody>';
+		addHtml += '<tbody id="' + item[0] + '" class="headertbody hidden"><tr class="headerline ' + item[1] + '"><th colspan="13"><div class="vername">' + item[2] +'</div></th></tr></tbody>';
 	};
 
 	document.getElementsByClassName('musiclist')[0].innerHTML += (addHtml);
@@ -1053,11 +1053,9 @@ let newMusic = {
 
 /**
  * トーストボックス表示用オブジェクト
- * TODO:jQuery削除！
  */
 let toastbox = {
 	target: document.getElementById('toastbox'),
-	toastObj: jQuery('#toastbox'),
 	defaultTimer: 5000, // ポップアップ時間(ミリ秒)
 	timerID: null,
 
@@ -1067,7 +1065,7 @@ let toastbox = {
 	message: (msg='') =>  {
 		if (toastbox.target === null) { toastbox.setObject(); };
 
-		if (toastbox.target.is(':hidden')) {
+		if (toastbox.target.classList.contains('hidden')) {
 			toastbox.fadeIn(msg);
 		} else {
 			toastbox.target.innerHTML = msg;
@@ -1076,7 +1074,7 @@ let toastbox = {
 	fadeIn: (msg='', ms=1000) => {
 		if (toastbox.target === null) { toastbox.setObject(); };
 
-		if (msg != '') { toastbox.target.innerHTML =msg; };
+		if (msg != '') { toastbox.target.innerHTML = msg; };
 		fade.in([toastbox.target], ms);
 	},
 	fadeOut: (ms=1000) => {
@@ -1224,11 +1222,12 @@ let musics = {
 	infoJSON: {},
 
 	filter: function(items) {
-		jQuery('#search-message').html('<span>検索中…</span>');
+		toastbox.fadeIn('<span>検索中…</span>', 100);
 		s.getSearchParam();
 		let now = dateFormat.format(new Date(), 'yyyy-MM-dd');
+		let returnJSON = [];
 
-		return jQuery.grep(items,function(item,index){ // TODO: jQueryをどうやって削除するか？
+		items.forEach( (item,i) => {
 			// シリーズ情報でフィルタ
 			if ( s.params.series.indexOf(parseFloat(item.VNo)) == -1 ) { return false; };
 
@@ -1330,20 +1329,20 @@ let musics = {
 				let uCT = { 'SP': 'ClearType' in uM && 'SP' in uM.ClearType ? uM.ClearType.SP : {}, 'DP': 'ClearType' in uM && 'DP' in uM.ClearType ? uM.ClearType.DP : {} };
 				let getVal = (Arr, iN, uS) => Arr.length - 1 - Arr.findIndex((i) => i == getDJLevel(iN*2,uS,1).replace(/[+0-9]/g, ''));
 				let chkScoreRecord = (dif, type, i, uEX, uMC, uCT) => {
-					if ( dif in uEX ) {
+					if ( dif in uEX ) { // EXScore記録有
 						val = getVal(DJLevelArray2, i[dif].Notes, uEX[dif]);
 						if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; }; // DJLevel
 						if ( uEX[dif] < s.params.exscore[type].min || s.params.exscore[type].max < uEX[dif] ) { return false; }; // EXScore
 					} else {
-						if ( dif in i ? s.params.djlevel[type].min != 0 || s.params.djlevel[type].max != DJLevelArray2.length - 1 : false ) { return false; }; // DJLevel
-						if ( dif in i ? s.params.exscore[type].min != 0 || s.params.exscore[type].max != 99999 : false ) { return false; }; // EXScore
+						if ( dif in i ? s.params.djlevel[type].min != 0 && s.params.djlevel[type].max != DJLevelArray2.length - 1: false ) { return false; }; // DJLevel
+						if ( dif in i ? s.params.exscore[type].min != -1 && s.params.exscore[type].max != 99999 : false ) { return false; }; // EXScore
 					};
-					if ( dif in uMC ) {
+					if ( dif in uMC ) { // MissCount記録有
 						if ( uMC[dif] < s.params.misscount[type].min || s.params.misscount[type].max < uMC[dif] ) { return false; }; // MissCount
 					} else {
-						if ( dif in i ? s.params.misscount[type].min != 0 || s.params.misscount[type].max != 99999 : false ) { return false; }; // MissCount
+						if ( dif in i ? s.params.misscount[type].min != -1 && s.params.misscount[type].max != 99999 : false ) { return false; }; // MissCount
 					};
-					if ( dif in uCT ) {
+					if ( dif in uCT ) { // ClearType記録有
 						if ( -1 == s.params.cleartype[type].indexOf(uCT[dif]) ) { return false; }; // ClearType
 					} else {
 						if ( dif in i ? -1 == s.params.cleartype[type].indexOf(ClearTypeArray[ClearTypeArray.length - 1]) : false ) { return false; }; // ClearType
@@ -1360,138 +1359,69 @@ let musics = {
 				if (!( chkScoreRecord(Diff[3].Name, 'DPA', item.Scores.Double, uEX.DP, uMC.DP, uCT.DP) ) ) { return false; };
 			};
 
-			return true;
+			returnJSON.push(item);
 		});
+
+		return returnJSON;
 	},
 
 	sort: function(items) {
-		jQuery('#search-message').html('<span>ソート中…</span>');
-		let searchsort = [ {'key': jQuery('#search-sort1').val(), 'order': jQuery('#search-sort-order1').val()},
-						   {'key': jQuery('#search-sort2').val(), 'order': jQuery('#search-sort-order2').val()},
-						   {'key': jQuery('#search-sort3').val(), 'order': jQuery('#search-sort-order3').val()} ];
+		toastbox.message('<span>ソート中…</span>');
+		let searchsort = [ {'key': document.getElementById('search-sort1').value, 'order': document.getElementById('search-sort-order1').value},
+						   {'key': document.getElementById('search-sort2').value, 'order': document.getElementById('search-sort-order2').value},
+						   {'key': document.getElementById('search-sort3').value, 'order': document.getElementById('search-sort-order3').value} ];
 
 		items.sort(function(a,b) {
 			// レベル情報取得
-			let aval = 0;
-			let bval = 0;
-			let now = dateFormat.format(new Date(), 'yyyy-MM-dd');
+			let noDate = '9999-99-99';
+			let diff = {
+				str:  (a,b,o) => a != b ? (o == 'UP' ? ( a > b ? 1 : -1 ) : ( b > a ? 1 : -1 )) : 0,
+				num:  (a,b,o) => a != b ? (o == 'UP' ? ( a -b ) : ( b - a )) : 0,
+				date: (a,b,o) => a != b ? (o == 'UP' ? ( a > b ? 1 : -1 ) : ( b > a ? 1 : -1 )) : 0
+			};
 
 			for(let item of searchsort){
 				switch(item.key) {
-					case 'TITLE':
-						aval = convKana(a.Title.toLowerCase(), 'KtoH');
-						bval = convKana(b.Title.toLowerCase(), 'KtoH');
-						if ( aval != bval ) { return item.order == 'UP' ? ( aval > bval ? 1 : -1 ) : (bval > aval ? 1 : -1); };
-						break;
-					case 'ARTIST':
-						aval = convKana(a.Artist.toLowerCase(), 'KtoH');
-						bval = convKana(b.Artist.toLowerCase(), 'KtoH');
-						if ( aval != bval ) { return item.order == 'UP' ? ( aval > bval ? 1 : -1 ) : (bval > aval ? 1 : -1); };
-						break;
-					case 'GENRE':
-						aval = convKana(a.Genre.toLowerCase(), 'KtoH');
-						bval = convKana(b.Genre.toLowerCase(), 'KtoH');
-						if ( aval != bval ) { return item.order == 'UP' ? ( aval > bval ? 1 : -1 ) : (bval > aval ? 1 : -1); };
-						break;
-					case 'BPM':
-						aval = !isNaN(a.BPM) ? Number(a.BPM) : 999;
-						bval = !isNaN(b.BPM) ? Number(b.BPM) : 999;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'RELEASE':
-						aval = ("Date" in a.Release) && ( a.Release.Date <= now ) ? a.Release.Date : '';
-						bval = ("Date" in b.Release) && ( b.Release.Date <= now ) ? b.Release.Date : '';
-						if ( aval != bval ) { return item.order == 'UP' ? ( aval > bval ? 1 : -1 ) : (bval > aval ? 1 : -1); };
-						break;
-					case 'BITDATE':
-						aval = ("BitDate" in a.Release) && ( a.Release.BitDate <= now ) ? a.Release.BitDate : '';
-						bval = ("BitDate" in b.Release) && ( b.Release.BitDate <= now ) ? b.Release.BitDate : '';
-						if ( aval != bval ) { return item.order == 'UP' ? ( aval > bval ? 1 : -1 ) : (bval > aval ? 1 : -1); };
-						break;
-					case 'VERSION':
-						aval = Number(a.VNo);
-						bval = Number(b.VNo);
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'SPNLV':
-						aval = ("Normal" in a.Scores.Single)  ? Number(a.Scores.Single.Normal.Level) : 0;
-						bval = ("Normal" in b.Scores.Single)  ? Number(b.Scores.Single.Normal.Level) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'SPHLV':
-						aval = ("Hyper" in a.Scores.Single)   ? Number(a.Scores.Single.Hyper.Level) : 0;
-						bval = ("Hyper" in b.Scores.Single)   ? Number(b.Scores.Single.Hyper.Level) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'SPALV':
-						aval = ("Another" in a.Scores.Single) ? Number(a.Scores.Single.Another.Level) : 0;
-						bval = ("Another" in b.Scores.Single) ? Number(b.Scores.Single.Another.Level) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'DPNLV':
-						aval = ("Normal" in a.Scores.Double)  ? Number(a.Scores.Double.Normal.Level) : 0;
-						bval = ("Normal" in b.Scores.Double)  ? Number(b.Scores.Double.Normal.Level) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'DPHLV':
-						aval = ("Hyper" in a.Scores.Double)   ? Number(a.Scores.Double.Hyper.Level) : 0;
-						bval = ("Hyper" in b.Scores.Double)   ? Number(b.Scores.Double.Hyper.Level) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'DPALV':
-						aval = ("Another" in a.Scores.Double) ? Number(a.Scores.Double.Another.Level) : 0;
-						bval = ("Another" in b.Scores.Double) ? Number(b.Scores.Double.Another.Level) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'SPNNOTES':
-						aval = ("Normal" in a.Scores.Single)  ? Number(a.Scores.Single.Normal.Notes) : 0;
-						bval = ("Normal" in b.Scores.Single)  ? Number(b.Scores.Single.Normal.Notes) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'SPHNOTES':
-						aval = ("Hyper" in a.Scores.Single)   ? Number(a.Scores.Single.Hyper.Notes) : 0;
-						bval = ("Hyper" in b.Scores.Single)   ? Number(b.Scores.Single.Hyper.Notes) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'SPANOTES':
-						aval = ("Another" in a.Scores.Single) ? Number(a.Scores.Single.Another.Notes) : 0;
-						bval = ("Another" in b.Scores.Single) ? Number(b.Scores.Single.Another.Notes) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'DPNNOTES':
-						aval = ("Normal" in a.Scores.Double)  ? Number(a.Scores.Double.Normal.Notes) : 0;
-						bval = ("Normal" in b.Scores.Double)  ? Number(b.Scores.Double.Normal.Notes) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'DPHNOTES':
-						aval = ("Hyper" in a.Scores.Double)   ? Number(a.Scores.Double.Hyper.Notes) : 0;
-						bval = ("Hyper" in b.Scores.Double)   ? Number(b.Scores.Double.Hyper.Notes) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					case 'DPANOTES':
-						aval = ("Another" in a.Scores.Double) ? Number(a.Scores.Double.Another.Notes) : 0;
-						bval = ("Another" in b.Scores.Double) ? Number(b.Scores.Double.Another.Notes) : 0;
-						if ( aval != bval ) { return item.order == 'UP' ? (aval - bval) : (bval-aval); };
-						break;
-					default:
-						break;
+					case 'TITLE':    return diff.str(convKana(a.Title.toLowerCase(), 'KtoH'),  convKana(b.Title.toLowerCase(), 'KtoH'),item.order);   break;
+					case 'ARTIST':   return diff.str(convKana(a.Artist.toLowerCase(), 'KtoH'), convKana(b.Artist.toLowerCase(), 'KtoH'),item.order);  break;
+					case 'GENRE':    return diff.str(convKana(a.Genre.toLowerCase(), 'KtoH'),  convKana(b.Genre.toLowerCase(), 'KtoH'),item.order);   break;
+					case 'BPM':      return diff.num(Number(a.BPM) || 999, Number(b.BPM) || 999, item.order); break;
+					case 'RELEASE':  return diff.date(a.Release?.Date || noDate, b.Release?.Date || noDate,item.order); break;
+					case 'BITDATE':  return diff.date(a.Release?.BitDate || noDate, b.Release?.BitDate || noDate,item.order); break;
+					case 'VERSION':  return diff.num(Number(a.VNo) || 999, Number(b.VNo) || 999, item.order); break;
+					case 'SPNLV':    return diff.num(Number(a.Scores?.Single?.Normal?.Level)   || 0, Number(b.Scores?.Single?.Normal?.Level)  || 0, item.order); break;
+					case 'SPHLV':    return diff.num(Number(a.Scores?.Single?.Hyper?.Level)    || 0, Number(b.Scores?.Single?.Hyper?.Level)   || 0, item.order); break;
+					case 'SPALV':    return diff.num(Number(a.Scores?.Single?.Another?.Level)  || 0, Number(b.Scores?.Single?.Another?.Level) || 0, item.order); break;
+					case 'DPNLV':    return diff.num(Number(a.Scores?.Double?.Normal?.Level)   || 0, Number(b.Scores?.Double?.Normal?.Level)  || 0, item.order); break;
+					case 'DPHLV':    return diff.num(Number(a.Scores?.Double?.Hyper?.Level)    || 0, Number(b.Scores?.Double?.Hyper?.Level)   || 0, item.order); break;
+					case 'DPALV':    return diff.num(Number(a.Scores?.Double?.Another?.Level)  || 0, Number(b.Scores?.Double?.Another?.Level) || 0, item.order); break;
+					case 'SPNNOTES': return diff.num(Number(a.Scores?.Single?.Normal?.Notes)   || 0, Number(b.Scores?.Single?.Normal?.Notes)  || 0, item.order); break;
+					case 'SPHNOTES': return diff.num(Number(a.Scores?.Single?.Hyper?.Notes)    || 0, Number(b.Scores?.Single?.Hyper?.Notes)   || 0, item.order); break;
+					case 'SPANOTES': return diff.num(Number(a.Scores?.Single?.Another?.Notes)  || 0, Number(b.Scores?.Single?.Another?.Notes) || 0, item.order); break;
+					case 'DPNNOTES': return diff.num(Number(a.Scores?.Double?.Normal?.Notes)   || 0, Number(b.Scores?.Double?.Normal?.Notes)  || 0, item.order); break;
+					case 'DPHNOTES': return diff.num(Number(a.Scores?.Double?.Hyper?.Notes)    || 0, Number(b.Scores?.Double?.Hyper?.Notes)   || 0, item.order); break;
+					case 'DPANOTES': return diff.num(Number(a.Scores?.Double?.Another?.Notes)  || 0, Number(b.Scores?.Double?.Another?.Notes) || 0, item.order); break;
+					default:         return 0; break;
 				};
 			};
-			return 0;
 		});
 
 		return items;
 	},
 	write: function(items) {
-		jQuery('#search-message').html('<span>結果テーブルに書き込み中…</span>');
 		let now = new Date();
 		let now2Y2M =  dateFormat.format(now, 'yy/MM');
 		let now4Y2M2D =  dateFormat.format(now, 'yyyy/MM/dd');
 
 		// 前回の結果を初期化
-		jQuery(".musiclist .music, .musiclist .music_other").remove();
+		toastbox.message('<span>前回の検索結果を削除中…</span>');
+		rParent = document.getElementById('musiclist').getElementsByTagName('tbody');
+		for ( i=0;i < rParent.length; i++){
+			while(rParent[i].firstChild.nextSibling) { rParent[i].removeChild(rParent[i].firstChild.nextSibling); }
+		};
 
 		// 曲数・譜面数計算用
+		toastbox.message('<span>結果テーブル作成中…</span>');
 		cTmp = { 'Beginner': 0, 'Normal': 0, 'Hyper': 0, 'Another': 0, 'Leggendaria': 0,
 				 'ALL': function() { return this.Beginner + this.Normal + this.Hyper + this.Another + this.Leggendaria; } };
 		let c = {
@@ -1673,7 +1603,7 @@ let musics = {
 			};
 
 			// 挿入データの作成
-			let swdjlv = Number(jQuery('#showdjlevel').val());
+			let swdjlv = Number(document.getElementById('showdjlevel').value);
 			let unlockCheckbox = {
 				"B": ((!isNaN(SPB.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-b" name="check-playable" class="check-playable" value="' + item.ID + '_b" ' + (vals.cp[Diff[0].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-b"></label>' : '&nbsp;'),
 				"N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (vals.cp[Diff[1].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
@@ -1770,7 +1700,9 @@ let musics = {
 
 			rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0) + (rBit.Leggendaria ? rBit.Leggendaria : 0));
 			rowspan = (hasUserJSON ? 5 - (item.Release.Type !== 'Default' ? 0 : 1) : 1);
-			addhtml = '<tr class="music m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+			searchOpen = document.getElementById('searchopen').checked;
+			extendOpen = document.getElementById('extendopen').checked;
+			addhtml = '<tr class="music m' + item.ID + (searchOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="release' + rTypeClass + '">' + rTypeSStr + '</td>' +
 					  '<td class="version version' + item.VNo + '">' + item.VShortName + '</td>' +
 					  '<td class="genre">' + item.Genre + '</td>' +
@@ -1785,7 +1717,7 @@ let musics = {
 					  '<td class="dp level dph m' + item.ID + ' ' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
 					  '<td class="dp level dpa m' + item.ID + ' ' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
 					  '</tr>' +
-					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="" rowspan="' + rowspan + '"></td>' +
 					  '<td class="other" colspan="4" rowspan="' + rowspan + '">' +
 					  '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
@@ -1809,7 +1741,7 @@ let musics = {
 					  '<td class="notes dpa m' + item.ID + '">' + (!isNaN(DPA.Lv) ? DPA.Notes : '') + '</td>' +
 					  '</tr>' +
 					  (hasUserJSON && item.Release.Type !== 'Default' ?
-					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="playable">解禁</td>' +
 					  '<td class="playable spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
 					  '<td class="playable spn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
@@ -1820,7 +1752,7 @@ let musics = {
 					  '<td class="playable dpa m' + item.ID + '">&nbsp;</td>' +
 					  '</tr>' : '' ) +
 					  (hasUserJSON ?
-					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="cleartype">ClearType</td>' +
 					  '<td class="cleartype spb selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPB + '</td>' +
 					  '<td class="cleartype spn selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPN + '</td>' +
@@ -1831,7 +1763,7 @@ let musics = {
 					  '<td class="cleartype dpa selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPA + '</td>' +
 					  '</tr>' : '' ) +
 					  (hasUserJSON ?
-					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="exscore">EXScore</td>' +
 					  '<td class="exscore spb m' + item.ID + '">' + scoreClass.djlevel.SPB + scoreClass.exscore.SPB + '</td>' +
 					  '<td class="exscore spn m' + item.ID + '">' + scoreClass.djlevel.SPN + scoreClass.exscore.SPN + '</td>' +
@@ -1842,7 +1774,7 @@ let musics = {
 					  '<td class="exscore dpa m' + item.ID + '">' + scoreClass.djlevel.DPA + scoreClass.exscore.DPA + '</td>' +
 					  '</tr>' : '' ) +
 					  (hasUserJSON ?
-					  '<tr class="music_other m' + item.ID + '" style="display: none;" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="misscount">MissCount</td>' +
 					  '<td class="misscount spb m' + item.ID + '">' + scoreClass.misscount.SPB + '</td>' +
 					  '<td class="misscount spn m' + item.ID + '">' + scoreClass.misscount.SPN + '</td>' +
@@ -1855,44 +1787,44 @@ let musics = {
 
 
 			// データ挿入先ごとにオブジェクトに格納
-			className = [];
-			switch (jQuery("#search-folder").val()) {
-				case 'VER'      : className.push("v" + zeroPadding(item.VNo,2) + "-header"); break;
-				case 'RELT'     : className.push("relt" + item.Release.Type + "-header"); break;
-				case 'RELY'     : className.push("rely" + r_id_r4Y + "-header"); break;
-				case 'RELYM'    : className.push("relym" + r_id_r4Y2M + "-header"); break;
-				case 'BITY'     : className.push("bity" + r_id_b4Y + "-header"); break;
-				case 'BITYM'    : className.push("bitym" + r_id_b4Y2M + "-header"); break;
-				case 'BPM'      : className.push("bpm" + getBPMValue(BPM) + "-header"); break;
-				case 'SPLV'     : if (!isNaN(SPB.Lv)) {className.push("sp-lv" + zeroPadding(SPB.Lv,2) + "-header");};
-								  if (!isNaN(SPN.Lv)) {className.push("sp-lv" + zeroPadding(SPN.Lv,2) + "-header");};
-								  if (!isNaN(SPH.Lv)) {className.push("sp-lv" + zeroPadding(SPH.Lv,2) + "-header");};
-								  if (!isNaN(SPA.Lv)) {className.push("sp-lv" + zeroPadding(SPA.Lv,2) + "-header");};
-								  if (!isNaN(SPL.Lv)) {className.push("sp-lv" + zeroPadding(SPL.Lv,2) + "-header");}; break;
-				case 'SPBLV'    : className.push("spb-lv" + (!isNaN(SPB.Lv) ? zeroPadding(SPB.Lv,2) : 'NO') + "-header"); break;
-				case 'SPNLV'    : className.push("spn-lv" + (!isNaN(SPN.Lv) ? zeroPadding(SPN.Lv,2) : 'NO') + "-header"); break;
-				case 'SPHLV'    : className.push("sph-lv" + (!isNaN(SPH.Lv) ? zeroPadding(SPH.Lv,2) : 'NO') + "-header"); break;
-				case 'SPALV'    : className.push("spa-lv" + (!isNaN(SPA.Lv) ? zeroPadding(SPA.Lv,2) : 'NO') + "-header"); break;
-				case 'SPLLV'    : className.push("spl-lv" + (!isNaN(SPL.Lv) ? zeroPadding(SPL.Lv,2) : 'NO') + "-header"); break;
-				case 'DPLV'     : if (!isNaN(DPB.Lv)) {className.push("dp-lv" + zeroPadding(DPB.Lv,2) + "-header");};
-								  if (!isNaN(DPN.Lv)) {className.push("dp-lv" + zeroPadding(DPN.Lv,2) + "-header");};
-								  if (!isNaN(DPH.Lv)) {className.push("dp-lv" + zeroPadding(DPH.Lv,2) + "-header");};
-								  if (!isNaN(DPA.Lv)) {className.push("dp-lv" + zeroPadding(DPA.Lv,2) + "-header");};
-								  if (!isNaN(DPL.Lv)) {className.push("dp-lv" + zeroPadding(DPL.Lv,2) + "-header");}; break;
-				case 'DPBLV'    : className.push("dpb-lv" + (!isNaN(DPB.Lv) ? zeroPadding(DPB.Lv,2) : 'NO') + "-header"); break;
-				case 'DPNLV'    : className.push("dpn-lv" + (!isNaN(DPN.Lv) ? zeroPadding(DPN.Lv,2) : 'NO') + "-header"); break;
-				case 'DPHLV'    : className.push("dph-lv" + (!isNaN(DPH.Lv) ? zeroPadding(DPH.Lv,2) : 'NO') + "-header"); break;
-				case 'DPALV'    : className.push("dpa-lv" + (!isNaN(DPA.Lv) ? zeroPadding(DPA.Lv,2) : 'NO') + "-header"); break;
-				case 'DPLLV'    : className.push("dpl-lv" + (!isNaN(DPL.Lv) ? zeroPadding(DPL.Lv,2) : 'NO') + "-header"); break;
-				case 'SPNNOTES' : className.push("spn-notes" + (!isNaN(SPN.Lv) ? getNotesValue(SPN.Notes) : 'NO') + "-header"); break;
-				case 'SPHNOTES' : className.push("sph-notes" + (!isNaN(SPH.Lv) ? getNotesValue(SPH.Notes) : 'NO') + "-header"); break;
-				case 'SPANOTES' : className.push("spa-notes" + (!isNaN(SPA.Lv) ? getNotesValue(SPA.Notes) : 'NO') + "-header"); break;
-				case 'DPNNOTES' : className.push("dpn-notes" + (!isNaN(DPN.Lv) ? getNotesValue(DPN.Notes) : 'NO') + "-header"); break;
-				case 'DPHNOTES' : className.push("dph-notes" + (!isNaN(DPH.Lv) ? getNotesValue(DPH.Notes) : 'NO') + "-header"); break;
-				case 'DPANOTES' : className.push("dpa-notes" + (!isNaN(DPA.Lv) ? getNotesValue(DPA.Notes) : 'NO') + "-header"); break;
+			idList = [];
+			switch (document.getElementById('search-folder').value) {
+				case 'VER'      : idList.push("v" + zeroPadding(item.VNo,2) + "-header"); break;
+				case 'RELT'     : idList.push("relt" + item.Release.Type + "-header"); break;
+				case 'RELY'     : idList.push("rely" + r_id_r4Y + "-header"); break;
+				case 'RELYM'    : idList.push("relym" + r_id_r4Y2M + "-header"); break;
+				case 'BITY'     : idList.push("bity" + r_id_b4Y + "-header"); break;
+				case 'BITYM'    : idList.push("bitym" + r_id_b4Y2M + "-header"); break;
+				case 'BPM'      : idList.push("bpm" + getBPMValue(BPM) + "-header"); break;
+				case 'SPLV'     : if (!isNaN(SPB.Lv)) {idList.push("sp-lv" + zeroPadding(SPB.Lv,2) + "-header");};
+								  if (!isNaN(SPN.Lv)) {idList.push("sp-lv" + zeroPadding(SPN.Lv,2) + "-header");};
+								  if (!isNaN(SPH.Lv)) {idList.push("sp-lv" + zeroPadding(SPH.Lv,2) + "-header");};
+								  if (!isNaN(SPA.Lv)) {idList.push("sp-lv" + zeroPadding(SPA.Lv,2) + "-header");};
+								  if (!isNaN(SPL.Lv)) {idList.push("sp-lv" + zeroPadding(SPL.Lv,2) + "-header");}; break;
+				case 'SPBLV'    : idList.push("spb-lv" + (!isNaN(SPB.Lv) ? zeroPadding(SPB.Lv,2) : 'NO') + "-header"); break;
+				case 'SPNLV'    : idList.push("spn-lv" + (!isNaN(SPN.Lv) ? zeroPadding(SPN.Lv,2) : 'NO') + "-header"); break;
+				case 'SPHLV'    : idList.push("sph-lv" + (!isNaN(SPH.Lv) ? zeroPadding(SPH.Lv,2) : 'NO') + "-header"); break;
+				case 'SPALV'    : idList.push("spa-lv" + (!isNaN(SPA.Lv) ? zeroPadding(SPA.Lv,2) : 'NO') + "-header"); break;
+				case 'SPLLV'    : idList.push("spl-lv" + (!isNaN(SPL.Lv) ? zeroPadding(SPL.Lv,2) : 'NO') + "-header"); break;
+				case 'DPLV'     : if (!isNaN(DPB.Lv)) {idList.push("dp-lv" + zeroPadding(DPB.Lv,2) + "-header");};
+								  if (!isNaN(DPN.Lv)) {idList.push("dp-lv" + zeroPadding(DPN.Lv,2) + "-header");};
+								  if (!isNaN(DPH.Lv)) {idList.push("dp-lv" + zeroPadding(DPH.Lv,2) + "-header");};
+								  if (!isNaN(DPA.Lv)) {idList.push("dp-lv" + zeroPadding(DPA.Lv,2) + "-header");};
+								  if (!isNaN(DPL.Lv)) {idList.push("dp-lv" + zeroPadding(DPL.Lv,2) + "-header");}; break;
+				case 'DPBLV'    : idList.push("dpb-lv" + (!isNaN(DPB.Lv) ? zeroPadding(DPB.Lv,2) : 'NO') + "-header"); break;
+				case 'DPNLV'    : idList.push("dpn-lv" + (!isNaN(DPN.Lv) ? zeroPadding(DPN.Lv,2) : 'NO') + "-header"); break;
+				case 'DPHLV'    : idList.push("dph-lv" + (!isNaN(DPH.Lv) ? zeroPadding(DPH.Lv,2) : 'NO') + "-header"); break;
+				case 'DPALV'    : idList.push("dpa-lv" + (!isNaN(DPA.Lv) ? zeroPadding(DPA.Lv,2) : 'NO') + "-header"); break;
+				case 'DPLLV'    : idList.push("dpl-lv" + (!isNaN(DPL.Lv) ? zeroPadding(DPL.Lv,2) : 'NO') + "-header"); break;
+				case 'SPNNOTES' : idList.push("spn-notes" + (!isNaN(SPN.Lv) ? getNotesValue(SPN.Notes) : 'NO') + "-header"); break;
+				case 'SPHNOTES' : idList.push("sph-notes" + (!isNaN(SPH.Lv) ? getNotesValue(SPH.Notes) : 'NO') + "-header"); break;
+				case 'SPANOTES' : idList.push("spa-notes" + (!isNaN(SPA.Lv) ? getNotesValue(SPA.Notes) : 'NO') + "-header"); break;
+				case 'DPNNOTES' : idList.push("dpn-notes" + (!isNaN(DPN.Lv) ? getNotesValue(DPN.Notes) : 'NO') + "-header"); break;
+				case 'DPHNOTES' : idList.push("dph-notes" + (!isNaN(DPH.Lv) ? getNotesValue(DPH.Notes) : 'NO') + "-header"); break;
+				case 'DPANOTES' : idList.push("dpa-notes" + (!isNaN(DPA.Lv) ? getNotesValue(DPA.Notes) : 'NO') + "-header"); break;
 			};
 
-			for (let header of className) {
+			for (let header of idList) {
 				tabledata[header] += addhtml;
 				if (!(header in countdata)) {
 					countdata[header] = { ...countdata.Tmp,
@@ -1939,47 +1871,75 @@ let musics = {
 		};
 
 		// データ挿入
-		for(let className in tabledata){
+		toastbox.message('<span>結果テーブルに書き込み中…</span>');
+		for(let idList in tabledata){
 			// 楽曲データを追加した場合は検索結果の書き換えと表示処理
-			if (tabledata[className] !== '') {
-				jQuery('#' + className).append(tabledata[className]);
-				jQuery('#' + className).find('span').remove();
-				let tmp = countdata[className];
+			if (tabledata[idList] !== '') {
+				hTag = document.getElementById(idList).getElementsByTagName('th')[0];
+				while (hTag.firstChild.nextSibling) { hTag.removeChild(hTag.firstChild.nextSibling); };
+				let tmp = countdata[idList];
 				let addScoresText = [
-					(tmp.BITScores.SPB > 0 ? '<span class="unlockvalue_b"> B：' + tmp.BITCanplayScores.SPB + ' / ' + tmp.BITScores.SPB + ' </span>' : '<span class="unlockvalue_b"> </span>'),
-					(tmp.BITScores.SPN > 0 ? '<span class="unlockvalue"> N：'   + tmp.BITCanplayScores.SPN + ' / ' + tmp.BITScores.SPN + ' </span>' : '<span class="unlockvalue"> </span>'),
-					(tmp.BITScores.SPH > 0 ? '<span class="unlockvalue"> H：'   + tmp.BITCanplayScores.SPH + ' / ' + tmp.BITScores.SPH + ' </span>' : '<span class="unlockvalue"> </span>'),
-					(tmp.BITScores.SPA > 0 ? '<span class="unlockvalue"> A：'   + tmp.BITCanplayScores.SPA + ' / ' + tmp.BITScores.SPA + ' </span>' : '<span class="unlockvalue"> </span>'),
-					(tmp.BITScores.SPL > 0 ? '<span class="unlockvalue"> L：'   + tmp.BITCanplayScores.SPL + ' / ' + tmp.BITScores.SPL + ' </span>' : '<span class="unlockvalue"> </span>'),
+					'<span class="unlockvalue_b"> ' + (tmp.BITScores.SPB > 0 ? 'B：' + tmp.BITCanplayScores.SPB + ' / ' + tmp.BITScores.SPB : '') + '</span>',
+					'<span class="unlockvalue"> ' + (tmp.BITScores.SPN > 0 ? 'N：' + tmp.BITCanplayScores.SPN + ' / ' + tmp.BITScores.SPN : '') + '</span>',
+					'<span class="unlockvalue"> ' + (tmp.BITScores.SPH > 0 ? 'H：' + tmp.BITCanplayScores.SPH + ' / ' + tmp.BITScores.SPH : '') + '</span>',
+					'<span class="unlockvalue"> ' + (tmp.BITScores.SPA > 0 ? 'A：' + tmp.BITCanplayScores.SPA + ' / ' + tmp.BITScores.SPA : '') + '</span>',
+					'<span class="unlockvalue"> ' + (tmp.BITScores.SPL > 0 ? 'L：' + tmp.BITCanplayScores.SPL + ' / ' + tmp.BITScores.SPL : '') + '</span>',
 				];
 				let addTextOutput = (tmp.BITScores.SPB > 0 || tmp.BITScores.SPN > 0 || tmp.BITScores.SPH > 0 || tmp.BITScores.SPA > 0 || tmp.BITScores.SPL > 0);
 				let addText = '<span class="result">&nbsp;' + tmp.Music + ' 曲</span>' +
 						  (addTextOutput ? '<span class="unlocklabel"> BIT解禁</span>' + addScoresText.join('') : '');
-				jQuery('#' + className).find('.headerline th').append(addText);
-				jQuery('#' + className).show();
-				if (jQuery('#searchopen').prop('checked') ) {
-					let baseTarget = jQuery('#' + className);
+				hTag.innerHTML += addText;
+
+				target = document.getElementById(idList);
+				target.innerHTML += tabledata[idList];
+				document.getElementById(idList).classList.remove('hidden');
+				if ( document.getElementById('searchopen').checked ) {
+					let baseTarget = jQuery('#' + idList);
 					if (jQuery('#extendopen').prop('checked')) {
-						baseTarget.children('.music_other').show();
+						baseTarget.children('.music_other').removeClass('hidden');
 					} else {
-						baseTarget.children('.music_other').hide();
+						baseTarget.children('.music_other').addClass('hidden');
 					}
-					jQuery('#' + className).children('.music').show();
+					jQuery('#' + idList).children('.music').removeClass('hidden');
 					baseTarget.children('.headerline').addClass('opened');
+					target.classList.remove('hidden');
+
+/*				if ( document.getElementById('searchopen').checked ) {
+					target.getElementsByClassName('headerline')[0].classList.add('opened'); */
 				};
 			};
 		};
 
+		// バージョンヘッダーをクリックで開閉
+		jQuery('.musiclist .headerline').click(function() {
+			// クリック対象が開いていたら
+			if ( this.classList.contains('opened') ) {
+				this.parentElement.querySelectorAll('.music,.music_other').forEach( elm => elm.classList.add('hidden'));
+				this.classList.remove('opened');
+			// クリック対象が閉じていたら
+			} else {
+				classStr = (document.getElementById('extendopen').checked ? '.music, .music_other' : '.music');
+				if ( document.getElementById('singleopen').checked ) {
+					document.querySelectorAll('.music, .music_other').forEach( elm => elm.classList.add('hidden'));
+					document.querySelectorAll('.musiclist .headerline').forEach( elm => elm === this ? '' : elm.classList.remove('opened'));
+				};
+				this.parentElement.querySelectorAll(classStr).forEach( elm => elm.classList.remove('hidden'));
+				this.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+				this.classList.add('opened');
+			};
+		});
+
 		// music_other開閉用にonclick設定
 		jQuery('.musiclist tbody').find('.genre, .title, .artist, .bpm').click(function() {
-			let mid = jQuery(this).parent().attr('data-mid');
-			jQuery(this).parent().parent().find('.' + mid + '.music_other').toggle();
+			let mid = this.parentElement.getAttribute('data-mid');
+			let elms = this.parentElement.parentElement.querySelectorAll('.' + mid + '.music_other');
+			elms.forEach( elm => elm.classList.contains('hidden') ? elm.classList.remove('hidden') : elm.classList.add('hidden') );
 		});
 
 		jQuery(".musiclist tbody").each(function() {
 			// 曲数が0のバージョンヘッダーを非表示
 			if (jQuery(this).find(".music").length <= 0) {
-				jQuery(this).hide();
+				this.classList.add('hidden');
 			};
 		});
 
@@ -2126,7 +2086,8 @@ let musics = {
 									'<td class="dph text-right">&nbsp;</td>' +
 									'<td class="dpa text-right">&nbsp;</td>' +
 									'</tr></tbody>');
-		jQuery('#search-message').empty();
+		toastbox.message('<span>検索しました</span>');
+		toastbox.timerFadeOut(5000);
 	},
 
 	getChartInfo: function (item) {
@@ -3088,32 +3049,6 @@ function handleClientLoad() {
 		jQuery('.score_opt input[type="number"]').each(function() { toggleScoreOptButton(this, true); });
 		jQuery('.purchase input').each(function() { togglePackButton(this, true); });
 		jQuery('#opt_bpm_changing').each(function() { toggleBPMOptButton(this, true); });
-	});
-
-	// バージョンヘッダーをクリックで開閉
-	jQuery('.musiclist .headerline').click(function() {
-		// クリック対象が開いていたら
-		if ( jQuery(this).hasClass('opened') ) {
-			jQuery(this).parent().children('.music,.music_other').hide();
-		// クリック対象が閉じていたら
-		} else {
-			if ( jQuery('#singleopen').prop("checked") ) {
-				jQuery('.musiclist tbody').children('.music, .music_other').hide();
-				jQuery('.musiclist .headerline').not(this).removeClass('opened');
-				classStr = (jQuery('#extendopen').prop('checked') ? '.music, .music_other' : '.music');
-				jQuery(this).parent().children(classStr).fadeIn('fast');
-				//if (document.documentElement.clientHeight) {};
-//				jQuery(window).scrollTop(jQuery(this).offset().top - 36);
-				this.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-			} else {
-				// jQuery('.musiclist tbody').children('.music_other').hide();
-				classStr = (jQuery('#extendopen').prop('checked') ? '.music, .music_other' : '.music');
-				jQuery(this).parent().children(classStr).fadeIn('fast');
-//				jQuery(window).scrollTop(jQuery(this).offset().top - 36);
-				this.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-			};
-		};
-		jQuery(this).toggleClass('opened');
 	});
 
 	// 新曲追加用フォームの入力時

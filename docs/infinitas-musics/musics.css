@@ -907,6 +907,9 @@ table.musiclist .bss {
     background-color: #ff3333;
     visibility: visible;
 }
+table.musiclist tbody.hidden {
+    display: none;
+}
 /*--------------------------------------------------
   画面サイズ：横800px以下の場合
 --------------------------------------------------*/
