@@ -2632,7 +2632,7 @@ function handleClientLoad() {
 	delete musiclist;
 
 	//
-	jQuery('#search-message').html('<span>準備中…</span>');
+	toastbox.FadeInandTimerFadeOut('準備中…');
 	if (musics.JSON.length > 0) {
 		// 楽曲数・譜面数の確認
 		for (item of musics.JSON) {
@@ -2669,7 +2669,7 @@ function handleClientLoad() {
 		artistSet = new Set([...artistSet].sort());
 		artistSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#artistlist'); });
 
-		jQuery('#search-message').html('<span>データファイル読込完了</span>');
+		toastbox.FadeInandTimerFadeOut('データファイル読込完了');
 		jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
 		jQuery('.infotable').append(
 			'<tbody class="musiclistdata"><tr><th colspan="2" class="section2">全データ</th>' +
