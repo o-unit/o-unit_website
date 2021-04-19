@@ -4,6 +4,7 @@ title: INFINITAS 楽曲一覧ページの作成作業中3
 tags: INFINTIAS
 #category:
 categories: INFINTIAS Update
+comments: true
 ---
 楽曲BIT解禁状況の保存方法にめどが立ったので、近いうちにどうにかします。  
 googleDriveAPIって便利だね！  
