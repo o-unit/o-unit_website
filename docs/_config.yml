@@ -287,12 +287,12 @@ author:
   bio: "のんびりやっていきます" # Note: Markdown is allowed
   location: "日本, 東京都 (Tokyo, Japan)"
   links:
-    - label: ""
+    - label: "site"
       icon: "fas fa-fw fa-link"
-      url: "https://mademistakes.com"
+      url: "https://o-unit.net"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/mmistakes"
+      url: "https://twitter.com/ounit_master"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/o-unit"
