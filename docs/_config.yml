@@ -14,7 +14,7 @@ title_separator          : "-"
 subtitle                 : "制作物置き場"
 name                     : &name "master" # &name is a YAML anchor which can be *referenced later
 description              : &description ""
-url                      : https://o-unit.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : https://o-unit.net/ # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "o-unit/o-unit.github.io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
@@ -22,10 +22,10 @@ logo                     : # path of logo image to display in the masthead, e.g.
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
-# comments:
-#   provider               : "false" # false (default), "disqus", "discourse", "facebook", "staticman_v2", "staticman", "utterances", "custom"
-#   disqus:
-#     shortname            :
+comments:
+  provider               : "disqus" # false (default), "disqus", "discourse", "facebook", "staticman_v2", "staticman", "utterances", "custom"
+  disqus:
+    shortname            : "o-unit"
 #   discourse:
 #     server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
 #   facebook:
@@ -70,8 +70,7 @@ social:
   type                   : # Person or Organization (defaults to Person)
   name                   : # If the user or organization name differs from the site's name
   links: # An array of links to social media profiles
-    - "https://twitter.com/mmistakes"
-    - "https://www.facebook.com/michaelrose"
+    - "https://twitter.com/ounit_master"
 
 # Analytics
 analytics:
