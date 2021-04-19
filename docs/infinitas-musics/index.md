@@ -27,7 +27,7 @@ layout: "single-nosidebar"
 		<div id="scorefilterbox"></div>
 	</div>
 	<div id="formtab-2_content" class="tab_content">
-		<div class="inblock fieldname">シリーズ</div>
+		<div class="inblock fieldname">バージョン</div>
 		<div id="changeselect-series-ALL" class="changeselect"></div>
 		<div id="changeselect-series-CS" class="changeselect"></div>
 		<hr class="clearfix" />
@@ -453,8 +453,8 @@ layout: "single-nosidebar"
 				<li><h3>[条件：楽曲]</h3>
 					楽曲のシリーズ・配信条件・配信開始月などの情報で表示対象を絞り込めます。<br />
 					<ul>
-						<li><h4>[シリーズ]</h4>
-							「1st style」～「INFINITAS」まで、シリーズ毎に楽曲を指定できます。<br />
+						<li><h4>[バージョン]</h4>
+							「1st style」～「INFINITAS」まで、バージョン毎に楽曲を指定できます。<br />
 							ボタンの背景色が青色がON・背景色無しがOFFです。<br />
 						</li>
 						<li><h4>[配信条件]</h4>
