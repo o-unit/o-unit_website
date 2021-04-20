@@ -66,7 +66,7 @@ let packlist = {
 	'0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'purchase-Pack0020001'}
 };
 
-let headerLine = [
+let VerHeaderLine = [
 	['v01-header', 'par-version','1st style'],
 	['v02-header', 'par-version','substream'],
 	['v03-header', 'par-version','2nd style'],
@@ -144,27 +144,27 @@ function zeroPadding(num,length){ return String(num).length >= length ? String(n
 
 let dateFormat = {
 	_fmt : {
-		hh: function(date) { return ('0' + date.getHours()).slice(-2); },
-		h: function(date) { return date.getHours(); },
-		mm: function(date) { return ('0' + date.getMinutes()).slice(-2); },
-		m: function(date) { return date.getMinutes(); },
-		ss: function(date) { return ('0' + date.getSeconds()).slice(-2); },
-		dd: function(date) { return ('0' + date.getDate()).slice(-2); },
-		d: function(date) { return date.getDate(); },
-		s: function(date) { return date.getSeconds(); },
-		yyyy: function(date) { return date.getFullYear() + ''; },
-		yy: function(date) { return (date.getYear() + '').slice(-2); },
-		t: function(date) { return date.getDate()<=3 ? ["st", "nd", "rd"][date.getDate()-1]: 'th'; },
-		w: function(date) {return ["Sun", "$on", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()]; },
-		MMMM: function(date) { return ["January", "February", "$arch", "April", "$ay", "June", "July", "August", "September", "October", "November", "December"][date.getMonth()]; },
-		MMM: function(date) {return ["Jan", "Feb", "$ar", "Apr", "$ay", "Jun", "Jly", "Aug", "Spt", "Oct", "Nov", "Dec"][date.getMonth()]; },
-		MM: function(date) { return ('0' + (date.getMonth() + 1)).slice(-2); },
-		M: function(date) { return date.getMonth() + 1; },
-		$: function(date) {return 'M';}
+		hh: (date) => ('0' + date.getHours()).slice(-2),
+		h: (date) => date.getHours(),
+		mm: (date) => ('0' + date.getMinutes()).slice(-2),
+		m: (date) => date.getMinutes(),
+		ss: (date) => ('0' + date.getSeconds()).slice(-2),
+		dd: (date) => ('0' + date.getDate()).slice(-2),
+		d: (date) => date.getDate(),
+		s: (date) => date.getSeconds(),
+		yyyy: (date) => date.getFullYear() + '',
+		yy: (date) => (date.getYear() + '').slice(-2),
+		t: (date) => date.getDate()<=3 ? ["st", "nd", "rd"][date.getDate()-1]: 'th',
+		w: (date) => ["Sun", "$on", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()],
+		MMMM: (date) => ["January", "February", "$arch", "April", "$ay", "June", "July", "August", "September", "October", "November", "December"][date.getMonth()],
+		MMM: (date) => ["Jan", "Feb", "$ar", "Apr", "$ay", "Jun", "Jly", "Aug", "Spt", "Oct", "Nov", "Dec"][date.getMonth()],
+		MM: (date) => ('0' + (date.getMonth() + 1)).slice(-2),
+		M: (date) => date.getMonth() + 1,
+		$: (date) => 'M'
 	},
 	_priority : ["hh", "h", "mm", "m", "ss", "dd", "d", "s", "yyyy", "yy", "t", "w", "MMMM", "MMM", "MM", "M", "$"],
 	format: function(date, format){return this._priority.reduce((res, fmt) => res.replace(fmt, this._fmt[fmt](date)), format)}
-}
+};
 
 /**
  * 参考 ： https://gist.github.com/kawanet/5553478
@@ -176,8 +176,8 @@ let dateFormat = {
  */
 function convKana(src, to = 'KtoH') {
 	switch (to) {
-		case 'HtoK': return src.replace(/[\u30a1-\u30f6]/g, function(match) { return String.fromCharCode(match.charCodeAt(0) - 0x60); });
-		case 'KtoH': return src.replace(/[\u3041-\u3096]/g, function(match) { return String.fromCharCode(match.charCodeAt(0) + 0x60); });
+		case 'HtoK': return src.replace(/[\u30a1-\u30f6]/g, (match) => String.fromCharCode(match.charCodeAt(0) - 0x60));
+		case 'KtoH': return src.replace(/[\u3041-\u3096]/g, (match) => String.fromCharCode(match.charCodeAt(0) + 0x60));
 		default: return src;
 	};
 };
@@ -250,7 +250,9 @@ let fade = {
  * @param {*} isLabelWithVal
  */
 function pushheaderLine(prefix, className, label, values, isLabelWithVal = true) {
-	for(let val of values){ headerLine.push([prefix + val + '-header', className, label + (isLabelWithVal ? val : '')]);}
+	let retArr = [];
+	for(let val of values){ retArr.push([prefix + val + '-header', className, label + (isLabelWithVal ? val : '')]);};
+	return retArr;
 };
 
 /**
@@ -1415,10 +1417,8 @@ let musics = {
 
 		// 前回の結果を初期化
 		toastbox.message('<span>前回の検索結果を削除中…</span>');
-		rParent = document.getElementById('musiclist').getElementsByTagName('tbody');
-		for ( i=0;i < rParent.length; i++){
-			while(rParent[i].firstChild.nextSibling) { rParent[i].removeChild(rParent[i].firstChild.nextSibling); }
-		};
+		rElm = document.getElementById('musiclist').tBodies;
+		while (rElm.length > 0) { rElm[0].remove(); };
 
 		// 曲数・譜面数計算用
 		toastbox.message('<span>結果テーブル作成中…</span>');
@@ -1467,7 +1467,6 @@ let musics = {
 						 'BITCanplay':       { 'B': 0, 'N': 0, 'H': 0, 'A': 0, 'L': 0 }
 		};
 
-		for (let item of headerLine) {tabledata[item[0]] = '';}
 		for(let item of items){
 			// 譜面情報の取得
 			let SPB = this.getChartInfo( item.Scores.Single[Diff[0].Name] );
@@ -1617,84 +1616,84 @@ let musics = {
 					"SPN": ((vals.cp[Diff[1].Name] || rTypeClass === '') && !isNaN(SPN.Lv) ? ' canplay' : ''),
 					"SPH": ((vals.cp[Diff[2].Name] || rTypeClass === '') && !isNaN(SPH.Lv) ? ' canplay' : ''),
 					"SPA": ((vals.cp[Diff[3].Name] || rTypeClass === '') && !isNaN(SPA.Lv) ? ' canplay' : ''),
-					"SPL": ((vals.cp[Diff[4].Name] || rTypeClass === '') && !isNaN(SPL.Lv) ? ' canplay' : ''),
-					"DPB": ((vals.cp[Diff[0].Name] || rTypeClass === '') && !isNaN(DPB.Lv) ? ' canplay' : ''),
+					//"SPL": ((vals.cp[Diff[4].Name] || rTypeClass === '') && !isNaN(SPL.Lv) ? ' canplay' : ''),
+					//"DPB": ((vals.cp[Diff[0].Name] || rTypeClass === '') && !isNaN(DPB.Lv) ? ' canplay' : ''),
 					"DPN": ((vals.cp[Diff[1].Name] || rTypeClass === '') && !isNaN(DPN.Lv) ? ' canplay' : ''),
 					"DPH": ((vals.cp[Diff[2].Name] || rTypeClass === '') && !isNaN(DPH.Lv) ? ' canplay' : ''),
 					"DPA": ((vals.cp[Diff[3].Name] || rTypeClass === '') && !isNaN(DPA.Lv) ? ' canplay' : ''),
-					"DPL": ((vals.cp[Diff[4].Name] || rTypeClass === '') && !isNaN(DPL.Lv) ? ' canplay' : '')
+					//"DPL": ((vals.cp[Diff[4].Name] || rTypeClass === '') && !isNaN(DPL.Lv) ? ' canplay' : '')
 				},
 				"cn": {
 					"SPB": '<div class="notesstyle' + (SPB.HCN ? ' hcn' : SPB.CN ? ' cn' : '') + '"></div>',
 					"SPN": '<div class="notesstyle' + (SPN.HCN ? ' hcn' : SPN.CN ? ' cn' : '') + '"></div>',
 					"SPH": '<div class="notesstyle' + (SPH.HCN ? ' hcn' : SPH.CN ? ' cn' : '') + '"></div>',
 					"SPA": '<div class="notesstyle' + (SPA.HCN ? ' hcn' : SPA.CN ? ' cn' : '') + '"></div>',
-					"SPL": '<div class="notesstyle' + (SPL.HCN ? ' hcn' : SPL.CN ? ' cn' : '') + '"></div>',
-					"DPB": '<div class="notesstyle' + (DPB.HCN ? ' hcn' : DPB.CN ? ' cn' : '') + '"></div>',
+					//"SPL": '<div class="notesstyle' + (SPL.HCN ? ' hcn' : SPL.CN ? ' cn' : '') + '"></div>',
+					//"DPB": '<div class="notesstyle' + (DPB.HCN ? ' hcn' : DPB.CN ? ' cn' : '') + '"></div>',
 					"DPN": '<div class="notesstyle' + (DPN.HCN ? ' hcn' : DPN.CN ? ' cn' : '') + '"></div>',
 					"DPH": '<div class="notesstyle' + (DPH.HCN ? ' hcn' : DPH.CN ? ' cn' : '') + '"></div>',
 					"DPA": '<div class="notesstyle' + (DPA.HCN ? ' hcn' : DPA.CN ? ' cn' : '') + '"></div>',
-					"DPL": '<div class="notesstyle' + (DPA.HCN ? ' hcn' : DPA.CN ? ' cn' : '') + '"></div>'
+					//"DPL": '<div class="notesstyle' + (DPA.HCN ? ' hcn' : DPA.CN ? ' cn' : '') + '"></div>'
 				},
 				"bss": {
 					"SPB": '<div class="notesstyle' + (SPB.HBSS ? ' hbss' : SPB.BSS ? ' bss' : '') + '"></div>',
 					"SPN": '<div class="notesstyle' + (SPN.HBSS ? ' hbss' : SPN.BSS ? ' bss' : '') + '"></div>',
 					"SPH": '<div class="notesstyle' + (SPH.HBSS ? ' hbss' : SPH.BSS ? ' bss' : '') + '"></div>',
 					"SPA": '<div class="notesstyle' + (SPA.HBSS ? ' hbss' : SPA.BSS ? ' bss' : '') + '"></div>',
-					"SPL": '<div class="notesstyle' + (SPL.HBSS ? ' hbss' : SPL.BSS ? ' bss' : '') + '"></div>',
-					"DPB": '<div class="notesstyle' + (DPB.HBSS ? ' hbss' : DPB.BSS ? ' bss' : '') + '"></div>',
+					//"SPL": '<div class="notesstyle' + (SPL.HBSS ? ' hbss' : SPL.BSS ? ' bss' : '') + '"></div>',
+					//"DPB": '<div class="notesstyle' + (DPB.HBSS ? ' hbss' : DPB.BSS ? ' bss' : '') + '"></div>',
 					"DPN": '<div class="notesstyle' + (DPN.HBSS ? ' hbss' : DPN.BSS ? ' bss' : '') + '"></div>',
 					"DPH": '<div class="notesstyle' + (DPH.HBSS ? ' hbss' : DPH.BSS ? ' bss' : '') + '"></div>',
 					"DPA": '<div class="notesstyle' + (DPA.HBSS ? ' hbss' : DPA.BSS ? ' bss' : '') + '"></div>',
-					"DPL": '<div class="notesstyle' + (DPL.HBSS ? ' hbss' : DPL.BSS ? ' bss' : '') + '"></div>'
+					//"DPL": '<div class="notesstyle' + (DPL.HBSS ? ' hbss' : DPL.BSS ? ' bss' : '') + '"></div>'
 				},
 				"exscore": {
 					"SPB": (!isNaN(SPB.Lv) ? '<input id="exs_' + item.ID + '_spb" name="exs_' + item.ID + '_spb" type="text" class="exscore" value="' + vals.ex.SP[Diff[0].Name] + '" placeholder="0">' : ''),
 					"SPN": (!isNaN(SPN.Lv) ? '<input id="exs_' + item.ID + '_spn" name="exs_' + item.ID + '_spn" type="text" class="exscore" value="' + vals.ex.SP[Diff[1].Name] + '" placeholder="0">' : ''),
 					"SPH": (!isNaN(SPH.Lv) ? '<input id="exs_' + item.ID + '_sph" name="exs_' + item.ID + '_sph" type="text" class="exscore" value="' + vals.ex.SP[Diff[2].Name] + '" placeholder="0">' : ''),
 					"SPA": (!isNaN(SPA.Lv) ? '<input id="exs_' + item.ID + '_spa" name="exs_' + item.ID + '_spa" type="text" class="exscore" value="' + vals.ex.SP[Diff[3].Name] + '" placeholder="0">' : ''),
-					"SPL": (!isNaN(SPL.Lv) ? '<input id="exs_' + item.ID + '_spl" name="exs_' + item.ID + '_spl" type="text" class="exscore" value="' + vals.ex.SP[Diff[4].Name] + '" placeholder="0">' : ''),
-					"DPB": (!isNaN(DPB.Lv) ? '<input id="exs_' + item.ID + '_dpb" name="exs_' + item.ID + '_dpb" type="text" class="exscore" value="' + vals.ex.DP[Diff[0].Name] + '" placeholder="0">' : ''),
+					//"SPL": (!isNaN(SPL.Lv) ? '<input id="exs_' + item.ID + '_spl" name="exs_' + item.ID + '_spl" type="text" class="exscore" value="' + vals.ex.SP[Diff[4].Name] + '" placeholder="0">' : ''),
+					//"DPB": (!isNaN(DPB.Lv) ? '<input id="exs_' + item.ID + '_dpb" name="exs_' + item.ID + '_dpb" type="text" class="exscore" value="' + vals.ex.DP[Diff[0].Name] + '" placeholder="0">' : ''),
 					"DPN": (!isNaN(DPN.Lv) ? '<input id="exs_' + item.ID + '_dpn" name="exs_' + item.ID + '_dpn" type="text" class="exscore" value="' + vals.ex.DP[Diff[1].Name] + '" placeholder="0">' : ''),
 					"DPH": (!isNaN(DPH.Lv) ? '<input id="exs_' + item.ID + '_dph" name="exs_' + item.ID + '_dph" type="text" class="exscore" value="' + vals.ex.DP[Diff[2].Name] + '" placeholder="0">' : ''),
 					"DPA": (!isNaN(DPA.Lv) ? '<input id="exs_' + item.ID + '_dpa" name="exs_' + item.ID + '_dpa" type="text" class="exscore" value="' + vals.ex.DP[Diff[3].Name] + '" placeholder="0">' : ''),
-					"DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + vals.ex.DP[Diff[4].Name] + '" placeholder="0">' : '')
+					//"DPL": (!isNaN(DPL.Lv) ? '<input id="exs_' + item.ID + '_dpl" name="exs_' + item.ID + '_dpl" type="text" class="exscore" value="' + vals.ex.DP[Diff[4].Name] + '" placeholder="0">' : '')
 				},
 				"djlevel": {
 					"SPB": ( !isNaN(SPB.Lv) && vals.ex.SP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spb">' + (swdjlv != -1 ? getDJLevel(SPB.Notes * 2, vals.ex.SP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
 					"SPN": ( !isNaN(SPN.Lv) && vals.ex.SP[Diff[1].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spn">' + (swdjlv != -1 ? getDJLevel(SPN.Notes * 2, vals.ex.SP[Diff[1].Name], swdjlv) : '') + '</label>' : '',
 					"SPH": ( !isNaN(SPH.Lv) && vals.ex.SP[Diff[2].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_sph">' + (swdjlv != -1 ? getDJLevel(SPH.Notes * 2, vals.ex.SP[Diff[2].Name], swdjlv) : '') + '</label>' : '',
 					"SPA": ( !isNaN(SPA.Lv) && vals.ex.SP[Diff[3].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spa">' + (swdjlv != -1 ? getDJLevel(SPA.Notes * 2, vals.ex.SP[Diff[3].Name], swdjlv) : '') + '</label>' : '',
-					"SPL": ( !isNaN(SPL.Lv) && vals.ex.SP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spl">' + (swdjlv != -1 ? getDJLevel(SPL.Notes * 2, vals.ex.SP[Diff[4].Name], swdjlv) : '') + '</label>' : '',
-					"DPB": ( !isNaN(DPB.Lv) && vals.ex.DP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + (swdjlv != -1 ? getDJLevel(DPB.Notes * 2, vals.ex.DP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
+					//"SPL": ( !isNaN(SPL.Lv) && vals.ex.SP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_spl">' + (swdjlv != -1 ? getDJLevel(SPL.Notes * 2, vals.ex.SP[Diff[4].Name], swdjlv) : '') + '</label>' : '',
+					//"DPB": ( !isNaN(DPB.Lv) && vals.ex.DP[Diff[0].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpb">' + (swdjlv != -1 ? getDJLevel(DPB.Notes * 2, vals.ex.DP[Diff[0].Name], swdjlv) : '') + '</label>' : '',
 					"DPN": ( !isNaN(DPN.Lv) && vals.ex.DP[Diff[1].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpn">' + (swdjlv != -1 ? getDJLevel(DPN.Notes * 2, vals.ex.DP[Diff[1].Name], swdjlv) : '') + '</label>' : '',
 					"DPH": ( !isNaN(DPH.Lv) && vals.ex.DP[Diff[2].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dph">' + (swdjlv != -1 ? getDJLevel(DPH.Notes * 2, vals.ex.DP[Diff[2].Name], swdjlv) : '') + '</label>' : '',
 					"DPA": ( !isNaN(DPA.Lv) && vals.ex.DP[Diff[3].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpa">' + (swdjlv != -1 ? getDJLevel(DPA.Notes * 2, vals.ex.DP[Diff[3].Name], swdjlv) : '') + '</label>' : '',
-					"DPL": ( !isNaN(DPL.Lv) && vals.ex.DP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + (swdjlv != -1 ? getDJLevel(DPL.Notes * 2, vals.ex.DP[Diff[4].Name], swdjlv) : '') + '</label>' : ''
+					//"DPL": ( !isNaN(DPL.Lv) && vals.ex.DP[Diff[4].Name] >= 0 ) ? '<label for="exs_' + item.ID + '_dpl">' + (swdjlv != -1 ? getDJLevel(DPL.Notes * 2, vals.ex.DP[Diff[4].Name], swdjlv) : '') + '</label>' : ''
 				},
 				"cleartype": {
 					"SPB": (!isNaN(SPB.Lv) ? makeSelectTag(item.ID, 'ct', 'spb', ClearTypeArray, vals.ct.SP[Diff[0].Name]) : ''),
 					"SPN": (!isNaN(SPN.Lv) ? makeSelectTag(item.ID, 'ct', 'spn', ClearTypeArray, vals.ct.SP[Diff[1].Name]) : ''),
 					"SPH": (!isNaN(SPH.Lv) ? makeSelectTag(item.ID, 'ct', 'sph', ClearTypeArray, vals.ct.SP[Diff[2].Name]) : ''),
 					"SPA": (!isNaN(SPA.Lv) ? makeSelectTag(item.ID, 'ct', 'spa', ClearTypeArray, vals.ct.SP[Diff[3].Name]) : ''),
-					"SPL": (!isNaN(SPL.Lv) ? makeSelectTag(item.ID, 'ct', 'spl', ClearTypeArray, vals.ct.SP[Diff[4].Name]) : ''),
-					"DPB": (!isNaN(DPB.Lv) ? makeSelectTag(item.ID, 'ct', 'dpb', ClearTypeArray, vals.ct.DP[Diff[0].Name]) : ''),
+					//"SPL": (!isNaN(SPL.Lv) ? makeSelectTag(item.ID, 'ct', 'spl', ClearTypeArray, vals.ct.SP[Diff[4].Name]) : ''),
+					//"DPB": (!isNaN(DPB.Lv) ? makeSelectTag(item.ID, 'ct', 'dpb', ClearTypeArray, vals.ct.DP[Diff[0].Name]) : ''),
 					"DPN": (!isNaN(DPN.Lv) ? makeSelectTag(item.ID, 'ct', 'dpn', ClearTypeArray, vals.ct.DP[Diff[1].Name]) : ''),
 					"DPH": (!isNaN(DPH.Lv) ? makeSelectTag(item.ID, 'ct', 'dph', ClearTypeArray, vals.ct.DP[Diff[2].Name]) : ''),
 					"DPA": (!isNaN(DPA.Lv) ? makeSelectTag(item.ID, 'ct', 'dpa', ClearTypeArray, vals.ct.DP[Diff[3].Name]) : ''),
-					"DPL": (!isNaN(DPL.Lv) ? makeSelectTag(item.ID, 'ct', 'dpl', ClearTypeArray, vals.ct.DP[Diff[4].Name]) : '')
+					//"DPL": (!isNaN(DPL.Lv) ? makeSelectTag(item.ID, 'ct', 'dpl', ClearTypeArray, vals.ct.DP[Diff[4].Name]) : '')
 				},
 				"misscount": {
 					"SPB": (!isNaN(SPB.Lv) ? '<input id="mc_' + item.ID + '_spb" name="mc_' + item.ID + '_spb" type="text" class="misscount" value="' + vals.mc.SP[Diff[0].Name] + '" placeholder="0">' : ''),
 					"SPN": (!isNaN(SPN.Lv) ? '<input id="mc_' + item.ID + '_spn" name="mc_' + item.ID + '_spn" type="text" class="misscount" value="' + vals.mc.SP[Diff[1].Name] + '" placeholder="0">' : ''),
 					"SPH": (!isNaN(SPH.Lv) ? '<input id="mc_' + item.ID + '_sph" name="mc_' + item.ID + '_sph" type="text" class="misscount" value="' + vals.mc.SP[Diff[2].Name] + '" placeholder="0">' : ''),
 					"SPA": (!isNaN(SPA.Lv) ? '<input id="mc_' + item.ID + '_spa" name="mc_' + item.ID + '_spa" type="text" class="misscount" value="' + vals.mc.SP[Diff[3].Name] + '" placeholder="0">' : ''),
-					"SPL": (!isNaN(SPL.Lv) ? '<input id="mc_' + item.ID + '_spl" name="mc_' + item.ID + '_spl" type="text" class="misscount" value="' + vals.mc.SP[Diff[4].Name] + '" placeholder="0">' : ''),
-					"DPB": (!isNaN(DPB.Lv) ? '<input id="mc_' + item.ID + '_dpb" name="mc_' + item.ID + '_dpb" type="text" class="misscount" value="' + vals.mc.DP[Diff[0].Name] + '" placeholder="0">' : ''),
+					//"SPL": (!isNaN(SPL.Lv) ? '<input id="mc_' + item.ID + '_spl" name="mc_' + item.ID + '_spl" type="text" class="misscount" value="' + vals.mc.SP[Diff[4].Name] + '" placeholder="0">' : ''),
+					//"DPB": (!isNaN(DPB.Lv) ? '<input id="mc_' + item.ID + '_dpb" name="mc_' + item.ID + '_dpb" type="text" class="misscount" value="' + vals.mc.DP[Diff[0].Name] + '" placeholder="0">' : ''),
 					"DPN": (!isNaN(DPN.Lv) ? '<input id="mc_' + item.ID + '_dpn" name="mc_' + item.ID + '_dpn" type="text" class="misscount" value="' + vals.mc.DP[Diff[1].Name] + '" placeholder="0">' : ''),
 					"DPH": (!isNaN(DPH.Lv) ? '<input id="mc_' + item.ID + '_dph" name="mc_' + item.ID + '_dph" type="text" class="misscount" value="' + vals.mc.DP[Diff[2].Name] + '" placeholder="0">' : ''),
 					"DPA": (!isNaN(DPA.Lv) ? '<input id="mc_' + item.ID + '_dpa" name="mc_' + item.ID + '_dpa" type="text" class="misscount" value="' + vals.mc.DP[Diff[3].Name] + '" placeholder="0">' : ''),
-					"DPL": (!isNaN(DPL.Lv) ? '<input id="mc_' + item.ID + '_dpl" name="mc_' + item.ID + '_dpl" type="text" class="misscount" value="' + vals.mc.DP[Diff[4].Name] + '" placeholder="0">' : '')
+					//"DPL": (!isNaN(DPL.Lv) ? '<input id="mc_' + item.ID + '_dpl" name="mc_' + item.ID + '_dpl" type="text" class="misscount" value="' + vals.mc.DP[Diff[4].Name] + '" placeholder="0">' : '')
 				},
 			};
 
@@ -1723,12 +1722,12 @@ let musics = {
 					  '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
 					  'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
 					  ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
-													 ((rBit[Diff[0].Name])  ? '&nbsp;B = ' + rBit[Diff[0].Name].toLocaleString() + ' / ' : '' ) +
-													 ((rBit[Diff[1].Name])  ? '&nbsp;N = ' + rBit[Diff[1].Name].toLocaleString() + ' / ' : '' ) +
-													 ((rBit[Diff[2].Name])  ? '&nbsp;H = ' + rBit[Diff[2].Name].toLocaleString() + ' / ' : '' ) +
-													 ((rBit[Diff[3].Name])  ? '&nbsp;A = ' + rBit[Diff[3].Name].toLocaleString() + ' / ' : '' ) +
-													 ((rBit[Diff[4].Name])  ? '&nbsp;L = ' + rBit[Diff[4].Name].toLocaleString() + ' / ' : '' ) +
-													 '&nbsp;&nbsp;合計 = ' + rBit.ALL.toLocaleString() : "") +
+					  ((rBit[Diff[0].Name])  ? '&nbsp;B = ' + rBit[Diff[0].Name].toLocaleString() + ' / ' : '' ) +
+					  ((rBit[Diff[1].Name])  ? '&nbsp;N = ' + rBit[Diff[1].Name].toLocaleString() + ' / ' : '' ) +
+					  ((rBit[Diff[2].Name])  ? '&nbsp;H = ' + rBit[Diff[2].Name].toLocaleString() + ' / ' : '' ) +
+					  ((rBit[Diff[3].Name])  ? '&nbsp;A = ' + rBit[Diff[3].Name].toLocaleString() + ' / ' : '' ) +
+					  ((rBit[Diff[4].Name])  ? '&nbsp;L = ' + rBit[Diff[4].Name].toLocaleString() + ' / ' : '' ) +
+					  '&nbsp;&nbsp;合計 = ' + rBit.ALL.toLocaleString() : "") +
 					  ((comment) ? '<br />' + comment : "") +
 					  '</td>' +
 					  '<td class="notes">Notes</td>' +
@@ -1825,7 +1824,7 @@ let musics = {
 			};
 
 			for (let header of idList) {
-				tabledata[header] += addhtml;
+				tabledata[header] = (tabledata[header] ? tabledata[header] + addhtml : addhtml);
 				if (!(header in countdata)) {
 					countdata[header] = { ...countdata.Tmp,
 					'Scores':           { ...countdata.Tmp.Scores },
@@ -1841,33 +1840,142 @@ let musics = {
 				if (!isNaN(SPN.Lv)) { countdata[header].Scores.SPN += 1; };
 				if (!isNaN(SPH.Lv)) { countdata[header].Scores.SPH += 1; };
 				if (!isNaN(SPA.Lv)) { countdata[header].Scores.SPA += 1; };
-				if (!isNaN(SPL.Lv)) { countdata[header].Scores.SPL += 1; };
-				if (!isNaN(DPB.Lv)) { countdata[header].Scores.DPB += 1; };
+				//if (!isNaN(SPL.Lv)) { countdata[header].Scores.SPL += 1; };
+				//if (!isNaN(DPB.Lv)) { countdata[header].Scores.DPB += 1; };
 				if (!isNaN(DPN.Lv)) { countdata[header].Scores.DPN += 1; };
 				if (!isNaN(DPH.Lv)) { countdata[header].Scores.DPH += 1; };
 				if (!isNaN(DPA.Lv)) { countdata[header].Scores.DPA += 1; };
-				if (!isNaN(DPL.Lv)) { countdata[header].Scores.DPL += 1; };
+				//if (!isNaN(DPL.Lv)) { countdata[header].Scores.DPL += 1; };
 
 				if (rBit4Y2M2D !== 'BIT未解禁' && isReleased && isBitCalc) {
 					if (!isNaN(SPB.Lv)) { countdata[header].BITScores.SPB += 1; if (vals.cp[Diff[0].Name]) {countdata[header].BITCanplayScores.SPB++; }; };
 					if (!isNaN(SPN.Lv)) { countdata[header].BITScores.SPN += 1; if (vals.cp[Diff[1].Name]) {countdata[header].BITCanplayScores.SPN++; }; };
 					if (!isNaN(SPH.Lv)) { countdata[header].BITScores.SPH += 1; if (vals.cp[Diff[2].Name]) {countdata[header].BITCanplayScores.SPH++; }; };
 					if (!isNaN(SPA.Lv)) { countdata[header].BITScores.SPA += 1; if (vals.cp[Diff[3].Name]) {countdata[header].BITCanplayScores.SPA++; }; };
-					if (!isNaN(SPL.Lv)) { countdata[header].BITScores.SPL += 1; if (vals.cp[Diff[4].Name]) {countdata[header].BITCanplayScores.SPL++; }; };
-					if (!isNaN(DPB.Lv)) { countdata[header].BITScores.DPB += 1; if (vals.cp[Diff[0].Name]) {countdata[header].BITCanplayScores.DPB++; }; };
+					//if (!isNaN(SPL.Lv)) { countdata[header].BITScores.SPL += 1; if (vals.cp[Diff[4].Name]) {countdata[header].BITCanplayScores.SPL++; }; };
+					//if (!isNaN(DPB.Lv)) { countdata[header].BITScores.DPB += 1; if (vals.cp[Diff[0].Name]) {countdata[header].BITCanplayScores.DPB++; }; };
 					if (!isNaN(DPN.Lv)) { countdata[header].BITScores.DPN += 1; if (vals.cp[Diff[1].Name]) {countdata[header].BITCanplayScores.DPN++; }; };
 					if (!isNaN(DPH.Lv)) { countdata[header].BITScores.DPH += 1; if (vals.cp[Diff[2].Name]) {countdata[header].BITCanplayScores.DPH++; }; };
 					if (!isNaN(DPA.Lv)) { countdata[header].BITScores.DPA += 1; if (vals.cp[Diff[3].Name]) {countdata[header].BITCanplayScores.DPA++; }; };
-					if (!isNaN(DPL.Lv)) { countdata[header].BITScores.DPL += 1; if (vals.cp[Diff[4].Name]) {countdata[header].BITCanplayScores.DPL++; }; };
+					//if (!isNaN(DPL.Lv)) { countdata[header].BITScores.DPL += 1; if (vals.cp[Diff[4].Name]) {countdata[header].BITCanplayScores.DPL++; }; };
 
 					if ( ( !isNaN(SPB.Lv) || !isNaN(DPB.Lv) )) {countdata[header].BIT.B += Number(rBit[Diff[0].Name]); if (vals.cp[Diff[0].Name]) {countdata[header].BITCanplay.B += Number(rBit[Diff[0].Name]); }; };
 					if ( ( !isNaN(SPN.Lv) || !isNaN(DPN.Lv) )) {countdata[header].BIT.N += Number(rBit[Diff[1].Name]); if (vals.cp[Diff[1].Name]) {countdata[header].BITCanplay.N += Number(rBit[Diff[1].Name]); }; };
 					if ( ( !isNaN(SPH.Lv) || !isNaN(DPH.Lv) )) {countdata[header].BIT.H += Number(rBit[Diff[2].Name]); if (vals.cp[Diff[2].Name]) {countdata[header].BITCanplay.H += Number(rBit[Diff[2].Name]); }; };
 					if ( ( !isNaN(SPA.Lv) || !isNaN(DPA.Lv) )) {countdata[header].BIT.A += Number(rBit[Diff[3].Name]); if (vals.cp[Diff[3].Name]) {countdata[header].BITCanplay.A += Number(rBit[Diff[3].Name]); }; };
-					if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) )) {countdata[header].BIT.L += Number(rBit[Diff[4].Name]); if (vals.cp[Diff[4].Name]) {countdata[header].BITCanplay.L += Number(rBit[Diff[4].Name]); }; };
+					//if ( ( !isNaN(SPL.Lv) || !isNaN(DPL.Lv) )) {countdata[header].BIT.L += Number(rBit[Diff[4].Name]); if (vals.cp[Diff[4].Name]) {countdata[header].BITCanplay.L += Number(rBit[Diff[4].Name]); }; };
 
 				};
 			};
+		};
+
+		// ヘッダー行の作成
+		let bitEndDate = new Date();
+		bitEndDate.setFullYear(bitEndDate.getFullYear() + 2);
+		let LvArr = ['01','02','03','04','05','06','07','08','09','10','11','12','NO'];
+
+		toastbox.message('<span>結果テーブルにヘッダー行の作成中…</span>');
+		switch (document.getElementById('search-folder').value) {
+			case 'VER':
+				headerLine = VerHeaderLine;
+				makeHeaderLine(headerLine);
+				break;
+			case 'RELT':
+				headerLine = pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4','Pack1','Pack2','Pack3','Pack4','Pack5','Pack6','Pack7','Pack8','Pack9','Pack10','Pack11','Pack12','Pack13','Pack14','PackSS1','PackPM1','Unreleased']);
+				makeHeaderLine(headerLine);
+				break;
+			case 'RELY':
+				headerLine = pushheaderLine('rely',  'par-rel-year', 'RELEASED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate));
+				makeHeaderLine(headerLine);
+				break;
+			case 'RELYM':
+				headerLine = pushheaderLine('relym', 'par-rel-month','RELEASED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true));
+				makeHeaderLine(headerLine);
+				break;
+			case 'BITY':
+				headerLine = pushheaderLine('bity',  'par-bit-year', 'BIT&nbsp;UNLOCKED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate).concat(['NO']));
+				makeHeaderLine(headerLine);
+				break;
+			case 'BITYM':
+				headerLine = pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
+				makeHeaderLine(headerLine);
+				break;
+			case 'BPM':
+				headerLine = pushheaderLine('bpm','par-bpm','BPM&nbsp;', BPMArray);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPLV':
+				headerLine = pushheaderLine('sp-lv','par-level','Single&nbsp;LEVEL&nbsp;',  LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPBLV':
+				headerLine = pushheaderLine('spb-lv','par-level','Single&nbsp;BEGINNER&nbsp;LEVEL&nbsp;',  LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPNLV':
+				headerLine = pushheaderLine('spn-lv','par-level','Single&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPHLV':
+				headerLine = pushheaderLine('sph-lv','par-level','Single&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPALV':
+				headerLine = pushheaderLine('spa-lv','par-level','Single&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPLLV':
+				headerLine = pushheaderLine('spl-lv','par-level','Single&nbsp;LEGGENDARIA&nbsp;LEVEL&nbsp;', LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPLV':
+				headerLine = pushheaderLine('dp-lv','par-level','Double&nbsp;LEVEL&nbsp;',  LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPBLV':
+				headerLine = pushheaderLine('dpb-lv','par-level','Double&nbsp;BEGINNER&nbsp;LEVEL&nbsp;',  LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPNLV':
+				headerLine = pushheaderLine('dpn-lv','par-level','Double&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPHLV':
+				headerLine = pushheaderLine('dph-lv','par-level','Double&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPALV':
+				headerLine = pushheaderLine('dpa-lv','par-level','Double&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPLLV':
+				headerLine = pushheaderLine('dpl-lv','par-level','Double&nbsp;LEGGENDARIA&nbsp;LEVEL&nbsp;', LvArr);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPNNOTES':
+				headerLine = pushheaderLine('spn-notes','par-notes','Single&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPHNOTES':
+				headerLine = pushheaderLine('sph-notes','par-notes','Single&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
+				makeHeaderLine(headerLine);
+				break;
+			case 'SPANOTES':
+				headerLine = pushheaderLine('spa-notes','par-notes','Single&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPNNOTES':
+				headerLine = pushheaderLine('dpn-notes','par-notes','Double&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPHNOTES':
+				headerLine = pushheaderLine('dph-notes','par-notes','Double&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
+				makeHeaderLine(headerLine);
+				break;
+			case 'DPANOTES':
+				headerLine = pushheaderLine('dpa-notes','par-notes','Double&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
+				makeHeaderLine(headerLine);
+				break;
 		};
 
 		// データ挿入
@@ -2926,33 +3034,6 @@ function handleClientLoad() {
 		delete userJSON.searchOpts[jQuery('#searchFavoriteNewName').val()];
 		toastbox.FadeInandTimerFadeOut('検索条件「' + jQuery('#searchFavoriteNewName').val() + '」を削除しました。');
 	});
-
-	// 検索結果のヘッダー行を作成
-	let LvArr = ['01','02','03','04','05','06','07','08','09','10','11','12','NO'];
-	let bitEndDate = new Date();
-	bitEndDate.setFullYear(bitEndDate.getFullYear() + 2);
-	pushheaderLine('sp-lv','par-level','Single&nbsp;LEVEL&nbsp;',  LvArr);
-	pushheaderLine('spn-lv','par-level','Single&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
-	pushheaderLine('sph-lv','par-level','Single&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
-	pushheaderLine('spa-lv','par-level','Single&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
-	pushheaderLine('dp-lv','par-level','Double&nbsp;LEVEL&nbsp;',  LvArr);
-	pushheaderLine('dpn-lv','par-level','Double&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
-	pushheaderLine('dph-lv','par-level','Double&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
-	pushheaderLine('dpa-lv','par-level','Double&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
-	pushheaderLine('spn-notes','par-notes','Single&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
-	pushheaderLine('sph-notes','par-notes','Single&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
-	pushheaderLine('spa-notes','par-notes','Single&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
-	pushheaderLine('dpn-notes','par-notes','Double&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
-	pushheaderLine('dph-notes','par-notes','Double&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
-	pushheaderLine('dpa-notes','par-notes','Double&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
-	pushheaderLine('bpm','par-bpm','BPM&nbsp;', BPMArray);
-	pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4',
-	'Pack1','Pack2','Pack3','Pack4','Pack5','Pack6','Pack7','Pack8','Pack9','Pack10','Pack11','Pack12','Pack13','PackSS1','Unreleased']);
-	pushheaderLine('rely',  'par-rel-year', 'RELEASED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate));
-	pushheaderLine('relym', 'par-rel-month','RELEASED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true));
-	pushheaderLine('bity',  'par-bit-year', 'BIT&nbsp;UNLOCKED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate).concat(['NO']));
-	pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
-	makeHeaderLine(headerLine);
 
 	// チェックボックスをラジオボタンとして使用してタブメニュー表示
 	let csobj = jQuery('#musicsearch').find('input[data-checkgroup]');
