@@ -1335,19 +1335,19 @@ let musics = {
 						val = getVal(DJLevelArray2, i[dif].Notes, uEX[dif]);
 						if ( val < s.params.djlevel[type].min || s.params.djlevel[type].max < val ) { return false; }; // DJLevel
 						if ( uEX[dif] < s.params.exscore[type].min || s.params.exscore[type].max < uEX[dif] ) { return false; }; // EXScore
-					} else {
-						if ( dif in i ? s.params.djlevel[type].min != 0 && s.params.djlevel[type].max != DJLevelArray2.length - 1: false ) { return false; }; // DJLevel
-						if ( dif in i ? s.params.exscore[type].min != -1 && s.params.exscore[type].max != 99999 : false ) { return false; }; // EXScore
+					} else if ( dif in i ) { // EXScore記録無 && 譜面有
+						if ( s.params.djlevel[type].min != 0 ) { return false; }; // DJLevel
+						if ( s.params.exscore[type].min != -1 && s.params.exscore[type].max != 99999 ) { return false; }; // EXScore
 					};
 					if ( dif in uMC ) { // MissCount記録有
-						if ( uMC[dif] < s.params.misscount[type].min || s.params.misscount[type].max < uMC[dif] ) { return false; }; // MissCount
-					} else {
-						if ( dif in i ? s.params.misscount[type].min != -1 && s.params.misscount[type].max != 99999 : false ) { return false; }; // MissCount
+						if ( uMC[dif] < s.params.misscount[type].min && s.params.misscount[type].max < uMC[dif] ) { return false; }; // MissCount
+					} else if ( dif in i ) { // MissCount記録無 && 譜面有
+						if ( s.params.misscount[type].min != -1 && s.params.misscount[type].max != 99999 ) { return false; }; // MissCount
 					};
 					if ( dif in uCT ) { // ClearType記録有
 						if ( -1 == s.params.cleartype[type].indexOf(uCT[dif]) ) { return false; }; // ClearType
-					} else {
-						if ( dif in i ? -1 == s.params.cleartype[type].indexOf(ClearTypeArray[ClearTypeArray.length - 1]) : false ) { return false; }; // ClearType
+					} else if ( dif in i ) { // ClearType記録無 && 譜面有
+						if ( -1 == s.params.cleartype[type].indexOf(ClearTypeArray[ClearTypeArray.length - 1]) ) { return false; }; // ClearType
 					};
 					return true;
 				};
@@ -2287,8 +2287,11 @@ let s = {
 		extendopen: false,
 		searchfolder: 'VER',
 		searchsort1: 'VERSION',
+		searchorder1: 'UP',
 		searchsort2: 'SPALV',
+		searchorder2: 'UP',
 		searchsort3: 'SPHLV',
+		searchorder3: 'UP',
 		showdjlevel: 0
 	},
 
@@ -2322,8 +2325,11 @@ let s = {
 		this.params.extendopen = jQuery("#extendopen").val();
 		this.params.searchfolder = jQuery("#search-folder").val();
 		this.params.searchsort1 = jQuery("#search-sort1").val();
+		this.params.searchorder1 = jQuery("#search-sort-order1").val();
 		this.params.searchsort2 = jQuery("#search-sort2").val();
+		this.params.searchorder2 = jQuery("#search-sort-order2").val();
 		this.params.searchsort3 = jQuery("#search-sort3").val();
+		this.params.searchorder3 = jQuery("#search-sort-order3").val();
 		this.params.showdjlevel = Number(jQuery('#showdjlevel').val());
 	},
 	getScoreSearchParams: function(score) {
@@ -2336,9 +2342,9 @@ let s = {
 		this.params.opt[score].notes.min = (isNaN(parseInt(jQuery('#opt_' + score + '_notes_min').val())) ?     0 : parseInt(jQuery('#opt_' + score + '_notes_min').val()));
 		this.params.opt[score].notes.max = (isNaN(parseInt(jQuery('#opt_' + score + '_notes_max').val())) ? 99999 : parseInt(jQuery('#opt_' + score + '_notes_max').val()));
 		[this.params.djlevel[score].min,this.params.djlevel[score].max] = jQuery('#djlevel_' + score + '_levels')[0].noUiSlider.get();
-		this.params.exscore[score].min = (isNaN(parseInt(jQuery('#exscore_' + score + '_min').val())) ?     0 : parseInt(jQuery('#exscore_' + score + '_min').val()));
+		this.params.exscore[score].min = (isNaN(parseInt(jQuery('#exscore_' + score + '_min').val())) ?    -1 : parseInt(jQuery('#exscore_' + score + '_min').val()));
 		this.params.exscore[score].max = (isNaN(parseInt(jQuery('#exscore_' + score + '_max').val())) ? 99999 : parseInt(jQuery('#exscore_' + score + '_max').val()));
-		this.params.misscount[score].min = (isNaN(parseInt(jQuery('#misscount_' + score + '_min').val())) ?     0 : parseInt(jQuery('#misscount_' + score + '_min').val()));
+		this.params.misscount[score].min = (isNaN(parseInt(jQuery('#misscount_' + score + '_min').val())) ?    -1 : parseInt(jQuery('#misscount_' + score + '_min').val()));
 		this.params.misscount[score].max = (isNaN(parseInt(jQuery('#misscount_' + score + '_max').val())) ? 99999 : parseInt(jQuery('#misscount_' + score + '_max').val()));
 		jQuery("[name=clearType_" + score + "]:checked").each(function(){thisTmp.params.cleartype[score].push(jQuery(this).val())});
 	},
@@ -2369,8 +2375,11 @@ let s = {
 		jQuery("#extendopen").prop('checked', jQuery("#extendopen").attr('checked') == 'checked');
 		jQuery("#search-folder").val(jQuery("#search-folder option[selected]").val());
 		jQuery("#search-sort1").val(jQuery("#search-sort1 option[selected]").val());
+		jQuery("#search-sort-order1").val(jQuery("#search-sort-order1 option[selected]").val());
 		jQuery("#search-sort2").val(jQuery("#search-sort2 option[selected]").val());
+		jQuery("#search-sort2-order").val(jQuery("#search-sort-order2 option[selected]").val());
 		jQuery("#search-sort3").val(jQuery("#search-sort3 option[selected]").val());
+		jQuery("#search-sort3-order").val(jQuery("#search-sort-order3 option[selected]").val());
 		jQuery('#showdjlevel').val(jQuery("#showdjlevel option[selected]").val());
 	},
 	getSearchParamFromFavorite: function(optName) {
@@ -2501,8 +2510,11 @@ let s = {
 		jQuery("#extendopen").val(paramObj.extendopen);
 		jQuery("#search-folder").val(paramObj.searchfolder);
 		jQuery("#search-sort1").val(paramObj.searchsort1);
+		jQuery("#search-sort1-order").val(paramObj.searchorder1);
 		jQuery("#search-sort2").val(paramObj.searchsort2);
+		jQuery("#search-sort2-order").val(paramObj.searchorder2);
 		jQuery("#search-sort3").val(paramObj.searchsort3);
+		jQuery("#search-sort3-order").val(paramObj.searchorder3);
 		jQuery('#showdjlevel').val(paramObj.showdjlevel);
 		return true;
 	},
