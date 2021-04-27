@@ -63,6 +63,7 @@ let packlist = {
 	'0000013': {'type':'Standard',  'name':'楽曲パック vol.13',                           'inputName':'楽曲パックVol.13', 'shortName':'Pack13',  'inputid':'purchase-Pack0000013'},
 	'0000014': {'type':'Standard',  'name':'楽曲パック vol.14',                           'inputName':'楽曲パックVol.14', 'shortName':'Pack14',  'inputid':'purchase-Pack0000014'},
 	'0010001': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.1', 'inputName':'SSパックVol.1',    'shortName':'PackSS1', 'inputid':'purchase-Pack0010001'},
+	'0010002': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.2', 'inputName':'SSパックVol.2',    'shortName':'PackSS2', 'inputid':'purchase-Pack0010002'},
 	'0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'purchase-Pack0020001'}
 };
 
@@ -1881,7 +1882,7 @@ let musics = {
 				makeHeaderLine(headerLine);
 				break;
 			case 'RELT':
-				headerLine = pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4','Pack1','Pack2','Pack3','Pack4','Pack5','Pack6','Pack7','Pack8','Pack9','Pack10','Pack11','Pack12','Pack13','Pack14','PackSS1','PackPM1','Unreleased']);
+				headerLine = pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4','Pack1','Pack2','Pack3','Pack4','Pack5','Pack6','Pack7','Pack8','Pack9','Pack10','Pack11','Pack12','Pack13','Pack14','PackSS1','PackSS2','PackPM1','Unreleased']);
 				makeHeaderLine(headerLine);
 				break;
 			case 'RELY':
