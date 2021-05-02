@@ -603,13 +603,15 @@ function makeCustomUserJSONString() {
  * @return なし
  *
 **/
-function makeHeaderLine(items) {
+function makeHeaderLine(target, items) {
 	let addHtml = '';
 	for(let item of items){
-		addHtml += '<tbody id="' + item[0] + '" class="headertbody hidden"><tr class="headerline ' + item[1] + '"><th colspan="13"><div class="vername">' + item[2] +'</div></th></tr></tbody>';
+		tmpTBODY = document.createElement("tbody");
+		tmpTBODY.setAttribute('id', item[0]);
+		tmpTBODY.classList.add('headertbody', 'hidden');
+		tmpTBODY.innerHTML = '<tr class="headerline ' + item[1] + '"><th colspan="13"><div class="vername">' + item[2] +'</div></th></tr>';
+		target.appendChild(tmpTBODY);
 	};
-
-	document.getElementsByClassName('musiclist')[0].innerHTML += (addHtml);
 };
 
 /**
@@ -1609,7 +1611,7 @@ let musics = {
 				"N": ((!isNaN(SPN.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-n" name="check-playable" class="check-playable" value="' + item.ID + '_n" ' + (vals.cp[Diff[1].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-n"></label>' : '&nbsp;'),
 				"H": ((!isNaN(SPH.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-h" name="check-playable" class="check-playable" value="' + item.ID + '_h" ' + (vals.cp[Diff[2].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-h"></label>' : '&nbsp;'),
 				"A": ((!isNaN(SPA.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-a" name="check-playable" class="check-playable" value="' + item.ID + '_a" ' + (vals.cp[Diff[3].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-a"></label>' : '&nbsp;'),
-				"L": ((!isNaN(SPL.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-l" name="check-playable" class="check-playable" value="' + item.ID + '_l" ' + (vals.cp[Diff[4].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-l"></label>' : '&nbsp;')
+				//"L": ((!isNaN(SPL.Lv) && (item.Release.Type !== 'Default')) ? '<input type="checkbox" id="cp-' + item.ID + '-l" name="check-playable" class="check-playable" value="' + item.ID + '_l" ' + (vals.cp[Diff[4].Name] ? 'checked ': '') + (isPack ? 'disabled ' : '') + '/><label for="cp-' + item.ID + '-l"></label>' : '&nbsp;')
 			};
 			let scoreClass = {
 				"canplay": {
@@ -1698,10 +1700,10 @@ let musics = {
 				},
 			};
 
-			rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0) + (rBit.Leggendaria ? rBit.Leggendaria : 0));
+			rBit.ALL = ((rBit.Beginner ? rBit.Beginner : 0) + (rBit.Normal ? rBit.Normal : 0) + (rBit.Hyper ? rBit.Hyper : 0) + (rBit.Another ? rBit.Another : 0)/*  + (rBit.Leggendaria ? rBit.Leggendaria : 0) */);
 			rowspan = (hasUserJSON ? 5 - (item.Release.Type !== 'Default' ? 0 : 1) : 1);
 			searchOpen = document.getElementById('searchopen').checked;
-			extendOpen = document.getElementById('extendopen').checked;
+			extendOpen = searchOpen && document.getElementById('extendopen').checked;
 			addhtml = '<tr class="music m' + item.ID + (searchOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="release' + rTypeClass + '">' + rTypeSStr + '</td>' +
 					  '<td class="version version' + item.VNo + '">' + item.VShortName + '</td>' +
@@ -1717,7 +1719,7 @@ let musics = {
 					  '<td class="dp level dph m' + item.ID + ' ' + scoreClass.canplay.DPH + '">' + scoreClass.cn.DPH + scoreClass.bss.DPH + DPH.Lv + '</td>' +
 					  '<td class="dp level dpa m' + item.ID + ' ' + scoreClass.canplay.DPA + '">' + scoreClass.cn.DPA + scoreClass.bss.DPA + DPA.Lv + '</td>' +
 					  '</tr>' +
-					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="" rowspan="' + rowspan + '"></td>' +
 					  '<td class="other" colspan="4" rowspan="' + rowspan + '">' +
 					  '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
@@ -1727,7 +1729,7 @@ let musics = {
 					  ((rBit[Diff[1].Name])  ? '&nbsp;N = ' + rBit[Diff[1].Name].toLocaleString() + ' / ' : '' ) +
 					  ((rBit[Diff[2].Name])  ? '&nbsp;H = ' + rBit[Diff[2].Name].toLocaleString() + ' / ' : '' ) +
 					  ((rBit[Diff[3].Name])  ? '&nbsp;A = ' + rBit[Diff[3].Name].toLocaleString() + ' / ' : '' ) +
-					  ((rBit[Diff[4].Name])  ? '&nbsp;L = ' + rBit[Diff[4].Name].toLocaleString() + ' / ' : '' ) +
+					  /* ((rBit[Diff[4].Name])  ? '&nbsp;L = ' + rBit[Diff[4].Name].toLocaleString() + ' / ' : '' ) + */
 					  '&nbsp;&nbsp;合計 = ' + rBit.ALL.toLocaleString() : "") +
 					  ((comment) ? '<br />' + comment : "") +
 					  '</td>' +
@@ -1741,7 +1743,7 @@ let musics = {
 					  '<td class="notes dpa m' + item.ID + '">' + (!isNaN(DPA.Lv) ? DPA.Notes : '') + '</td>' +
 					  '</tr>' +
 					  (hasUserJSON && item.Release.Type !== 'Default' ?
-					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="playable">解禁</td>' +
 					  '<td class="playable spb m' + item.ID + '">' + unlockCheckbox.B + '</td>' +
 					  '<td class="playable spn m' + item.ID + '">' + unlockCheckbox.N + '</td>' +
@@ -1752,7 +1754,7 @@ let musics = {
 					  '<td class="playable dpa m' + item.ID + '">&nbsp;</td>' +
 					  '</tr>' : '' ) +
 					  (hasUserJSON ?
-					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="cleartype">ClearType</td>' +
 					  '<td class="cleartype spb selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPB + '</td>' +
 					  '<td class="cleartype spn selectbutton m' + item.ID + '">' + scoreClass.cleartype.SPN + '</td>' +
@@ -1763,7 +1765,7 @@ let musics = {
 					  '<td class="cleartype dpa selectbutton m' + item.ID + '">' + scoreClass.cleartype.DPA + '</td>' +
 					  '</tr>' : '' ) +
 					  (hasUserJSON ?
-					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="exscore">EXScore</td>' +
 					  '<td class="exscore spb m' + item.ID + '">' + scoreClass.djlevel.SPB + scoreClass.exscore.SPB + '</td>' +
 					  '<td class="exscore spn m' + item.ID + '">' + scoreClass.djlevel.SPN + scoreClass.exscore.SPN + '</td>' +
@@ -1774,7 +1776,7 @@ let musics = {
 					  '<td class="exscore dpa m' + item.ID + '">' + scoreClass.djlevel.DPA + scoreClass.exscore.DPA + '</td>' +
 					  '</tr>' : '' ) +
 					  (hasUserJSON ?
-					  '<tr class="music_other m' + item.ID + (searchOpen || extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
+					  '<tr class="music_other m' + item.ID + (extendOpen ? '' : ' hidden') + '" data-mid="m' + item.ID + '">' +
 					  '<td class="misscount">MissCount</td>' +
 					  '<td class="misscount spb m' + item.ID + '">' + scoreClass.misscount.SPB + '</td>' +
 					  '<td class="misscount spn m' + item.ID + '">' + scoreClass.misscount.SPN + '</td>' +
@@ -1870,6 +1872,8 @@ let musics = {
 			};
 		};
 
+		// DocumentFragmentの作成
+		let df = document.createDocumentFragment();
 		// ヘッダー行の作成
 		let bitEndDate = new Date();
 		bitEndDate.setFullYear(bitEndDate.getFullYear() + 2);
@@ -1879,103 +1883,106 @@ let musics = {
 		switch (document.getElementById('search-folder').value) {
 			case 'VER':
 				headerLine = VerHeaderLine;
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'RELT':
-				headerLine = pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4','Pack1','Pack2','Pack3','Pack4','Pack5','Pack6','Pack7','Pack8','Pack9','Pack10','Pack11','Pack12','Pack13','Pack14','PackSS1','PackSS2','PackPM1','Unreleased']);
-				makeHeaderLine(headerLine);
+				headerArray = ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4'];
+				for(let pk of packlist){ headerArray.push(packlist[pk].shortName); };
+				headerArray.push('Unreleased');
+				headerLine = pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', headerArray);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'RELY':
 				headerLine = pushheaderLine('rely',  'par-rel-year', 'RELEASED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate));
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'RELYM':
 				headerLine = pushheaderLine('relym', 'par-rel-month','RELEASED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true));
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'BITY':
 				headerLine = pushheaderLine('bity',  'par-bit-year', 'BIT&nbsp;UNLOCKED&nbsp;YEAR&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate).concat(['NO']));
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'BITYM':
 				headerLine = pushheaderLine('bitym', 'par-bit-month','BIT&nbsp;UNLOCKED&nbsp;MONTH&nbsp;:&nbsp;', makeMonthArray(LaunchDate, bitEndDate, true).concat(['NO']));
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'BPM':
 				headerLine = pushheaderLine('bpm','par-bpm','BPM&nbsp;', BPMArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPLV':
 				headerLine = pushheaderLine('sp-lv','par-level','Single&nbsp;LEVEL&nbsp;',  LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPBLV':
 				headerLine = pushheaderLine('spb-lv','par-level','Single&nbsp;BEGINNER&nbsp;LEVEL&nbsp;',  LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPNLV':
 				headerLine = pushheaderLine('spn-lv','par-level','Single&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPHLV':
 				headerLine = pushheaderLine('sph-lv','par-level','Single&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPALV':
 				headerLine = pushheaderLine('spa-lv','par-level','Single&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPLLV':
 				headerLine = pushheaderLine('spl-lv','par-level','Single&nbsp;LEGGENDARIA&nbsp;LEVEL&nbsp;', LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPLV':
 				headerLine = pushheaderLine('dp-lv','par-level','Double&nbsp;LEVEL&nbsp;',  LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPBLV':
 				headerLine = pushheaderLine('dpb-lv','par-level','Double&nbsp;BEGINNER&nbsp;LEVEL&nbsp;',  LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPNLV':
 				headerLine = pushheaderLine('dpn-lv','par-level','Double&nbsp;NORMAL&nbsp;LEVEL&nbsp;',  LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPHLV':
 				headerLine = pushheaderLine('dph-lv','par-level','Double&nbsp;HYPER&nbsp;LEVEL&nbsp;',   LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPALV':
 				headerLine = pushheaderLine('dpa-lv','par-level','Double&nbsp;ANOTHER&nbsp;LEVEL&nbsp;', LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPLLV':
 				headerLine = pushheaderLine('dpl-lv','par-level','Double&nbsp;LEGGENDARIA&nbsp;LEVEL&nbsp;', LvArr);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPNNOTES':
 				headerLine = pushheaderLine('spn-notes','par-notes','Single&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPHNOTES':
 				headerLine = pushheaderLine('sph-notes','par-notes','Single&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'SPANOTES':
 				headerLine = pushheaderLine('spa-notes','par-notes','Single&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPNNOTES':
 				headerLine = pushheaderLine('dpn-notes','par-notes','Double&nbsp;NORMAL&nbsp;NOTES&nbsp;',  NotesArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPHNOTES':
 				headerLine = pushheaderLine('dph-notes','par-notes','Double&nbsp;HYPER&nbsp;NOTES&nbsp;',   NotesArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 			case 'DPANOTES':
 				headerLine = pushheaderLine('dpa-notes','par-notes','Double&nbsp;ANOTHER&nbsp;NOTES&nbsp;', NotesArray);
-				makeHeaderLine(headerLine);
+				makeHeaderLine(df, headerLine);
 				break;
 		};
 
@@ -1984,7 +1991,7 @@ let musics = {
 		for(let idList in tabledata){
 			// 楽曲データを追加した場合は検索結果の書き換えと表示処理
 			if (tabledata[idList] !== '') {
-				hTag = document.getElementById(idList).getElementsByTagName('th')[0];
+				hTag = df.getElementById(idList).getElementsByTagName('th')[0];
 				while (hTag.firstChild.nextSibling) { hTag.removeChild(hTag.firstChild.nextSibling); };
 				let tmp = countdata[idList];
 				let addScoresText = [
@@ -1997,44 +2004,42 @@ let musics = {
 				let addTextOutput = (tmp.BITScores.SPB > 0 || tmp.BITScores.SPN > 0 || tmp.BITScores.SPH > 0 || tmp.BITScores.SPA > 0 || tmp.BITScores.SPL > 0);
 				let addText = '<span class="result">&nbsp;' + tmp.Music + ' 曲</span>' +
 						  (addTextOutput ? '<span class="unlocklabel"> BIT解禁</span>' + addScoresText.join('') : '');
-				hTag.innerHTML += addText;
+ 				hTag.innerHTML += addText;
 
-				target = document.getElementById(idList);
+				target = df.getElementById(idList);
+				target.classList.remove('hidden');
+				target.dataset.initialized = true;
+				target.dataset.musiccount = tmp.Music;
+				target.dataset.tableid = idList;
 				target.innerHTML += tabledata[idList];
-				document.getElementById(idList).classList.remove('hidden');
-				if ( document.getElementById('searchopen').checked ) {
-					let baseTarget = jQuery('#' + idList);
-					if (jQuery('#extendopen').prop('checked')) {
-						baseTarget.children('.music_other').removeClass('hidden');
-					} else {
-						baseTarget.children('.music_other').addClass('hidden');
-					}
-					jQuery('#' + idList).children('.music').removeClass('hidden');
-					baseTarget.children('.headerline').addClass('opened');
-					target.classList.remove('hidden');
-
-/*				if ( document.getElementById('searchopen').checked ) {
-					target.getElementsByClassName('headerline')[0].classList.add('opened'); */
-				};
 			};
 		};
 
+		document.getElementById('musiclist').appendChild(df);
+
 		// バージョンヘッダーをクリックで開閉
 		jQuery('.musiclist .headerline').click(function() {
+			let wrkThis = this;
+			if ( "false" === wrkThis.parentElement.dataset.initialized ) {
+				tmpId = wrkThis.parentElement.id;
+				wrkThis.parentElement.innerHTML += tabledata[tmpId];
+				wrkThis = document.getElementById(tmpId).firstChild;
+				wrkThis.parentElement.dataset.initialized = true;
+			};
 			// クリック対象が開いていたら
-			if ( this.classList.contains('opened') ) {
-				this.parentElement.querySelectorAll('.music,.music_other').forEach( elm => elm.classList.add('hidden'));
-				this.classList.remove('opened');
+			if ( wrkThis.classList.contains('opened') ) {
+				wrkThis.parentElement.querySelectorAll('.music,.music_other').forEach( elm => elm.classList.add('hidden'));
+				wrkThis.classList.remove('opened');
 			// クリック対象が閉じていたら
 			} else {
 				classStr = (document.getElementById('extendopen').checked ? '.music, .music_other' : '.music');
 				if ( document.getElementById('singleopen').checked ) {
 					document.querySelectorAll('.music, .music_other').forEach( elm => elm.classList.add('hidden'));
-					document.querySelectorAll('.musiclist .headerline').forEach( elm => elm === this ? '' : elm.classList.remove('opened'));
+					document.querySelectorAll('.musiclist .headerline').forEach( elm => elm === wrkThis ? '' : elm.classList.remove('opened'));
 				};
-				this.parentElement.querySelectorAll(classStr).forEach( elm => elm.classList.remove('hidden'));
-				this.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-				this.classList.add('opened');
+				wrkThis.parentElement.querySelectorAll(classStr).forEach( elm => elm.classList.remove('hidden'));
+				wrkThis.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+				wrkThis.classList.add('opened');
 			};
 		});
 
@@ -2043,13 +2048,6 @@ let musics = {
 			let mid = this.parentElement.getAttribute('data-mid');
 			let elms = this.parentElement.parentElement.querySelectorAll('.' + mid + '.music_other');
 			elms.forEach( elm => elm.classList.contains('hidden') ? elm.classList.remove('hidden') : elm.classList.add('hidden') );
-		});
-
-		jQuery(".musiclist tbody").each(function() {
-			// 曲数が0のバージョンヘッダーを非表示
-			if (jQuery(this).find(".music").length <= 0) {
-				this.classList.add('hidden');
-			};
 		});
 
 		// 解禁状況更新処理用
