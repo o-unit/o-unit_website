@@ -1,5 +1,5 @@
 musiclist = {
-"info":{ "lastupdated":"2021-03-30T06:00:00+09:00" },
+"info":{ "lastupdated":"2021-06-02T12:00:00+09:00" },
 "musics":[
 {"ID":"0010001","Genre":"BIG BEAT","Title":"GAMBOL","Artist":"SLAKE","Comment":"","Release":{"Date":"2015-12-01","Type":"Default"},"Scores":{"Single":{"Normal":{"Level":"1","Notes":"137","BPM":"102"},"Hyper":{"Level":"1","Notes":"137","BPM":"102"}},"Double":{"Normal":{"Level":"1","Notes":"137","BPM":"102"},"Hyper":{"Level":"1","Notes":"137","BPM":"102"}}}},
 {"ID":"0010002","Genre":"DIGI-ROCK","Title":"GRADIUSIC CYBER","Artist":"TAKA","Comment":"","Release":{"Date":"2016-11-09","Type":"BIT","BitDate":"2016-11-09",},"Scores":{"Single":{"Normal":{"Level":"5","Notes":"442","MinBPM":"159","MaxBPM":"167"},"Hyper":{"Level":"6","Notes":"508","MinBPM":"159","MaxBPM":"167"},"Another":{"Level":"7","Notes":"609","MinBPM":"160","MaxBPM":"167"}},"Double":{"Normal":{"Level":"4","Notes":"409","MinBPM":"159","MaxBPM":"167"},"Hyper":{"Level":"9","Notes":"556","MinBPM":"159","MaxBPM":"167"},"Another":{"Level":"9","Notes":"631","MinBPM":"159","MaxBPM":"167"}}}},
