@@ -1384,30 +1384,32 @@ let musics = {
 				num:  (a,b,o) => a != b ? (o == 'UP' ? ( a -b ) : ( b - a )) : 0,
 				date: (a,b,o) => a != b ? (o == 'UP' ? ( a > b ? 1 : -1 ) : ( b > a ? 1 : -1 )) : 0
 			};
+			let retVal = 0;
 
 			for(let item of searchsort){
 				switch(item.key) {
-					case 'TITLE':    return diff.str(convKana(a.Title.toLowerCase(), 'KtoH'),  convKana(b.Title.toLowerCase(), 'KtoH'),item.order);   break;
-					case 'ARTIST':   return diff.str(convKana(a.Artist.toLowerCase(), 'KtoH'), convKana(b.Artist.toLowerCase(), 'KtoH'),item.order);  break;
-					case 'GENRE':    return diff.str(convKana(a.Genre.toLowerCase(), 'KtoH'),  convKana(b.Genre.toLowerCase(), 'KtoH'),item.order);   break;
-					case 'BPM':      return diff.num(Number(a.BPM) || 999, Number(b.BPM) || 999, item.order); break;
-					case 'RELEASE':  return diff.date(a.Release?.Date || noDate, b.Release?.Date || noDate,item.order); break;
-					case 'BITDATE':  return diff.date(a.Release?.BitDate || noDate, b.Release?.BitDate || noDate,item.order); break;
-					case 'VERSION':  return diff.num(Number(a.VNo) || 999, Number(b.VNo) || 999, item.order); break;
-					case 'SPNLV':    return diff.num(Number(a.Scores?.Single?.Normal?.Level)   || 0, Number(b.Scores?.Single?.Normal?.Level)  || 0, item.order); break;
-					case 'SPHLV':    return diff.num(Number(a.Scores?.Single?.Hyper?.Level)    || 0, Number(b.Scores?.Single?.Hyper?.Level)   || 0, item.order); break;
-					case 'SPALV':    return diff.num(Number(a.Scores?.Single?.Another?.Level)  || 0, Number(b.Scores?.Single?.Another?.Level) || 0, item.order); break;
-					case 'DPNLV':    return diff.num(Number(a.Scores?.Double?.Normal?.Level)   || 0, Number(b.Scores?.Double?.Normal?.Level)  || 0, item.order); break;
-					case 'DPHLV':    return diff.num(Number(a.Scores?.Double?.Hyper?.Level)    || 0, Number(b.Scores?.Double?.Hyper?.Level)   || 0, item.order); break;
-					case 'DPALV':    return diff.num(Number(a.Scores?.Double?.Another?.Level)  || 0, Number(b.Scores?.Double?.Another?.Level) || 0, item.order); break;
-					case 'SPNNOTES': return diff.num(Number(a.Scores?.Single?.Normal?.Notes)   || 0, Number(b.Scores?.Single?.Normal?.Notes)  || 0, item.order); break;
-					case 'SPHNOTES': return diff.num(Number(a.Scores?.Single?.Hyper?.Notes)    || 0, Number(b.Scores?.Single?.Hyper?.Notes)   || 0, item.order); break;
-					case 'SPANOTES': return diff.num(Number(a.Scores?.Single?.Another?.Notes)  || 0, Number(b.Scores?.Single?.Another?.Notes) || 0, item.order); break;
-					case 'DPNNOTES': return diff.num(Number(a.Scores?.Double?.Normal?.Notes)   || 0, Number(b.Scores?.Double?.Normal?.Notes)  || 0, item.order); break;
-					case 'DPHNOTES': return diff.num(Number(a.Scores?.Double?.Hyper?.Notes)    || 0, Number(b.Scores?.Double?.Hyper?.Notes)   || 0, item.order); break;
-					case 'DPANOTES': return diff.num(Number(a.Scores?.Double?.Another?.Notes)  || 0, Number(b.Scores?.Double?.Another?.Notes) || 0, item.order); break;
-					default:         return 0; break;
+					case 'TITLE':    retVal = diff.str(convKana(a.Title.toLowerCase(), 'KtoH'),  convKana(b.Title.toLowerCase(), 'KtoH'),item.order);   break;
+					case 'ARTIST':   retVal = diff.str(convKana(a.Artist.toLowerCase(), 'KtoH'), convKana(b.Artist.toLowerCase(), 'KtoH'),item.order);  break;
+					case 'GENRE':    retVal = diff.str(convKana(a.Genre.toLowerCase(), 'KtoH'),  convKana(b.Genre.toLowerCase(), 'KtoH'),item.order);   break;
+					case 'BPM':      retVal = diff.num(Number(a.BPM) || 999, Number(b.BPM) || 999, item.order); break;
+					case 'RELEASE':  retVal = diff.date(a.Release?.Date || noDate, b.Release?.Date || noDate,item.order); break;
+					case 'BITDATE':  retVal = diff.date(a.Release?.BitDate || noDate, b.Release?.BitDate || noDate,item.order); break;
+					case 'VERSION':  retVal = diff.num(Number(a.VNo) || 999, Number(b.VNo) || 999, item.order); break;
+					case 'SPNLV':    retVal = diff.num(Number(a.Scores?.Single?.Normal?.Level)   || 0, Number(b.Scores?.Single?.Normal?.Level)  || 0, item.order); break;
+					case 'SPHLV':    retVal = diff.num(Number(a.Scores?.Single?.Hyper?.Level)    || 0, Number(b.Scores?.Single?.Hyper?.Level)   || 0, item.order); break;
+					case 'SPALV':    retVal = diff.num(Number(a.Scores?.Single?.Another?.Level)  || 0, Number(b.Scores?.Single?.Another?.Level) || 0, item.order); break;
+					case 'DPNLV':    retVal = diff.num(Number(a.Scores?.Double?.Normal?.Level)   || 0, Number(b.Scores?.Double?.Normal?.Level)  || 0, item.order); break;
+					case 'DPHLV':    retVal = diff.num(Number(a.Scores?.Double?.Hyper?.Level)    || 0, Number(b.Scores?.Double?.Hyper?.Level)   || 0, item.order); break;
+					case 'DPALV':    retVal = diff.num(Number(a.Scores?.Double?.Another?.Level)  || 0, Number(b.Scores?.Double?.Another?.Level) || 0, item.order); break;
+					case 'SPNNOTES': retVal = diff.num(Number(a.Scores?.Single?.Normal?.Notes)   || 0, Number(b.Scores?.Single?.Normal?.Notes)  || 0, item.order); break;
+					case 'SPHNOTES': retVal = diff.num(Number(a.Scores?.Single?.Hyper?.Notes)    || 0, Number(b.Scores?.Single?.Hyper?.Notes)   || 0, item.order); break;
+					case 'SPANOTES': retVal = diff.num(Number(a.Scores?.Single?.Another?.Notes)  || 0, Number(b.Scores?.Single?.Another?.Notes) || 0, item.order); break;
+					case 'DPNNOTES': retVal = diff.num(Number(a.Scores?.Double?.Normal?.Notes)   || 0, Number(b.Scores?.Double?.Normal?.Notes)  || 0, item.order); break;
+					case 'DPHNOTES': retVal = diff.num(Number(a.Scores?.Double?.Hyper?.Notes)    || 0, Number(b.Scores?.Double?.Hyper?.Notes)   || 0, item.order); break;
+					case 'DPANOTES': retVal = diff.num(Number(a.Scores?.Double?.Another?.Notes)  || 0, Number(b.Scores?.Double?.Another?.Notes) || 0, item.order); break;
+					default:         retVal = 0; break;
 				};
+				if (retVal !== 0) { return retVal; };
 			};
 		});
 
