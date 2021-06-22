@@ -297,6 +297,7 @@ function readUserJSONfromLocalStorage(key=PROJECT_ID, callback=initializeUserJSO
 		let result = st.getItem(key);
 		if ( !checkUserJSON(result) ) { return false; };
 
+		Cookies.set('infinitas_LocalStorageEnable', 1, {path: '', expires: 180, sameSite: 'strict'});
 		toastbox.FadeInandTimerFadeOut('ローカルストレージのデータを読み込みました。');
 		callback(result);
 	} catch (e) {
@@ -2671,7 +2672,7 @@ function getGoogleDriveFile(fid) {
 		toastbox.FadeInandTimerFadeOut('google Driveから読込完了！');
 		initializeUserJSON(obj.body);
 		// FileIDをcookieに保存
-		Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 31, sameSite: 'strict'});
+		Cookies.set('infinitas_gdid',jQuery('#gdid').val(), {path: '', expires: 180, sameSite: 'strict'});
 
 	},function(error) {
 		toastbox.FadeInandTimerFadeOut('エラーが発生しました！');
@@ -2947,7 +2948,7 @@ function handleClientLoad() {
 	// API有効化ボタン押下時
 	jQuery('#googleapiEnable').on('click', function() {
 		gapiScriptLoad();
-		Cookies.set('infinitas_gapiEnable', 1, {path: '', expires: 31, sameSite: 'strict'});
+		Cookies.set('infinitas_gapiEnable', 1, {path: '', expires: 180, sameSite: 'strict'});
 	});
 
 	// API無効化ボタン押下時
@@ -2959,7 +2960,7 @@ function handleClientLoad() {
 
 	// LocalStorage有効化ボタン押下時
 	jQuery('#localStorageEnable').on('click', function() {
-		Cookies.set('infinitas_LocalStorageEnable', 1, {path: '', expires: 31, sameSite: 'strict'});
+		Cookies.set('infinitas_LocalStorageEnable', 1, {path: '', expires: 180, sameSite: 'strict'});
 		jQuery('#localStorageEnable').addClass('hidden');
 		jQuery('#localStorageRead, #localStorageSave, #localStorageDisable').removeClass('hidden');
 	});
