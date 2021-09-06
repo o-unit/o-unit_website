@@ -65,6 +65,7 @@ let packlist = {
 	'0000015': {'type':'Standard',  'name':'楽曲パック vol.15',                           'inputName':'楽曲パックVol.15', 'shortName':'Pack15',  'inputid':'purchase-Pack0000015'},
 	'0010001': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.1', 'inputName':'SSパックVol.1',    'shortName':'PackSS1', 'inputid':'purchase-Pack0010001'},
 	'0010002': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.2', 'inputName':'SSパックVol.2',    'shortName':'PackSS2', 'inputid':'purchase-Pack0010002'},
+	'0010003': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.3', 'inputName':'SSパックVol.3',    'shortName':'PackSS3', 'inputid':'purchase-Pack0010003'},
 	'0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'purchase-Pack0020001'}
 };
 
