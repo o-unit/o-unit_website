@@ -15,36 +15,37 @@ let LaunchDate = new Date( 2015, 12 - 1,1 ) // サービス開始年月日 2015-
 let JSONmsgObj = document.getElementById('json-message');
 
 let VerArray = {
-	"001": {"VName":"1st style",     "VShortName":"1st"},
-	"002": {"VName":"substream",     "VShortName":"sub"},
-	"003": {"VName":"2nd style",     "VShortName":"2nd"},
-	"004": {"VName":"3rd style",     "VShortName":"3rd"},
-	"005": {"VName":"4th style",     "VShortName":"4th"},
-	"006": {"VName":"5th style",     "VShortName":"5th"},
-	"007": {"VName":"6th style",     "VShortName":"6th"},
-	"008": {"VName":"7th style",     "VShortName":"7th"},
-	"009": {"VName":"8th style",     "VShortName":"8th"},
-	"010": {"VName":"9th style",     "VShortName":"9th"},
-	"011": {"VName":"10th style",    "VShortName":"10th"},
-	"012": {"VName":"IIDX RED",      "VShortName":"RED"},
-	"013": {"VName":"HAPPY SKY",     "VShortName":"HS"},
-	"014": {"VName":"DistorteD",     "VShortName":"DD"},
-	"015": {"VName":"GOLD",          "VShortName":"GLD"},
-	"016": {"VName":"DJ TROOPERS",   "VShortName":"DJT"},
-	"017": {"VName":"EMPRESS",       "VShortName":"EMP"},
-	"018": {"VName":"SIRIUS",        "VShortName":"SIR"},
-	"019": {"VName":"Resort Anthem", "VShortName":"RA"},
-	"020": {"VName":"Lincle",        "VShortName":"Lin"},
-	"021": {"VName":"tricolo",       "VShortName":"tri"},
-	"022": {"VName":"SPADA",         "VShortName":"SPA"},
-	"023": {"VName":"PENDUAL",       "VShortName":"PEN"},
-	"024": {"VName":"copula",        "VShortName":"cop"},
-	"025": {"VName":"SINOBUZ",       "VShortName":"SIN"},
-	"026": {"VName":"CANNON BALLERS","VShortName":"CB"},
-	"027": {"VName":"Rootage",       "VShortName":"Rt"},
-	"028": {"VName":"HEROIC VERSE",  "VShortName":"HV"},
-	"029": {"VName":"BISTROVER",     "VShortName":"BIS"},
-	"999": {"VName":"INFINITAS",     "VShortName":"INF"}
+	"0001": {"VName":"1st style",     "VShortName":"1st"},
+	"0002": {"VName":"substream",     "VShortName":"sub"},
+	"0003": {"VName":"2nd style",     "VShortName":"2nd"},
+	"0004": {"VName":"3rd style",     "VShortName":"3rd"},
+	"0005": {"VName":"4th style",     "VShortName":"4th"},
+	"0006": {"VName":"5th style",     "VShortName":"5th"},
+	"0007": {"VName":"6th style",     "VShortName":"6th"},
+	"0008": {"VName":"7th style",     "VShortName":"7th"},
+	"0009": {"VName":"8th style",     "VShortName":"8th"},
+	"0010": {"VName":"9th style",     "VShortName":"9th"},
+	"0011": {"VName":"10th style",    "VShortName":"10th"},
+	"0012": {"VName":"IIDX RED",      "VShortName":"RED"},
+	"0013": {"VName":"HAPPY SKY",     "VShortName":"HS"},
+	"0014": {"VName":"DistorteD",     "VShortName":"DD"},
+	"0015": {"VName":"GOLD",          "VShortName":"GLD"},
+	"0016": {"VName":"DJ TROOPERS",   "VShortName":"DJT"},
+	"0017": {"VName":"EMPRESS",       "VShortName":"EMP"},
+	"0018": {"VName":"SIRIUS",        "VShortName":"SIR"},
+	"0019": {"VName":"Resort Anthem", "VShortName":"RA"},
+	"0020": {"VName":"Lincle",        "VShortName":"Lin"},
+	"0021": {"VName":"tricolo",       "VShortName":"tri"},
+	"0022": {"VName":"SPADA",         "VShortName":"SPA"},
+	"0023": {"VName":"PENDUAL",       "VShortName":"PEN"},
+	"0024": {"VName":"copula",        "VShortName":"cop"},
+	"0025": {"VName":"SINOBUZ",       "VShortName":"SIN"},
+	"0026": {"VName":"CANNON BALLERS","VShortName":"CB"},
+	"0027": {"VName":"Rootage",       "VShortName":"Rt"},
+	"0028": {"VName":"HEROIC VERSE",  "VShortName":"HV"},
+	"0029": {"VName":"BISTROVER",     "VShortName":"BIS"},
+	"0030": {"VName":"CastHour",      "VShortName":"CH"},
+	"0999": {"VName":"INFINITAS",     "VShortName":"INF"}
 };
 
 let packlist = {
@@ -68,39 +69,6 @@ let packlist = {
 	'0010003': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.3', 'inputName':'SSパックVol.3',    'shortName':'PackSS3', 'inputid':'purchase-Pack0010003'},
 	'0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'purchase-Pack0020001'}
 };
-
-let VerHeaderLine = [
-	['v01-header', 'par-version','1st style'],
-	['v02-header', 'par-version','substream'],
-	['v03-header', 'par-version','2nd style'],
-	['v04-header', 'par-version','3rd style'],
-	['v05-header', 'par-version','4th style'],
-	['v06-header', 'par-version','5th style'],
-	['v07-header', 'par-version','6th style'],
-	['v08-header', 'par-version','7th style'],
-	['v09-header', 'par-version','8th style'],
-	['v10-header', 'par-version','9th style'],
-	['v11-header', 'par-version','10th style'],
-	['v12-header', 'par-version','IIDXRED'],
-	['v13-header', 'par-version','HAPPY SKY'],
-	['v14-header', 'par-version','DistorteD'],
-	['v15-header', 'par-version','GOLD'],
-	['v16-header', 'par-version','DJ TROOPERS'],
-	['v17-header', 'par-version','EMPRESS'],
-	['v18-header', 'par-version','SIRIUS'],
-	['v19-header', 'par-version','Resort Anthem'],
-	['v20-header', 'par-version','Lincle'],
-	['v21-header', 'par-version','tricoro'],
-	['v22-header', 'par-version','SPADA'],
-	['v23-header', 'par-version','PENDUAL'],
-	['v24-header', 'par-version','copula'],
-	['v25-header', 'par-version','SINOBUZ'],
-	['v26-header', 'par-version','CANNON BALLERS'],
-	['v27-header', 'par-version','Rootage'],
-	['v28-header', 'par-version','HEROIC VERSE'],
-	['v29-header', 'par-version','BISTROVER'],
-	['v999-header','par-version','INFINITAS']
-];
 
 let BPMArray = [
 		'-99','100-109','110-119','120-129','130-139','140-149','150-159','160-169','170-179','180-189',
@@ -1796,7 +1764,7 @@ let musics = {
 			// データ挿入先ごとにオブジェクトに格納
 			idList = [];
 			switch (document.getElementById('search-folder').value) {
-				case 'VER'      : idList.push("v" + zeroPadding(item.VNo,2) + "-header"); break;
+				case 'VER'      : idList.push("v" + zeroPadding(item.VNo,4) + "-header"); break;
 				case 'RELT'     : idList.push("relt" + item.Release.Type + "-header"); break;
 				case 'RELY'     : idList.push("rely" + r_id_r4Y + "-header"); break;
 				case 'RELYM'    : idList.push("relym" + r_id_r4Y2M + "-header"); break;
@@ -1887,7 +1855,8 @@ let musics = {
 		toastbox.message('<span>結果テーブルにヘッダー行の作成中…</span>');
 		switch (document.getElementById('search-folder').value) {
 			case 'VER':
-				headerLine = VerHeaderLine;
+				headerLine = [];
+				for (const prop in VerArray) { headerLine.push(['v' + prop + '-header', 'par-version', VerArray[prop].VName]); };
 				makeHeaderLine(df, headerLine);
 				break;
 			case 'RELT':
@@ -3077,7 +3046,7 @@ function handleClientLoad() {
 
 			for (let i = 0; i < musicJSON.length; i++) {
 				// バージョン情報を追加
-				let sliceID = musicJSON[i].ID.substr(0,3);
+				let sliceID = '0' + musicJSON[i].ID.substr(0,3);
 				musicJSON[i]['VNo'] = Number(sliceID);
 				musicJSON[i]['VName'] = VerArray[sliceID].VName;
 				musicJSON[i]['VShortName'] = VerArray[sliceID].VShortName;
