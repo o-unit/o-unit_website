@@ -274,7 +274,17 @@ input[id="formtab-10"]:checked ~ [for="formtab-10"] {
     font-size: 0.8rem;
 }
 #musicsearch .vname input[type="checkbox"] {
-    display: none;
+    /* display: none; */
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    margin: -1px;
 }
 #musicsearch .vname input[type="checkbox"] + label {
     position: relative;
@@ -297,6 +307,10 @@ input[id="formtab-10"]:checked ~ [for="formtab-10"] {
     border-color: #ffffff;
     font-weight: bold;
 }
+#musicsearch .vname input[type="checkbox"]:focus-within + label {
+    border-width: 4px;
+    margin: 0px 2px 0px 2px;
+}
 #musicsearch input[type="checkbox"][disabled] + label {
     background-color: #3b9cba;
     color: #333333;
@@ -304,7 +318,17 @@ input[id="formtab-10"]:checked ~ [for="formtab-10"] {
 }
 
 #musicsearch .vname input.opt {
-    display: none;
+    /* display: none; */
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    margin: -1px;
 }
 #musicsearch .vname input.opt + label {
     position: relative;
@@ -326,6 +350,10 @@ input[id="formtab-10"]:checked ~ [for="formtab-10"] {
     color: #000000;
     border-color: #ffffff;
     font-weight: bold;
+}
+#musicsearch .vname input.opt:focus-within + label {
+    border-width: 4px;
+    margin: 0px 2px 0px 2px;
 }
 #musicsearch .vname input.opt[disabled] + label {
     background-color: #3b9cba;
@@ -722,6 +750,11 @@ table.musiclist .packSS {
 table.musiclist .packPM {
     color: #000000;
     background-color: #ff9999;
+    font-size: 0.825rem;
+}
+table.musiclist .packJU {
+    color: #000000;
+    background-color: #f5ff99;
     font-size: 0.825rem;
 }
 table.musiclist .djp {
