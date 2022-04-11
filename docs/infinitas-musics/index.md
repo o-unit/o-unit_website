@@ -95,7 +95,7 @@ layout: "single-nosidebar"
 			<div class="notes-menu"><input id="opt_bpm_max" name="opt_bpm_max" type="text" placeholder="9999" class="input-60" /></div>
 			<div class="inblock pad-lr5">&nbsp;</div>
 			<div class="vname bpm_opt">
-				<input id="opt_bpm_changing" name="opt_bpm_changing" type="number" class="opt hidden" value="0" />
+				<input id="opt_bpm_changing" name="opt_bpm_changing" type="number" class="opt" value="0" />
 				<label for="opt_bpm_changing">可変&nbsp;:&nbsp;-</label>
 			</div>
 		</div>
@@ -373,10 +373,10 @@ layout: "single-nosidebar"
 			<div class="fieldname">LocalStorage</div>
 			<div class="inblock">
 				<div class="clearfix">
-					<a id="localStorageEnable" class="btn btn--info">LocalStorage有効化</a>
-					<a id="localStorageRead" class="btn btn--info hidden">読込</a>
-					<a id="localStorageSave" class="btn btn--info hidden">保存</a>
-					<a id="localStorageDisable" class="btn btn--info hidden">LocalStorage無効化</a>
+					<a href="#musicsearch" id="localStorageEnable" class="btn btn--info">LocalStorage有効化</a>
+					<a href="#musicsearch" id="localStorageRead" class="btn btn--info hidden">読込</a>
+					<a href="#musicsearch" id="localStorageSave" class="btn btn--info hidden">保存</a>
+					<a href="#musicsearch" id="localStorageDisable" class="btn btn--info hidden">LocalStorage無効化</a>
 				</div>
 			</div>
 		</div>
@@ -411,9 +411,9 @@ layout: "single-nosidebar"
 						<option value="" class="new" selected>(新規作成)</option>
 					</select>
 					<input id="searchFavoriteNewName" name="searchFavoriteNewName" type="text" placeholder="新規お気に入り名" class="input-200 hidden" />
-					<a id="searchFavoriteRead" class="btn btn--info">読込</a>
-					<a id="searchFavoriteSave" class="btn btn--info">保存</a>
-					<a id="searchFavoriteDelete" class="btn btn--danger">削除</a>
+					<a href="#musicsearch" id="searchFavoriteRead" class="btn btn--info">読込</a>
+					<a href="#musicsearch" id="searchFavoriteSave" class="btn btn--info">保存</a>
+					<a href="#musicsearch" id="searchFavoriteDelete" class="btn btn--danger">削除</a>
 				</div>
 			</div>
 		</div>
@@ -571,6 +571,7 @@ layout: "single-nosidebar"
 					<option value="Pack" />
 					<option value="PackSS" />
 					<option value="PackPM" />
+					<option value="PackJU" />
 				</datalist>
 			</div>
 		</div>
