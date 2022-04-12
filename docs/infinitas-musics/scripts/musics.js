@@ -69,7 +69,8 @@ let packlist = {
 	'0010002': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.2', 'inputName':'SSパックVol.2',    'shortName':'PackSS2', 'inputid':'purchase-Pack0010002'},
 	'0010003': {'type':'Startar',   'name':'スタートアップセレクション 楽曲パック vol.3', 'inputName':'SSパックVol.3',    'shortName':'PackSS3', 'inputid':'purchase-Pack0010003'},
 	'0020001': {'type':'PopnMusic', 'name':'pop\'n music セレクション 楽曲パック vol.1',  'inputName':'PMパックVol.1',    'shortName':'PackPM1', 'inputid':'purchase-Pack0020001'},
-	'0030001': {'type':'jubeat',    'name':'jubeat セレクション 楽曲パック vol.1',        'inputName':'juパックVol.1',    'shortName':'PackJU1', 'inputid':'purchase-Pack0030001'}
+	'0030001': {'type':'jubeat',    'name':'jubeat セレクション 楽曲パック vol.1',        'inputName':'juパックVol.1',    'shortName':'PackJU1', 'inputid':'purchase-Pack0030001'},
+	'0040001': {'type':'BPL',       'name':'BPL セレクション 楽曲パック vol.1',           'inputName':'BPLパックVol.1',   'shortName':'PackBPL1','inputid':'purchase-Pack0040001'}
 };
 
 let BPMArray = [
@@ -876,7 +877,8 @@ function togglePackButton(obj, noToggle = false) {
 	let replacedObjId = "Pack" + objIdNumber;
 	if (      objIdNumber >= 10000 && objIdNumber < 20000 ) { replacedObjId = "PackSS" + (objIdNumber - 10000); }
 	else if ( objIdNumber >= 20000 && objIdNumber < 30000 ) { replacedObjId = "PackPM" + (objIdNumber - 20000); }
-	else if ( objIdNumber >= 20000 && objIdNumber < 30000 ) { replacedObjId = "PackJU" + (objIdNumber - 30000); };
+	else if ( objIdNumber >= 30000 && objIdNumber < 40000 ) { replacedObjId = "PackJU" + (objIdNumber - 30000); }
+	else if ( objIdNumber >= 40000 && objIdNumber < 50000 ) { replacedObjId = "PackBPL" + (objIdNumber - 40000); };
 
 	jQuery.each(musics.JSON,function (ind,val) {
 		if ('Type' in val.Release && val.Release.Type == replacedObjId ) {
@@ -1491,6 +1493,12 @@ let musics = {
 					rTypeClass = ' packJU packJU' + m[2];
 					rTypeStr   = 'jubeat セレクションVol.' + m[2];
 					rTypeSStr  = 'JU#' + m[2];
+					isPack = true;
+					break;
+				case 'PackBPL':
+					rTypeClass = ' packBPL packBPL' + m[2];
+					rTypeStr   = 'BPL セレクションVol.' + m[2];
+					rTypeSStr  = 'BPL#' + m[2];
 					isPack = true;
 					break;
 				case 'Championship':

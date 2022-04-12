@@ -572,6 +572,7 @@ layout: "single-nosidebar"
 					<option value="PackSS" />
 					<option value="PackPM" />
 					<option value="PackJU" />
+					<option value="PackBPL" />
 				</datalist>
 			</div>
 		</div>
