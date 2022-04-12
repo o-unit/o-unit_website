@@ -2741,21 +2741,27 @@ function handleClientLoad() {
 
 		// 曲名の自動補完
 		let titleSet = new Set();
-		musics.JSON.forEach(function(val,idx,ar){ titleSet.add(val.Title); });
+		musics.JSON.forEach(function(val){ titleSet.add(val.Title); });
 		titleSet = new Set([...titleSet].sort());
-		titleSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#titlelist'); });
+		titleOptStr = '';
+		titleSet.forEach(function(val){ titleOptStr += '<option value="' + val + '"></option>'; });
+		document.getElementById('titlelist').innerHTML = titleOptStr;
 
 		// ジャンル名の自動補完
 		let genreSet = new Set();
-		musics.JSON.forEach(function(val,idx,ar){ genreSet.add(val.Genre); });
+		musics.JSON.forEach(function(val){ genreSet.add(val.Genre); });
 		genreSet = new Set([...genreSet].sort());
-		genreSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#genrelist'); });
+		genreOptStr = '';
+		genreSet.forEach(function(val){ genreOptStr += '<option value="' + val + '"></option>'; });
+		document.getElementById('genrelist').innerHTML = genreOptStr;
 
 		// アーティスト名の自動補完
 		let artistSet = new Set();
-		musics.JSON.forEach(function(val,idx,ar){ artistSet.add(val.Artist); });
+		musics.JSON.forEach(function(val){ artistSet.add(val.Artist); });
 		artistSet = new Set([...artistSet].sort());
-		artistSet.forEach(function(val,idx,ar){ jQuery('<option></option>').attr('value', val).appendTo('#artistlist'); });
+		artistOptStr = '';
+		artistSet.forEach(function(val){ artistOptStr += '<option value="' + val + '"></option>'; });
+		document.getElementById('artistlist').innerHTML = artistOptStr;
 
 		toastbox.FadeInandTimerFadeOut('データファイル読込完了');
 		jQuery('info-lastupdated').append('データ更新日：' + dateFormat.format(new Date(musics.infoJSON.lastupdated), 'yyyy/MM/dd hh:mm'));
