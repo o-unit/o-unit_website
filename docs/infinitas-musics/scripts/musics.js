@@ -2172,7 +2172,7 @@ let musics = {
 	},
 
 	getChartInfo: function (item) {
-		let chart = {'Lv':'-', 'Notes':'-', 'BPM':'', 'CN':false, 'BSS':false, 'HCN':false, 'HBSS': false };
+		let chart = {'Lv':'-', 'Notes':'-', 'BPM':'', 'CN':false, 'BSS':false, 'MSS':false, 'HCN':false, 'HBSS': false, 'HMSS': false };
 
 		if (item) {
 			chart.Lv = item.Level ? item.Level :  '-';
@@ -2180,8 +2180,10 @@ let musics = {
 			chart.BPM = item.BPM ? item.BPM : item.MinBPM + '-' + item.MaxBPM;
 			chart.CN = item.CN ? true : false;
 			chart.BSS = item.BSS ? true : false;
+			chart.MSS = item.MSS ? true : false;
 			chart.HCN = item.HCN ? true : false;
 			chart.HBSS = item.HBSS ? true : false;
+			chart.HMSS = item.HMSS ? true : false;
 		};
 
 		return chart;
