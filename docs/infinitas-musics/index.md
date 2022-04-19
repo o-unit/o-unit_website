@@ -546,6 +546,45 @@ layout: "single-nosidebar"
 	</div>
 	<div id="formtab-8_content" class="tab_content">
 		<div class="clearfix">
+			<div class="fieldname"><label for="new_version">バージョン</label></div>
+			<div class="inblock selectbutton">
+				<select id="new_version" name="new_version">
+					<option value="vvv00xx" selected>Version...</option>
+					<option value="00100xx">1st style</option>
+					<option value="00200xx">substream</option>
+					<option value="00300xx">2nd style</option>
+					<option value="00400xx">3rd style</option>
+					<option value="00500xx">4th style</option>
+					<option value="00600xx">5th style</option>
+					<option value="00700xx">6th style</option>
+					<option value="00800xx">7th style</option>
+					<option value="00900xx">8th style</option>
+					<option value="01000xx">9th style</option>
+					<option value="01100xx">10th style</option>
+					<option value="01200xx">IIDX RED</option>
+					<option value="01300xx">HAPPY SKY</option>
+					<option value="01400xx">DistorteD</option>
+					<option value="01500xx">GOLD</option>
+					<option value="01600xx">DJ TROOPERS</option>
+					<option value="01700xx">EMPRESS</option>
+					<option value="01800xx">SIRIUS</option>
+					<option value="01900xx">Resort Anthem</option>
+					<option value="02000xx">Lincle</option>
+					<option value="02100xx">tricolo</option>
+					<option value="02200xx">SPADA</option>
+					<option value="02300xx">PENDUAL</option>
+					<option value="02400xx">copula</option>
+					<option value="02500xx">SINOBUZ</option>
+					<option value="02600xx">CANNON BALLERS</option>
+					<option value="02700xx">Rootage</option>
+					<option value="02800xx">HEROIC VERSE</option>
+					<option value="02900xx">BISTROVER</option>
+					<option value="03000xx">CastHour</option>
+					<option value="99900xx">INFINITAS</option>
+				</select>
+			</div>
+		</div>
+		<div class="clearfix">
 			<div class="fieldname"><label for="new_genre">ジャンル</label></div>
 			<div class="inblock"><input id="new_genre" name="new_genre" type="text" placeholder="ジャンル名…" class="input-260" /></div>
 		</div>
@@ -594,8 +633,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_SPB_BPM" name="new_SPB_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_SPB_CN" name="new_SPB_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_SPB_BSS" name="new_SPB_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_SPB_MSS" name="new_SPB_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_SPB_HCN" name="new_SPB_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_SPB_HBSS" name="new_SPB_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_SPB_HMSS" name="new_SPB_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPB_HMSS">HMSS</label></div>
 		</div>
 		<div class="clearfix">
 			<div class="fieldname"><label for="new_SPN_Lv">SPN</label></div>
@@ -606,8 +647,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_SPN_BPM" name="new_SPN_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_SPN_CN" name="new_SPN_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_SPN_BSS" name="new_SPN_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_SPN_MSS" name="new_SPN_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_SPN_HCN" name="new_SPN_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_SPN_HBSS" name="new_SPN_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_SPN_HMSS" name="new_SPN_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPN_HMSS">HMSS</label></div>
 		</div>
 		<div class="clearfix">
 			<div class="fieldname"><label for="new_SPH_Lv">SPH</label></div>
@@ -618,8 +661,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_SPH_BPM" name="new_SPH_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_SPH_CN" name="new_SPH_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_SPH_BSS" name="new_SPH_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_SPH_MSS" name="new_SPH_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_SPH_HCN" name="new_SPH_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_SPH_HBSS" name="new_SPH_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_SPH_HMSS" name="new_SPH_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPH_HMSS">HMSS</label></div>
 		</div>
 		<div class="clearfix">
 			<div class="fieldname"><label for="new_SPA_Lv">SPA</label></div>
@@ -630,8 +675,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_SPA_BPM" name="new_SPA_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_SPA_CN" name="new_SPA_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_SPA_BSS" name="new_SPA_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_SPA_MSS" name="new_SPA_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_SPA_HCN" name="new_SPA_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_SPA_HBSS" name="new_SPA_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_SPA_HMSS" name="new_SPA_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_SPA_HMSS">HMSS</label></div>
 		</div>
 		<div class="clearfix">
 			<div class="fieldname"><label for="new_DPN_Lv">DPN</label></div>
@@ -642,8 +689,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_DPN_BPM" name="new_DPN_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_DPN_CN" name="new_DPN_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_DPN_BSS" name="new_DPN_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_DPN_MSS" name="new_DPN_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_DPN_HCN" name="new_DPN_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_DPN_HBSS" name="new_DPN_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_DPN_HMSS" name="new_DPN_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPN_HMSS">HMSS</label></div>
 		</div>
 		<div class="clearfix">
 			<div class="fieldname"><label for="new_DPH_Lv">DPH</label></div>
@@ -654,8 +703,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_DPH_BPM" name="new_DPH_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_DPH_CN" name="new_DPH_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_DPH_BSS" name="new_DPH_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_DPH_MSS" name="new_DPH_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_DPH_HCN" name="new_DPH_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_DPH_HBSS" name="new_DPH_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_DPH_HMSS" name="new_DPH_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPH_HMSS">HMSS</label></div>
 		</div>
 		<div class="clearfix">
 			<div class="fieldname"><label for="new_DPA_Lv">DPA</label></div>
@@ -666,8 +717,10 @@ layout: "single-nosidebar"
 			<div class="inblock"><input id="new_DPA_BPM" name="new_DPA_BPM" type="text" placeholder="BPM" class="input-60" /></div>
 			<div class="vname addmusic"><input id="new_DPA_CN" name="new_DPA_CN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_CN">CN</label></div>
 			<div class="vname addmusic"><input id="new_DPA_BSS" name="new_DPA_BSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_BSS">BSS</label></div>
+			<div class="vname addmusic"><input id="new_DPA_MSS" name="new_DPA_MSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_MSS">MSS</label></div>
 			<div class="vname addmusic"><input id="new_DPA_HCN" name="new_DPA_HCN" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_HCN">HCN</label></div>
 			<div class="vname addmusic"><input id="new_DPA_HBSS" name="new_DPA_HBSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_HBSS">HBSS</label></div>
+			<div class="vname addmusic"><input id="new_DPA_HMSS" name="new_DPA_HMSS" type="checkbox" class="releasetype-checkbox" /><label for="new_DPA_HMSS">HMSS</label></div>
 		</div>
 		<hr class="clearfix" />
 		<div class="clearfix"><textarea id="new_comment" name="new_comment" placeholder="コメントを入力…" class="textarea-100p height-8"></textarea></div>

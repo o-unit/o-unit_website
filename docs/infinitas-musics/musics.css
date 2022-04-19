@@ -757,6 +757,11 @@ table.musiclist .packJU {
     background-color: #f5ff99;
     font-size: 0.825rem;
 }
+table.musiclist .packBPL {
+    color: #ffffff;
+    background-color: #2a009c;
+    font-size: 0.825rem;
+}
 table.musiclist .djp {
     color: #000000;
     background-color: #ffff00;
@@ -938,6 +943,10 @@ table.musiclist .cn {
 }
 table.musiclist .bss {
     background-color: #ff3333;
+    visibility: visible;
+}
+table.musiclist .mss {
+    background-color: #b30000;
     visibility: visible;
 }
 table.musiclist tbody.hidden {

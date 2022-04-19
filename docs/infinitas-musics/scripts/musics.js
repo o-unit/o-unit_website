@@ -970,7 +970,7 @@ let newMusic = {
 	makeJSON: function () {
 		let self = this;
 		let JSONData = {
-			"ID": "0xx00yy",
+			"ID": document.getElementById('new_version').value,
 			"Genre": document.getElementById('new_genre').value,
 			"Title": document.getElementById('new_title').value,
 			"Artist": document.getElementById('new_artist').value,
@@ -1019,10 +1019,12 @@ let newMusic = {
 				output.BPM = tmpBPM[0];
 			};
 		};
-		if (document.getElementById('new_' +  score + '_CN').checked  ) { output.CN   = '1'; };
-		if (document.getElementById('new_' +  score + '_BSS').checked ) { output.BSS  = '1'; };
-		if (document.getElementById('new_' +  score + '_HCN').checked ) { output.HCN  = '1'; };
-		if (document.getElementById('new_' +  score + '_HBSS').checked) { output.HBSS = '1'; };
+		if (document.getElementById('new_' +  score + '_CN').checked   ) { output.CN    = '1'; };
+		if (document.getElementById('new_' +  score + '_BSS').checked  ) { output.BSS   = '1'; };
+		if (document.getElementById('new_' +  score + '_HCN').checked  ) { output.HCN   = '1'; };
+		if (document.getElementById('new_' +  score + '_HBSS').checked ) { output.HBSS  = '1'; };
+		if (document.getElementById('new_' +  score + '_MSS').checked  ) { output.MSS   = '1'; };
+		if (document.getElementById('new_' +  score + '_HMSS').checked ) { output.HMSS  = '1'; };
 
 		return output;
 	}
@@ -1608,15 +1610,15 @@ let musics = {
 					//"DPL": '<div class="notesstyle' + (DPA.HCN ? ' hcn' : DPA.CN ? ' cn' : '') + '"></div>'
 				},
 				"bss": {
-					"SPB": '<div class="notesstyle' + (SPB.HBSS ? ' hbss' : SPB.BSS ? ' bss' : '') + '"></div>',
-					"SPN": '<div class="notesstyle' + (SPN.HBSS ? ' hbss' : SPN.BSS ? ' bss' : '') + '"></div>',
-					"SPH": '<div class="notesstyle' + (SPH.HBSS ? ' hbss' : SPH.BSS ? ' bss' : '') + '"></div>',
-					"SPA": '<div class="notesstyle' + (SPA.HBSS ? ' hbss' : SPA.BSS ? ' bss' : '') + '"></div>',
+					"SPB": '<div class="notesstyle' + (SPB.MSS ? ' mss' : SPB.HBSS ? ' hbss' : SPB.BSS ? ' bss' : '') + '"></div>',
+					"SPN": '<div class="notesstyle' + (SPN.MSS ? ' mss' : SPN.HBSS ? ' hbss' : SPN.BSS ? ' bss' : '') + '"></div>',
+					"SPH": '<div class="notesstyle' + (SPH.MSS ? ' mss' : SPH.HBSS ? ' hbss' : SPH.BSS ? ' bss' : '') + '"></div>',
+					"SPA": '<div class="notesstyle' + (SPA.MSS ? ' mss' : SPA.HBSS ? ' hbss' : SPA.BSS ? ' bss' : '') + '"></div>',
 					//"SPL": '<div class="notesstyle' + (SPL.HBSS ? ' hbss' : SPL.BSS ? ' bss' : '') + '"></div>',
 					//"DPB": '<div class="notesstyle' + (DPB.HBSS ? ' hbss' : DPB.BSS ? ' bss' : '') + '"></div>',
-					"DPN": '<div class="notesstyle' + (DPN.HBSS ? ' hbss' : DPN.BSS ? ' bss' : '') + '"></div>',
-					"DPH": '<div class="notesstyle' + (DPH.HBSS ? ' hbss' : DPH.BSS ? ' bss' : '') + '"></div>',
-					"DPA": '<div class="notesstyle' + (DPA.HBSS ? ' hbss' : DPA.BSS ? ' bss' : '') + '"></div>',
+					"DPN": '<div class="notesstyle' + (DPN.MSS ? ' mss' : DPN.HBSS ? ' hbss' : DPN.BSS ? ' bss' : '') + '"></div>',
+					"DPH": '<div class="notesstyle' + (DPH.MSS ? ' mss' : DPH.HBSS ? ' hbss' : DPH.BSS ? ' bss' : '') + '"></div>',
+					"DPA": '<div class="notesstyle' + (DPA.MSS ? ' mss' : DPA.HBSS ? ' hbss' : DPA.BSS ? ' bss' : '') + '"></div>',
 					//"DPL": '<div class="notesstyle' + (DPL.HBSS ? ' hbss' : DPL.BSS ? ' bss' : '') + '"></div>'
 				},
 				"exscore": {
