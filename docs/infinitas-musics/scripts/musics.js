@@ -1695,7 +1695,7 @@ let musics = {
 					  '<td class="other" colspan="4" rowspan="' + rowspan + '">' +
 					  '配信開始日：' + r4Y2M2D + '&nbsp;&nbsp;(&nbsp;配信タイプ&nbsp;：&nbsp;' + rTypeStr + '&nbsp;)<br />' +
 					  'BIT解禁開始日：' + rBit4Y2M2D + '<br />' +
-					  ((rBit4Y2M2D !== 'BIT未解禁') ? '必要BIT数 : ' +
+					  ((rBit4Y2M2D !== 'BIT未解禁' && rTypeStr !== 'デフォルト') ? '必要BIT数 : ' +
 					  ((rBit[Diff[0].Name])  ? '&nbsp;B = ' + rBit[Diff[0].Name].toLocaleString() + ' / ' : '' ) +
 					  ((rBit[Diff[1].Name])  ? '&nbsp;N = ' + rBit[Diff[1].Name].toLocaleString() + ' / ' : '' ) +
 					  ((rBit[Diff[2].Name])  ? '&nbsp;H = ' + rBit[Diff[2].Name].toLocaleString() + ' / ' : '' ) +
@@ -1823,7 +1823,7 @@ let musics = {
 				if (!isNaN(DPA.Lv)) { countdata[header].Scores.DPA += 1; };
 				//if (!isNaN(DPL.Lv)) { countdata[header].Scores.DPL += 1; };
 
-				if (rBit4Y2M2D !== 'BIT未解禁' && isReleased && isBitCalc) {
+				if (rBit4Y2M2D !== 'BIT未解禁' && rTypeStr !== 'デフォルト' && isReleased && isBitCalc) {
 					if (!isNaN(SPB.Lv)) { countdata[header].BITScores.SPB += 1; if (vals.cp[Diff[0].Name]) {countdata[header].BITCanplayScores.SPB++; }; };
 					if (!isNaN(SPN.Lv)) { countdata[header].BITScores.SPN += 1; if (vals.cp[Diff[1].Name]) {countdata[header].BITCanplayScores.SPN++; }; };
 					if (!isNaN(SPH.Lv)) { countdata[header].BITScores.SPH += 1; if (vals.cp[Diff[2].Name]) {countdata[header].BITCanplayScores.SPH++; }; };
@@ -3050,7 +3050,7 @@ function handleClientLoad() {
 				DPL = ([Diff[4].Name] in musicJSON[i].Scores.Double) ? musicJSON[i].Scores.Double[Diff[4].Name] : {Level: 0, BPM: 0};
 
 				// 解禁BITの計算
-				if ("BitDate" in musicJSON[i].Release) {
+				if ("Default" != musicJSON[i].Release.Type && "BitDate" in musicJSON[i].Release) {
 					BLv = Number(SPB.Level) + Number(DPB.Level);
 					NLv = Number(SPN.Level) + Number(DPN.Level);
 					HLv = Number(SPH.Level) + Number(DPH.Level);
