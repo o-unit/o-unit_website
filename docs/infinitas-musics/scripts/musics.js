@@ -1861,7 +1861,7 @@ let musics = {
 				break;
 			case 'RELT':
 				headerArray = ['Default','Monthly','BIT','DJP','Championship1','Championship2','Championship3','Championship4'];
-				for(let pk of packlist){ headerArray.push(packlist[pk].shortName); };
+				for(let pk in packlist){ headerArray.push(packlist[pk].shortName); };
 				headerArray.push('Unreleased');
 				headerLine = pushheaderLine('relt',  'par-rel-type', 'RELEASED&nbsp;TYPE&nbsp;:&nbsp;', headerArray);
 				makeHeaderLine(df, headerLine);
@@ -2510,6 +2510,13 @@ let s = {
 		if (!('searchOpts' in userJSON)) { return false; };
 		this.getSearchParam();
 		userJSON.searchOpts[optName] = JSON.parse(JSON.stringify(this.params));
+
+		let blob = new Blob([JSON.stringify(userJSON, undefined, '\t')], {type: 'application\/json'});
+		url = URL.createObjectURL(blob);
+
+		document.getElementById('downloadButton').setAttribute("href", url);
+		document.getElementById('downloadButton').setAttribute("download", "musiclist_userdata.json");
+
 		return true;
 	},
 	setScoreSearchParams: function(score, lvMin = 0, lvMax = 12, CN = 0, BSS = 0, HCN = 0, notesMin = '', notesMax = '',
@@ -2690,7 +2697,7 @@ function updateFileContent(fileId, contentBlob, callback) {
  *
  * @param {*} callback - コールバック関数
  */
- function musiclistLoad(callback = handleClientLoad) {
+function musiclistLoad(callback = handleClientLoad) {
 	// google API の読込
 	let musiclistElement = document.createElement("script");
 	musiclistElement.src = "./musiclist.js";
