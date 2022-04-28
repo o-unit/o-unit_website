@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.0.4.7)
+    activesupport (6.0.4.8)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -291,6 +291,7 @@ GEM
     unf_ext (0.0.8.1)
     unicode-display_width (1.8.0)
     verbal_expressions (0.1.5)
+    webrick (1.7.0)
     zeitwerk (2.5.4)
 
 PLATFORMS
@@ -306,8 +307,9 @@ DEPENDENCIES
   jekyll-paginate
   jekyll-sitemap
   jemoji
-  nokogiri (>= 1.12.5)
+  nokogiri (>= 1.13.4)
   tzinfo-data
+  webrick (~> 1.7)
 
 BUNDLED WITH
    2.2.28

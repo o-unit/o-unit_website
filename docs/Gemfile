@@ -9,6 +9,9 @@ gem "wdm", "~> 0.1.0" if Gem.win_platform?
 gem "activesupport", ">= 4.1.11"
 gem "nokogiri", ">= 1.13.4"
 
+# require Gem
+gem "webrick", "~> 1.7"
+
 # If you have any plugins, put them here!
 group :jekyll_plugins do
   gem "jekyll-paginate"
