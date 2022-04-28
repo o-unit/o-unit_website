@@ -8,7 +8,7 @@ services:
       - "./docs:/srv/jekyll"
       - "./vendor/bundle:/usr/local/bundle"
       - "./gem:/usr/gem"
-    command: jekyll serve --force_polling
+    command: jekyll build --watch --force_polling
     ports:
       - "4000:4000"
     environment:
